@@ -123,7 +123,7 @@ const DecisionHeroCard = ({ headlineData }: { headlineData: HeadlineData | null 
       <div className="grid grid-cols-2 gap-4">
         {/* Best window */}
         <div>
-          <p className="text-[10px] font-extrabold text-muted-foreground/70 uppercase tracking-wider mb-1">Best Window</p>
+          <p className="text-[12px] font-extrabold text-muted-foreground/70 uppercase tracking-wider mb-1">Best Window</p>
           <div className="flex items-center gap-1.5">
             <Sun size={13} className="text-status-quiet shrink-0" />
             <span className="text-[15px] font-bold text-foreground leading-tight">{bestWindow}</span>
@@ -132,7 +132,7 @@ const DecisionHeroCard = ({ headlineData }: { headlineData: HeadlineData | null 
 
         {/* Peak Hours */}
         <div>
-          <p className="text-[10px] font-extrabold text-muted-foreground/70 uppercase tracking-wider mb-1">Peak Hours</p>
+          <p className="text-[12px] font-extrabold text-muted-foreground/70 uppercase tracking-wider mb-1">Peak Hours</p>
           <div className="flex items-center gap-1.5">
             <AlertTriangle size={13} className="text-status-peak shrink-0" />
             <span className="text-[15px] font-bold text-foreground leading-tight">{peakWindow}</span>
@@ -140,7 +140,7 @@ const DecisionHeroCard = ({ headlineData }: { headlineData: HeadlineData | null 
         </div>
       </div>
 
-      <p className="text-[10px] text-muted-foreground/60 mt-3">Based on historical patterns, not live data</p>
+      <p className="text-[12px] text-muted-foreground/60 mt-3">Based on historical patterns, not live data</p>
     </motion.div>
   );
 };

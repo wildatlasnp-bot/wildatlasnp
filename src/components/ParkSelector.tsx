@@ -71,7 +71,7 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
         onClick={() => setOpen(!open)}
         aria-expanded={open}
         aria-haspopup="listbox"
-        className={`flex items-center gap-1.5 text-[11px] font-semibold tracking-wider transition-colors font-body ${
+        className={`flex items-center gap-1.5 text-[12px] font-semibold tracking-wider transition-colors font-body ${
           isOverlay
             ? "text-white hover:brightness-110"
             : "px-3.5 py-1 rounded-full border hover:brightness-95"
@@ -82,7 +82,7 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
       >
         {isOverlay ? (
           <span className="font-display-italic" style={{
-            fontSize: 11,
+            fontSize: 12,
             letterSpacing: '0.12em',
             color: 'var(--ranger-paper-soft)',
             lineHeight: 1,
@@ -137,7 +137,7 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
                       {toTitleCase(park.shortName)}
                     </span>
                     {sublabel && (
-                      <span className="font-body" style={{ fontSize: 11, color: 'var(--ranger-ink-faint)', lineHeight: 1.2 }}>
+                      <span className="font-body" style={{ fontSize: 12, color: 'var(--ranger-ink-faint)', lineHeight: 1.2 }}>
                         {sublabel}
                       </span>
                     )}

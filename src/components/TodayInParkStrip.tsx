@@ -92,7 +92,7 @@ const TodayInParkStrip = ({ parkId }: TodayInParkStripProps) => {
           );
         })}
       </div>
-      <p className="text-[11px] text-muted-foreground/50 text-right mt-3 font-body">
+      <p className="text-[12px] text-muted-foreground/50 text-right mt-3 font-body">
         Last updated {timeStr}
       </p>
     </div>

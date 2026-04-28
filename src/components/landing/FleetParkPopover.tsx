@@ -308,7 +308,7 @@ export default function FleetParkPopover({
             aria-hidden="true"
             style={{
               fontFamily: "'DM Sans', sans-serif",
-              fontSize: 11,
+              fontSize: 12,
               letterSpacing: "0.08em",
               textTransform: "uppercase",
               color: "#7A7A74",
@@ -418,7 +418,7 @@ export default function FleetParkPopover({
             <div style={{ marginBottom: 14 }}>
               <div
                 style={{
-                  fontSize: 10,
+                  fontSize: 12,
                   letterSpacing: "0.22em",
                   textTransform: "uppercase",
                   color: "rgba(26, 47, 30, 0.55)",
@@ -468,7 +468,7 @@ export default function FleetParkPopover({
             <div>
               <div
                 style={{
-                  fontSize: 10,
+                  fontSize: 12,
                   letterSpacing: "0.22em",
                   textTransform: "uppercase",
                   color: "rgba(26, 47, 30, 0.55)",

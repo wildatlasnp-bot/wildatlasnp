@@ -53,7 +53,7 @@ const PermitActivity = ({ recentFinds }: { recentFinds: RecentFindsData }) => {
               <div className={`font-body font-black leading-none ${s.cls} ${s.small ? "text-[14px]" : "text-[28px]"}`}>
                 {s.value}
               </div>
-              <div className="font-body font-bold text-[9px] text-foreground/40 uppercase tracking-[0.14em] mt-3">
+              <div className="font-body font-bold text-[12px] text-foreground/40 uppercase tracking-[0.14em] mt-3">
                 {s.label}
               </div>
             </div>

@@ -176,7 +176,7 @@ const PermitSuccessOverlay = ({
                     <span className="text-sm"></span>
                   </div>
                   <div>
-                    <p className="text-[11px] font-semibold text-primary uppercase tracking-wider mb-1">
+                    <p className="text-[12px] font-semibold text-primary uppercase tracking-wider mb-1">
                        Poko
                     </p>
                     <p className="text-[13px] text-foreground leading-relaxed">
@@ -207,7 +207,7 @@ const PermitSuccessOverlay = ({
 
               {/* Victory share */}
               <div className="mt-5 pt-4 border-t border-border">
-                <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest text-center mb-3">
+                <p className="text-[12px] font-semibold text-muted-foreground uppercase tracking-widest text-center mb-3">
                   Share your victory 🎉
                 </p>
                 <div className="flex items-center gap-2">

@@ -129,7 +129,7 @@ export default function WatchOhOne({ isMobile }: { isMobile: boolean }) {
         <div
           style={{
             fontFamily: "'DM Sans', sans-serif",
-            fontSize: 11,
+            fontSize: 12,
             fontWeight: 500,
             letterSpacing: "0.16em",
             textTransform: "uppercase",

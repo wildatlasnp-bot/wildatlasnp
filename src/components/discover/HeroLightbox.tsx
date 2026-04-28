@@ -170,7 +170,7 @@ export default function HeroLightbox({
               <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 8 }}>
                 <span aria-hidden="true" style={{ width: 18, height: 1, background: "var(--ranger-gold)" }} />
                 <span style={{
-                  fontSize: 10, fontWeight: 600,
+                  fontSize: 12, fontWeight: 600,
                   letterSpacing: "0.22em", color: "var(--ranger-parchment-body)",
                   textTransform: "uppercase",
                 }}>
@@ -196,7 +196,7 @@ export default function HeroLightbox({
               </p>
             )}
             <p style={{
-              fontSize: 10, fontWeight: 500,
+              fontSize: 12, fontWeight: 500,
               letterSpacing: "0.18em", color: "var(--ranger-parchment-mute)",
               textTransform: "uppercase", margin: "14px 0 0",
             }}>

@@ -138,7 +138,7 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
               className="absolute uppercase whitespace-nowrap"
               style={{
                 top: "0px",
-                fontSize: "9px",
+                fontSize: "12px",
                 fontWeight: 700,
                 letterSpacing: "0.05em",
                 color: NEEDLE_COLOR,
@@ -206,7 +206,7 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
             <span
               key={t.label}
               className="absolute -translate-x-1/2"
-              style={{ left: `${pct(t.mins)}%`, color: "var(--wa-ink-gray)", fontSize: 9, fontWeight: 600, fontFamily: "'DM Sans', sans-serif", overflow: 'visible', whiteSpace: 'nowrap' }}
+              style={{ left: `${pct(t.mins)}%`, color: "var(--wa-ink-gray)", fontSize: 12, fontWeight: 600, fontFamily: "'DM Sans', sans-serif", overflow: 'visible', whiteSpace: 'nowrap' }}
             >
               {t.label}
             </span>
@@ -240,8 +240,8 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
             }}
           >
             <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: w.dot }} />
-            <span className="text-[11px] font-semibold" style={{ color: "var(--wa-ink-gray)" }}>{w.label}</span>
-            <span className="text-[11px] font-medium" style={{ color: "var(--wa-ink-gray)" }}>— {w.time}</span>
+            <span className="text-[12px] font-semibold" style={{ color: "var(--wa-ink-gray)" }}>{w.label}</span>
+            <span className="text-[12px] font-medium" style={{ color: "var(--wa-ink-gray)" }}>— {w.time}</span>
           </div>
         ))}
       </div>
@@ -257,8 +257,8 @@ const ClosedCard = React.memo(({ f }: { f: Forecast }) => (
     <div className="flex items-center gap-2.5 rounded-md bg-muted/60 border border-border px-3 py-3">
       <AlertTriangle size={14} className="text-destructive shrink-0" />
       <div>
-        <p className="text-[11px] font-semibold text-destructive">Closed for Season</p>
-        {f.notes && <p className="text-[10px] text-muted-foreground mt-0.5 leading-relaxed">{f.notes}</p>}
+        <p className="text-[12px] font-semibold text-destructive">Closed for Season</p>
+        {f.notes && <p className="text-[12px] text-muted-foreground mt-0.5 leading-relaxed">{f.notes}</p>}
       </div>
     </div>
   </div>
@@ -376,7 +376,7 @@ const CrowdWindows = ({ parkId, season = "summer", children, onHeadlineData }: C
             <button
               key={dt}
               onClick={() => { setDayType(dt); setAnimKey(k => k + 1); }}
-              className={`relative flex items-center justify-center px-3 py-1.5 rounded-[6px] text-[11px] font-semibold transition-all duration-200 ${
+              className={`relative flex items-center justify-center px-3 py-1.5 rounded-[6px] text-[12px] font-semibold transition-all duration-200 ${
                 dayType === dt
                   ? "text-primary-foreground"
                   : "text-muted-foreground hover:text-foreground"

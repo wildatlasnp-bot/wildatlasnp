@@ -176,8 +176,8 @@ const AddParkModal = ({ open, onOpenChange, onParkAdded, onUpgrade }: AddParkMod
                       className="flex flex-col items-start p-4 rounded-[18px] border border-border/70 bg-card hover:border-primary/40 hover:bg-primary/5 transition-all text-left"
                     >
                       <p className="text-[13px] font-bold text-foreground">{park.shortName}</p>
-                      <p className="text-[10px] text-muted-foreground mt-0.5">{park.region}</p>
-                      <p className="text-[10px] text-muted-foreground/60 mt-1 leading-snug">{park.heroDescription}</p>
+                      <p className="text-[12px] text-muted-foreground mt-0.5">{park.region}</p>
+                      <p className="text-[12px] text-muted-foreground/60 mt-1 leading-snug">{park.heroDescription}</p>
                     </button>
                   );
                 })}
@@ -229,7 +229,7 @@ const AddParkModal = ({ open, onOpenChange, onParkAdded, onUpgrade }: AddParkMod
                       <div className="flex-1 min-w-0">
                         <p className="text-[13px] font-semibold text-foreground">{permit.name}</p>
                         {permit.description && (
-                          <p className="text-[10px] text-muted-foreground mt-0.5 truncate">{permit.description}</p>
+                          <p className="text-[12px] text-muted-foreground mt-0.5 truncate">{permit.description}</p>
                         )}
                       </div>
                       {selected && (

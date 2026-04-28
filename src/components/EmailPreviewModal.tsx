@@ -110,7 +110,7 @@ const EmailPreviewModal = ({ open, onOpenChange }: EmailPreviewModalProps) => {
         {/* Header */}
         <div className="px-5 py-3.5 border-b border-border/50 bg-card pr-12">
           <p className="text-[14px] font-heading font-bold text-foreground">Email Preview</p>
-          <p className="text-[10px] text-muted-foreground mt-0.5">What your permit alerts look like</p>
+          <p className="text-[12px] text-muted-foreground mt-0.5">What your permit alerts look like</p>
         </div>
 
         {/* Email render with scroll shadows */}
@@ -146,7 +146,7 @@ const EmailPreviewModal = ({ open, onOpenChange }: EmailPreviewModalProps) => {
 
         {/* Footer */}
         <div className="px-5 py-3 border-t border-border/50 bg-card">
-          <p className="text-[9px] text-muted-foreground/60 text-center leading-relaxed">
+          <p className="text-[12px] text-muted-foreground/60 text-center leading-relaxed">
             Sample data shown · Actual emails include your tracked permits and live dates
           </p>
         </div>

@@ -141,24 +141,24 @@ const EmailAnalyticsCard = () => {
         {/* Overall summary */}
         <div className="grid grid-cols-3 gap-3">
           <div className="rounded-lg border p-3 space-y-1">
-            <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1">
+            <p className="text-[12px] font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1">
               <Mail className="h-2.5 w-2.5" /> Sent
             </p>
             <p className="text-xl font-bold text-foreground">{totalSent}</p>
           </div>
           <div className="rounded-lg border p-3 space-y-1">
-            <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1">
+            <p className="text-[12px] font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1">
               <Eye className="h-2.5 w-2.5" /> Open Rate
             </p>
             <p className="text-xl font-bold text-foreground">{overallOpenRate}%</p>
-            <p className="text-[11px] text-muted-foreground">{totalUniqueOpens} unique</p>
+            <p className="text-[12px] text-muted-foreground">{totalUniqueOpens} unique</p>
           </div>
           <div className="rounded-lg border p-3 space-y-1">
-            <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1">
+            <p className="text-[12px] font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1">
               <MousePointerClick className="h-2.5 w-2.5" /> Click Rate
             </p>
             <p className="text-xl font-bold text-foreground">{overallClickRate}%</p>
-            <p className="text-[11px] text-muted-foreground">{totalUniqueClicks} unique</p>
+            <p className="text-[12px] text-muted-foreground">{totalUniqueClicks} unique</p>
           </div>
         </div>
 
@@ -184,29 +184,29 @@ const EmailAnalyticsCard = () => {
             <div className="grid grid-cols-4 gap-3 text-center">
               <div>
                 <p className="text-lg font-bold text-foreground">{s.opens}</p>
-                <p className="text-[10px] text-muted-foreground">Opens</p>
+                <p className="text-[12px] text-muted-foreground">Opens</p>
               </div>
               <div>
                 <p className="text-lg font-bold text-foreground">{s.openRate}%</p>
-                <p className="text-[10px] text-muted-foreground">Open Rate</p>
+                <p className="text-[12px] text-muted-foreground">Open Rate</p>
               </div>
               <div>
                 <p className="text-lg font-bold text-foreground">{s.clicks}</p>
-                <p className="text-[10px] text-muted-foreground">Clicks</p>
+                <p className="text-[12px] text-muted-foreground">Clicks</p>
               </div>
               <div>
                 <p className="text-lg font-bold text-foreground">{s.clickRate}%</p>
-                <p className="text-[10px] text-muted-foreground">Click Rate</p>
+                <p className="text-[12px] text-muted-foreground">Click Rate</p>
               </div>
             </div>
 
             {s.topLinks.length > 0 && (
               <div className="space-y-1">
-                <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Top Links</p>
+                <p className="text-[12px] font-medium text-muted-foreground uppercase tracking-wider">Top Links</p>
                 {s.topLinks.map((link, i) => (
                   <div key={i} className="flex items-center justify-between text-xs">
                     <span className="text-foreground truncate max-w-[200px]">{link.label}</span>
-                    <Badge variant="outline" className="text-[10px] ml-2">{link.clicks}</Badge>
+                    <Badge variant="outline" className="text-[12px] ml-2">{link.clicks}</Badge>
                   </div>
                 ))}
               </div>

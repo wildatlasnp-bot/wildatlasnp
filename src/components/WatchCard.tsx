@@ -379,7 +379,7 @@ const WatchCard = ({
                   {displayName}
                 </h3>
                 {seasonTag && (
-                  <span className="shrink-0 font-body" style={{ background: "#EAF3DE", color: "#2F6F4E", fontSize: 11, fontWeight: 600, padding: "2px 10px", borderRadius: 999, whiteSpace: "nowrap" }}>
+                  <span className="shrink-0 font-body" style={{ background: "#EAF3DE", color: "#2F6F4E", fontSize: 12, fontWeight: 600, padding: "2px 10px", borderRadius: 999, whiteSpace: "nowrap" }}>
                     {seasonTag}
                   </span>
                 )}
@@ -402,11 +402,11 @@ const WatchCard = ({
 
         {/* Row 2: Park pill + season range */}
         <div className="mt-2 flex items-center" style={{ gap: 6 }}>
-          <span className="font-body" style={{ background: "#EAF3DE", color: "#2F6F4E", fontSize: 11, fontWeight: 600, padding: "2px 10px", borderRadius: 999, display: "inline-block" }}>
+          <span className="font-body" style={{ background: "#EAF3DE", color: "#2F6F4E", fontSize: 12, fontWeight: 600, padding: "2px 10px", borderRadius: 999, display: "inline-block" }}>
             {parkConfig.shortName}
           </span>
           {seasonLabel && (
-            <span className="font-body" style={{ fontSize: 10, fontWeight: 400, color: "#9CA3AF" }}>{seasonLabel}</span>
+            <span className="font-body" style={{ fontSize: 12, fontWeight: 400, color: "#9CA3AF" }}>{seasonLabel}</span>
           )}
         </div>
 
@@ -441,10 +441,10 @@ const WatchCard = ({
         {metadataText && (
           metadataText.startsWith("Last opening") ? (
             <div className="mt-2 pl-[14px] flex items-center" style={{ gap: 8 }}>
-              <span className="font-body" style={{ background: "#EAF3DE", color: "#3B6D11", fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 20, display: "inline-block" }}>
+              <span className="font-body" style={{ background: "#EAF3DE", color: "#3B6D11", fontSize: 12, fontWeight: 600, padding: "2px 8px", borderRadius: 20, display: "inline-block" }}>
                 {metadataText}
               </span>
-              <span className="font-body" style={{ fontSize: 10, fontWeight: 400, color: "#9CA3AF" }}>opens infrequently</span>
+              <span className="font-body" style={{ fontSize: 12, fontWeight: 400, color: "#9CA3AF" }}>opens infrequently</span>
             </div>
           ) : (
             <p className="font-normal leading-snug mt-1.5 pl-[14px]" style={{ fontSize: 12, color: "#9CA3AF" }}>
@@ -519,18 +519,18 @@ const WatchCard = ({
               {availability.slice(0, 5).map((a) => (
                 <span
                   key={a.id}
-                  className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${chipClass(a.last_checked)}`}
+                  className={`text-[12px] font-semibold px-1.5 py-0.5 rounded ${chipClass(a.last_checked)}`}
                 >
                   {format(new Date(a.date + "T00:00:00"), "MMM d")}
                   {a.available_spots > 1 && ` (${a.available_spots})`}
                 </span>
               ))}
               {availability.length > 5 && (
-                <span className="text-[10px] text-muted-foreground font-normal">+{availability.length - 5} more</span>
+                <span className="text-[12px] text-muted-foreground font-normal">+{availability.length - 5} more</span>
               )}
             </div>
             {availability.some((a) => isDateStale(a.last_checked)) && (
-              <p className="text-[10px] text-muted-foreground/65 font-normal leading-snug pl-0.5">
+              <p className="text-[12px] text-muted-foreground/65 font-normal leading-snug pl-0.5">
                 This opening may no longer be available — check Recreation.gov to confirm.
               </p>
             )}
@@ -576,7 +576,7 @@ const WatchCard = ({
             {/* Description */}
             {permit.description && (
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-1.5">Description</p>
+                <p className="text-[12px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-1.5">Description</p>
                 <p className="text-[14px] text-foreground leading-relaxed">{permit.description}</p>
               </div>
             )}
@@ -584,14 +584,14 @@ const WatchCard = ({
             {/* Season */}
             {seasonLabel && (
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-1.5">Season</p>
+                <p className="text-[12px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-1.5">Season</p>
                 <p className="text-[14px] text-foreground">{seasonLabel}</p>
               </div>
             )}
 
             {/* Scanner state */}
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-2">Scanner Status</p>
+              <p className="text-[12px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-2">Scanner Status</p>
               <div className="flex items-center gap-2">
                 {lastFind ? (
                   <>
@@ -624,7 +624,7 @@ const WatchCard = ({
             {/* Activity insights */}
             {permit.total_finds > 0 && (
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-1.5">Recent Activity</p>
+                <p className="text-[12px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-1.5">Recent Activity</p>
                 <div className="flex items-center gap-2 text-[14px] text-foreground">
                   <TrendingUp size={14} className="text-muted-foreground" />
                   {permit.total_finds} permits found in the last 7 days
@@ -635,7 +635,7 @@ const WatchCard = ({
             {/* Available dates */}
             {availability.length > 0 && (
               <div className="space-y-1.5">
-                <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground/70">Available Dates</p>
+                <p className="text-[12px] font-bold uppercase tracking-wide text-muted-foreground/70">Available Dates</p>
                 <div className="flex flex-wrap gap-2">
                   {availability.map((a) => (
                     <span
@@ -648,7 +648,7 @@ const WatchCard = ({
                   ))}
                 </div>
                 {availability.some((a) => isDateStale(a.last_checked)) && (
-                  <p className="text-[11px] text-muted-foreground/65 font-normal leading-snug">
+                  <p className="text-[12px] text-muted-foreground/65 font-normal leading-snug">
                     This opening may no longer be available — check Recreation.gov to confirm.
                   </p>
                 )}

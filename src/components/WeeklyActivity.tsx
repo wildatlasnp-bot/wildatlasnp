@@ -26,7 +26,7 @@ const WeeklyActivity = ({ parkId }: { parkId: string }) => {
         <Activity size={16} className="text-primary shrink-0" />
         <div>
           <div className="font-body font-bold text-lg leading-none text-foreground">{count}</div>
-          <div className="font-body text-[9px] text-muted-foreground uppercase tracking-widest mt-1">Openings detected this week</div>
+          <div className="font-body text-[12px] text-muted-foreground uppercase tracking-widest mt-1">Openings detected this week</div>
         </div>
       </div>
     </div>

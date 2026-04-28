@@ -160,7 +160,7 @@ const InlinePhoneInput = ({ userId, watchId, onPhoneSaved }: InlinePhoneInputPro
                 {saving ? "…" : "Save"}
               </button>
             </div>
-            <p className="text-[10px] text-muted-foreground/60 mt-1.5">
+            <p className="text-[12px] text-muted-foreground/60 mt-1.5">
               By saving, you consent to receive automated permit alert texts from WildAtlas. Msg &amp; data rates may apply. Reply STOP to cancel.
             </p>
           </motion.div>
@@ -194,7 +194,7 @@ const InlinePhoneInput = ({ userId, watchId, onPhoneSaved }: InlinePhoneInputPro
             <button
               onClick={handleResend}
               disabled={resending}
-              className="mt-1.5 text-[10px] text-muted-foreground/60 hover:text-muted-foreground transition-colors disabled:opacity-40"
+              className="mt-1.5 text-[12px] text-muted-foreground/60 hover:text-muted-foreground transition-colors disabled:opacity-40"
             >
               {resending ? "Sending…" : "Resend code"}
             </button>

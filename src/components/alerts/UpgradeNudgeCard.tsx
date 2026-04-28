@@ -34,7 +34,7 @@ const UpgradeNudgeCard = ({
         <span
           style={{
             fontFamily: DM_SANS,
-            fontSize: 9,
+            fontSize: 12,
             fontWeight: 700,
             letterSpacing: "0.14em",
             textTransform: "uppercase",

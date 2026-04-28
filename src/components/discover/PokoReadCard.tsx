@@ -101,7 +101,7 @@ export default function PokoReadCard({ parkId, parkShortName, onAskPoko }: PokoR
           <span style={{ width: 16, height: 1, backgroundColor: GOLD, opacity: 0.65 }} />
           <span
             style={{
-              fontSize: 9,
+              fontSize: 12,
               fontWeight: 700,
               letterSpacing: "0.18em",
               textTransform: "uppercase",

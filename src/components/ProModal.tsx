@@ -75,7 +75,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           description: "Your account needs a quick fix — please sign out and sign back in.",
           action: (
             <button
-              className="text-[11px] font-semibold text-primary hover:underline whitespace-nowrap"
+              className="text-[12px] font-semibold text-primary hover:underline whitespace-nowrap"
               onClick={() => { signOut(); onOpenChange(false); }}
             >
               Sign Out
@@ -181,7 +181,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                 {freeFeatures.map((f) => (
                   <div key={f} className="flex items-start gap-2">
                     <Minus size={16} className="shrink-0 mt-0.5" style={{ color: "#B0ABA5" }} aria-hidden="true" />
-                    <span style={{ fontSize: 11, color: "#666" }}>{f}</span>
+                    <span style={{ fontSize: 12, color: "#666" }}>{f}</span>
                   </div>
                 ))}
                 <div className="flex items-start gap-2">
@@ -214,7 +214,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                   top: -10,
                   background: "#2F6F4E",
                   color: "#fff",
-                  fontSize: 11,
+                  fontSize: 12,
                   fontWeight: 600,
                   letterSpacing: "0.02em",
                   padding: "3px 10px",
@@ -234,7 +234,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                     style={ITEM_STYLE(280 + i * 60)}
                   >
                     <CheckCircle size={16} className="shrink-0 mt-0.5" style={{ color: "#2F6F4E" }} aria-hidden="true" />
-                    <span style={{ fontSize: 11, fontWeight: 500, color: "#1a1a1a" }}>{f}</span>
+                    <span style={{ fontSize: 12, fontWeight: 500, color: "#1a1a1a" }}>{f}</span>
                   </div>
                 ))}
               </div>
@@ -260,7 +260,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                   ? <span className="inline-block w-12 h-5 bg-muted animate-pulse rounded align-middle" />
                   : <span className="font-heading" style={{ fontSize: 22, fontWeight: 500, color: "#1a1a1a" }}>{displayPrice}</span>
                 }
-                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 300, color: "#999" }}>/ month</span>
+                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 300, color: "#999" }}>/ month</span>
               </div>
             </div>
           </div>
@@ -341,18 +341,18 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             ].map((t) => (
               <div key={t.label} className="flex items-center gap-1" style={{ whiteSpace: "nowrap" }}>
                 <t.icon size={10} className="shrink-0" style={{ color: "#aaa" }} strokeWidth={2.5} />
-                <span style={{ fontSize: 10, color: "#aaa" }}>{t.label}</span>
+                <span style={{ fontSize: 12, color: "#aaa" }}>{t.label}</span>
               </div>
             ))}
           </div>
 
           {/* Footer */}
-          <p style={{ fontSize: 11, color: "#ccc", marginTop: 12, textAlign: "center" }}>
+          <p style={{ fontSize: 12, color: "#ccc", marginTop: 12, textAlign: "center" }}>
             Cancel from Settings anytime ·{" "}
             <button
               onClick={() => setRefundOpen(true)}
               className="underline underline-offset-2 transition-colors hover:text-foreground"
-              style={{ color: "#aaa", fontSize: 11 }}
+              style={{ color: "#aaa", fontSize: 12 }}
             >
               Refund Policy
             </button>

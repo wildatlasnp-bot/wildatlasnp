@@ -146,7 +146,7 @@ const InlineDisclaimer = () => (
   <p style={{
     fontFamily: "'Cormorant Garamond', serif",
     fontStyle: 'italic',
-    fontSize: 11,
+    fontSize: 12,
     color: 'rgba(240,237,234,0.38)',
     textAlign: 'center',
     margin: '6px 0 0',
@@ -169,7 +169,7 @@ const RateLimitUpgradeCard = ({ onUpgrade }: { onUpgrade: () => void }) => (
     {/* RECOMMENDED badge */}
     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
       <span style={{
-        fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 700, letterSpacing: '0.14em',
+        fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 700, letterSpacing: '0.14em',
         textTransform: 'uppercase', color: '#FFFFFF', background: '#2F6F4E', borderRadius: 99, padding: '3px 10px',
       }}>Recommended</span>
     </div>
@@ -197,7 +197,7 @@ const RateLimitUpgradeCard = ({ onUpgrade }: { onUpgrade: () => void }) => (
     >
       Upgrade — $9.99/mo
     </button>
-    <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: 'rgba(26,24,20,0.35)', textAlign: 'center', marginTop: 8 }}>
+    <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: 'rgba(26,24,20,0.35)', textAlign: 'center', marginTop: 8 }}>
       Cancel anytime · 7-day refund
     </p>
   </div>
@@ -850,7 +850,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
           padding: '8px 20px 10px',
           fontFamily: "'DM Sans', sans-serif",
-          fontSize: 9.5, fontWeight: 600,
+          fontSize: 12, fontWeight: 600,
           letterSpacing: '0.22em', textTransform: 'uppercase',
           color: inkMuted,
           opacity: statusOpacity,
@@ -1050,7 +1050,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
           const remaining = 5 - questionsUsed;
           if (remaining > 3 || remaining < 0) return null;
           return (
-            <p style={{ fontSize: 11, fontFamily: "'DM Sans', sans-serif", textAlign: 'center', margin: '2px 20px 8px', lineHeight: 1.4 }}>
+            <p style={{ fontSize: 12, fontFamily: "'DM Sans', sans-serif", textAlign: 'center', margin: '2px 20px 8px', lineHeight: 1.4 }}>
               {remaining > 0 ? (
                 <span style={{ color: '#C9A96E' }}>{remaining} question{remaining !== 1 ? 's' : ''} remaining today</span>
               ) : (
@@ -1308,7 +1308,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
           </div>
           <div>
             <p style={{ fontSize: 15, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink)', margin: 0 }}>Poko</p>
-            <p style={{ fontSize: 11, fontWeight: 300, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink-muted)', margin: 0 }}>your park companion</p>
+            <p style={{ fontSize: 12, fontWeight: 300, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink-muted)', margin: 0 }}>your park companion</p>
           </div>
         </div>
       )}
@@ -1559,7 +1559,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                 marginTop: 10,
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
                 fontFamily: "'DM Sans', sans-serif",
-                fontSize: 10.5,
+                fontSize: 12,
                 fontWeight: 500,
                 letterSpacing: '0.18em',
                 textTransform: 'uppercase',
@@ -1640,7 +1640,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                               display: 'flex', alignItems: 'baseline', gap: 12,
                               margin: '2px 2px 14px',
                               fontFamily: "'DM Sans', sans-serif",
-                              fontSize: 9.5, fontWeight: 600,
+                              fontSize: 12, fontWeight: 600,
                               letterSpacing: '0.26em', textTransform: 'uppercase',
                               color: 'rgba(240,237,234,0.62)',
                               lineHeight: 1,
@@ -1789,7 +1789,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                 }}>
                   <span style={{
                     fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 9, fontWeight: 600,
+                    fontSize: 12, fontWeight: 600,
                     letterSpacing: '0.24em', textTransform: 'uppercase',
                     color: 'rgba(240,237,234,0.42)',
                     whiteSpace: 'nowrap',
@@ -1980,14 +1980,14 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                 </div>
                 <div style={{ paddingBottom: 12 }}>
                   {renderStatusRow({ tone: 'dark' })}
-                  <p style={{ fontSize: 10.5, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.40)', textAlign: 'center', padding: '0 20px', margin: '8px 0 0', lineHeight: 1.5, letterSpacing: '0.01em' }}>
+                  <p style={{ fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.40)', textAlign: 'center', padding: '0 20px', margin: '8px 0 0', lineHeight: 1.5, letterSpacing: '0.01em' }}>
                     Poko can make mistakes. Verify permits and trail conditions at nps.gov and recreation.gov.
                   </p>
                   {!isPro && (() => {
                     const remaining = 5 - questionsUsed;
                     if (remaining > 3 || remaining < 0) return null;
                     return (
-                      <p style={{ fontSize: 9, fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', textAlign: 'center', margin: '4px 0 8px', lineHeight: 1.4 }}>
+                      <p style={{ fontSize: 12, fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', textAlign: 'center', margin: '4px 0 8px', lineHeight: 1.4 }}>
                         {remaining > 0 ? (
                           <span style={{ color: 'rgba(240,237,234,0.38)' }}>{remaining} question{remaining !== 1 ? 's' : ''} remaining today</span>
                         ) : (
@@ -2160,7 +2160,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   }}>
                     <span style={{
                       fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 9, fontWeight: 600,
+                      fontSize: 12, fontWeight: 600,
                       letterSpacing: '0.24em', textTransform: 'uppercase',
                       color: 'rgba(240,237,234,0.42)',
                       whiteSpace: 'nowrap',

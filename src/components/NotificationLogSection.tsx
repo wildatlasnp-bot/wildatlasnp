@@ -104,15 +104,15 @@ const NotificationLogSection = () => {
             <div className="flex items-center gap-4 flex-wrap">
               <div className="text-center">
                 <span className="text-xl font-bold text-foreground">{data.queue.pending}</span>
-                <p className="text-[10px] text-muted-foreground">Pending</p>
+                <p className="text-[12px] text-muted-foreground">Pending</p>
               </div>
               <div className="text-center">
                 <span className="text-xl font-bold text-green-700">{data.queue.sent}</span>
-                <p className="text-[10px] text-muted-foreground">Sent</p>
+                <p className="text-[12px] text-muted-foreground">Sent</p>
               </div>
               <div className="text-center">
                 <span className="text-xl font-bold text-destructive">{data.queue.exhausted}</span>
-                <p className="text-[10px] text-muted-foreground">Exhausted</p>
+                <p className="text-[12px] text-muted-foreground">Exhausted</p>
               </div>
               <div className="ml-auto text-right">
                 <span className="text-sm text-muted-foreground">{data.queue.total} total</span>

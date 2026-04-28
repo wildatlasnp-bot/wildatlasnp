@@ -249,7 +249,7 @@ const AlertDetailPage = () => {
           padding: "5px 12px", display: "flex", alignItems: "center", gap: 7,
         }}>
           <span ref={ldotRef} id="ldot" style={{ width: 6, height: 6, borderRadius: "50%", background: "#6ec994", flexShrink: 0 }} />
-          <span style={{ fontFamily: F.dm, fontSize: 11, fontWeight: 500, color: "#6ec994", textTransform: "uppercase", letterSpacing: "0.1em" }}>
+          <span style={{ fontFamily: F.dm, fontSize: 12, fontWeight: 500, color: "#6ec994", textTransform: "uppercase", letterSpacing: "0.1em" }}>
             Window open
           </span>
         </div>
@@ -260,7 +260,7 @@ const AlertDetailPage = () => {
         {/* Kicker */}
         <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 14 }}>
           <span style={{ display: "block", width: 20, height: 1, background: "rgba(201,169,110,0.4)" }} />
-          <span style={{ fontFamily: F.dm, fontSize: 10, fontWeight: 500, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(201,169,110,0.72)" }}>
+          <span style={{ fontFamily: F.dm, fontSize: 12, fontWeight: 500, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(201,169,110,0.72)" }}>
             {permitName || "Timed Entry Permit"}
           </span>
         </div>
@@ -292,12 +292,12 @@ const AlertDetailPage = () => {
       <div style={{ padding: "0 28px", marginBottom: 6, position: "relative", zIndex: 1 }}>
         {/* Meta row */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-          <span style={{ fontFamily: F.dm, fontSize: 10, fontWeight: 500, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(244,240,232,0.26)" }}>
+          <span style={{ fontFamily: F.dm, fontSize: 12, fontWeight: 500, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(244,240,232,0.26)" }}>
             Time since detection
           </span>
           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
             <span ref={sdotRef} id="sdot" style={{ width: 5, height: 5, borderRadius: "50%", background: "#6ec994", flexShrink: 0 }} />
-            <span style={{ fontFamily: F.dm, fontSize: 11, fontWeight: 400, color: "#6ec994" }}>Scanner active</span>
+            <span style={{ fontFamily: F.dm, fontSize: 12, fontWeight: 400, color: "#6ec994" }}>Scanner active</span>
           </div>
         </div>
 
@@ -379,7 +379,7 @@ const AlertDetailPage = () => {
               }}
             >
               <CheckIcon />
-              <span style={{ fontFamily: F.dm, fontSize: 10, fontWeight: 300, color: "rgba(244,240,232,0.35)" }}>Captured</span>
+              <span style={{ fontFamily: F.dm, fontSize: 12, fontWeight: 300, color: "rgba(244,240,232,0.35)" }}>Captured</span>
             </button>
           ) : (
             <div style={{
@@ -387,7 +387,7 @@ const AlertDetailPage = () => {
               borderRadius: 20, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 5,
             }}>
               <CheckIcon />
-              <span style={{ fontFamily: F.dm, fontSize: 10, fontWeight: 300, color: "#6ec994" }}>Done</span>
+              <span style={{ fontFamily: F.dm, fontSize: 12, fontWeight: 300, color: "#6ec994" }}>Done</span>
             </div>
           )}
         </div>

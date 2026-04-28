@@ -216,7 +216,7 @@ const AddPermitSearchModal = ({
               </div>
             ) : (
               <div className="space-y-1.5">
-                <p style={{ fontFamily: DM_SANS, fontSize: 10, fontWeight: 500, letterSpacing: "0.12em", textTransform: "uppercase" as const, fontStyle: "normal", color: "rgba(26,47,30,0.35)", marginBottom: 8 }}>
+                <p style={{ fontFamily: DM_SANS, fontSize: 12, fontWeight: 500, letterSpacing: "0.12em", textTransform: "uppercase" as const, fontStyle: "normal", color: "rgba(26,47,30,0.35)", marginBottom: 8 }}>
                   {filtered.length} result{filtered.length !== 1 ? "s" : ""}
                 </p>
                 {filtered.map((p) => (
@@ -236,7 +236,7 @@ const AddPermitSearchModal = ({
               {/* Recently Viewed */}
               {showRecent && (
                 <div className="mb-5">
-                   <p className="flex items-center gap-1.5" style={{ fontFamily: DM_SANS, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", fontStyle: "normal", color: "rgba(26,47,30,0.35)", marginTop: 0, marginBottom: 8 }}>
+                   <p className="flex items-center gap-1.5" style={{ fontFamily: DM_SANS, fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", fontStyle: "normal", color: "rgba(26,47,30,0.35)", marginTop: 0, marginBottom: 8 }}>
                      <Clock size={9} />
                      Recently viewed
                    </p>
@@ -259,7 +259,7 @@ const AddPermitSearchModal = ({
                 <div className="mb-5">
                   {/* Hairline rule above section label */}
                   <div style={{ height: 1, background: "rgba(26,47,30,0.08)", marginBottom: 12 }} />
-                   <p style={{ fontFamily: DM_SANS, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", fontStyle: "normal", color: "rgba(26,47,30,0.35)", marginBottom: 8 }}>
+                   <p style={{ fontFamily: DM_SANS, fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", fontStyle: "normal", color: "rgba(26,47,30,0.35)", marginBottom: 8 }}>
                      Popular permits
                   </p>
                   <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
@@ -281,7 +281,7 @@ const AddPermitSearchModal = ({
                 <button
                   onClick={() => setShowBrowse((v) => !v)}
                   className="flex items-center gap-1.5 font-bold transition-colors w-full py-2"
-                  style={{ fontFamily: DM_SANS, fontSize: 11, color: "#2F6F4E" }}
+                  style={{ fontFamily: DM_SANS, fontSize: 12, color: "#2F6F4E" }}
                 >
                   <Mountain size={11} />
                   Browse all parks
@@ -391,7 +391,7 @@ const PermitRow = ({
                 background: "#EAF3DE",
                 border: "0.5px solid #D4E5C4",
                 color: "#27500A",
-                fontSize: 11,
+                fontSize: 12,
                 fontWeight: 500,
                 fontFamily: DM_SANS,
                 borderRadius: 20,
