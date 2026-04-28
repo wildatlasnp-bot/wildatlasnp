@@ -48,7 +48,7 @@ const TodaySummaryCard = ({ parkShortName, headlineData }: { parkShortName: stri
       transition={{ duration: 0.25 }}
       className={`rounded-[18px] border ${crowd.border} ${crowd.bg} px-4 py-3.5`}
     >
-      <p className="text-[10px] font-black uppercase tracking-[0.18em] text-muted-foreground mb-3">
+      <p className="text-[12px] font-black uppercase tracking-[0.18em] text-muted-foreground mb-3">
         Today at {parkShortName}
       </p>
 
@@ -57,7 +57,7 @@ const TodaySummaryCard = ({ parkShortName, headlineData }: { parkShortName: stri
         <div className="flex items-center gap-2">
           <div className={`w-2 h-2 rounded-full ${crowd.color.replace("text-", "bg-")}`} />
           <div>
-            <p className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-wider">Crowds</p>
+            <p className="text-[12px] font-extrabold text-muted-foreground uppercase tracking-wider">Crowds</p>
             <p className={`text-[16px] font-black ${crowd.color} leading-tight`}>{crowd.level}</p>
           </div>
         </div>
@@ -66,7 +66,7 @@ const TodaySummaryCard = ({ parkShortName, headlineData }: { parkShortName: stri
         <div className="flex items-center gap-2">
           <Sun size={13} className="text-status-quiet shrink-0" />
           <div>
-            <p className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-wider">Best Arrival</p>
+            <p className="text-[12px] font-extrabold text-muted-foreground uppercase tracking-wider">Best Arrival</p>
             <p className="text-[16px] font-black text-foreground leading-tight">{headlineData.quietStart}–{headlineData.quietEnd}</p>
           </div>
         </div>
@@ -75,7 +75,7 @@ const TodaySummaryCard = ({ parkShortName, headlineData }: { parkShortName: stri
         <div className="flex items-center gap-2">
           <AlertTriangle size={13} className="text-status-peak shrink-0" />
           <div>
-            <p className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-wider">Peak Hours</p>
+            <p className="text-[12px] font-extrabold text-muted-foreground uppercase tracking-wider">Peak Hours</p>
             <p className="text-[16px] font-black text-foreground leading-tight">{headlineData.peakStart}–{headlineData.eveningQuiet}</p>
           </div>
         </div>
@@ -84,7 +84,7 @@ const TodaySummaryCard = ({ parkShortName, headlineData }: { parkShortName: stri
         <div className="flex items-center gap-2">
           <Moon size={13} className="text-muted-foreground shrink-0" />
           <div>
-            <p className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-wider">Quiet Again</p>
+            <p className="text-[12px] font-extrabold text-muted-foreground uppercase tracking-wider">Quiet Again</p>
             <p className="text-[16px] font-black text-foreground leading-tight">{headlineData.eveningQuiet}</p>
           </div>
         </div>

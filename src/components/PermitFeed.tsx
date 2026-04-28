@@ -176,13 +176,13 @@ const FindDetailSheet = ({
         <div className="space-y-5">
           {find.location_name && (
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-1.5 font-body">Location</p>
+              <p className="text-[12px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-1.5 font-body">Location</p>
               <p className="text-[14px] text-foreground font-body">{find.location_name}</p>
             </div>
           )}
 
           <div>
-            <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-1.5 font-body">Detected</p>
+            <p className="text-[12px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-1.5 font-body">Detected</p>
             <p className="text-[14px] text-foreground font-body">
               {formatDistanceToNow(parseISO(find.found_at), { addSuffix: true })}
             </p>
@@ -190,7 +190,7 @@ const FindDetailSheet = ({
 
           {dates.length > 0 && (
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-2 font-body">Available Dates</p>
+              <p className="text-[12px] font-bold uppercase tracking-wide text-muted-foreground/70 mb-2 font-body">Available Dates</p>
               <div className="flex flex-wrap gap-2">
                 {dates.sort().map((d) => (
                   <span

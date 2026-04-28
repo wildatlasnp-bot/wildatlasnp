@@ -58,7 +58,7 @@ const ParkInsightsCards = ({ parkId }: { parkId: string }) => {
 
   return (
     <div>
-      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2">
+      <p className="text-[12px] font-semibold text-muted-foreground uppercase tracking-widest mb-2">
         Today's Park Insights
       </p>
       <div className="flex flex-col gap-2">
@@ -74,7 +74,7 @@ const ParkInsightsCards = ({ parkId }: { parkId: string }) => {
               {card.icon}
             </div>
             <div className="min-w-0">
-              <p className="text-[10px] font-semibold text-secondary uppercase tracking-wider leading-none mb-1">
+              <p className="text-[12px] font-semibold text-secondary uppercase tracking-wider leading-none mb-1">
                 {card.label}
               </p>
               <p className="text-[12px] text-muted-foreground leading-snug">

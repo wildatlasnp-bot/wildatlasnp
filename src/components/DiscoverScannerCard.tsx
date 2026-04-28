@@ -83,7 +83,7 @@ const DiscoverScannerCard = ({ onNavigateToSniper }: DiscoverScannerCardProps) =
               action: (
                 <button
                   onClick={goToSniper}
-                  className="text-[11px] font-semibold text-primary hover:underline whitespace-nowrap"
+                  className="text-[12px] font-semibold text-primary hover:underline whitespace-nowrap"
                 >
                   View Tracker →
                 </button>
@@ -112,7 +112,7 @@ const DiscoverScannerCard = ({ onNavigateToSniper }: DiscoverScannerCardProps) =
           <h3 className="text-[13px] font-semibold text-foreground">
             Track your first permit
           </h3>
-          <p className="text-[11px] text-muted-foreground font-medium mt-1 leading-snug">
+          <p className="text-[12px] text-muted-foreground font-medium mt-1 leading-snug">
             Monitor cancellations and get alerts when permits become available.
           </p>
           <button
@@ -171,14 +171,14 @@ const DiscoverScannerCard = ({ onNavigateToSniper }: DiscoverScannerCardProps) =
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-1.5">
-              <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-status-quiet">
+              <span className="text-[12px] font-extrabold uppercase tracking-[0.14em] text-status-quiet">
                 Permit Scanner
               </span>
               {isActive && (
-                <span className="text-[9px] font-bold text-status-quiet/70">· Running</span>
+                <span className="text-[12px] font-bold text-status-quiet/70">· Running</span>
               )}
             </div>
-            <p className="text-[11px] text-muted-foreground font-medium mt-0.5 leading-snug">
+            <p className="text-[12px] text-muted-foreground font-medium mt-0.5 leading-snug">
               Tracking {trackingCount} permit{trackingCount !== 1 ? "s" : ""} on Recreation.gov
             </p>
           </div>
@@ -188,7 +188,7 @@ const DiscoverScannerCard = ({ onNavigateToSniper }: DiscoverScannerCardProps) =
         {lastFoundAgo && (
           <div className="flex items-center gap-1.5 mt-2.5 pl-11">
             <Zap size={10} className={shimmer ? "text-status-quiet" : "text-status-quiet/70"} />
-            <span className={`text-[10px] font-medium transition-colors duration-150 ease-smooth ${shimmer ? "text-status-quiet font-semibold" : "text-muted-foreground"}`}>
+            <span className={`text-[12px] font-medium transition-colors duration-150 ease-smooth ${shimmer ? "text-status-quiet font-semibold" : "text-muted-foreground"}`}>
               Last find: {lastFoundAgo}
             </span>
           </div>

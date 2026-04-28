@@ -357,7 +357,7 @@
   /* Section label — small uppercase divider labels */
   .section-label {
     font-family: var(--font-body);
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -406,7 +406,7 @@
   /* Type scale: section-label — uppercase section dividers */
   .type-section-label {
     font-family: var(--font-body);
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -460,7 +460,7 @@
   }
 
   .flat-group-label {
-    @apply text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground font-body mb-2 block;
+    @apply text-[12px] font-bold uppercase tracking-[0.12em] text-muted-foreground font-body mb-2 block;
   }
 
   /* Mochi chat prose — optimized for fast scanning */
@@ -541,7 +541,7 @@
   }
   .mochi-prose h2, .mochi-prose h3 {
     font-family: 'DM Sans', sans-serif;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 500;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -1825,7 +1825,7 @@
 /* Responsive: at very narrow widths (<360px) the trigger compacts */
 @media (max-width: 359px) {
   .wa-live-alert-trigger { padding-left: 16px !important; padding-right: 16px !important; gap: 8px !important; }
-  .wa-live-alert-subtext { font-size: 11.5px !important; }
+  .wa-live-alert-subtext { font-size: 12px !important; }
 }
 /* Tablet+ — slightly more breathing room and a faintly larger countdown */
 @media (min-width: 768px) {
@@ -1978,7 +1978,7 @@
 /* Section plate header — eyebrow + roman numeral cluster */
 .wa-plate-eyebrow {
   font-family: 'DM Sans', system-ui, sans-serif;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -2128,7 +2128,7 @@
 }
 .wa-cluster-eyebrow {
   font-family: 'DM Sans', sans-serif;
-  font-size: 10px; font-weight: 600;
+  font-size: 12px; font-weight: 600;
   letter-spacing: 0.22em; text-transform: uppercase;
   color: #6B6860;
   display: inline-flex; align-items: baseline; gap: 8px;
@@ -2491,7 +2491,7 @@ a.ranger-card--night:active,
 }
 .wa-signal-chip-label {
   font-family: 'DM Sans', sans-serif;
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -2545,7 +2545,7 @@ a.ranger-card--night:active,
 .wa-season-badge {
   display: inline-flex; align-items: center;
   font-family: 'DM Sans', sans-serif;
-  font-weight: 600; font-size: 9px;
+  font-weight: 600; font-size: 12px;
   letter-spacing: 0.14em; text-transform: uppercase;
   color: #8A6B2E;
   background: rgba(201,169,110,0.14);
@@ -2577,7 +2577,7 @@ a.ranger-card--night:active,
 /* Editorial eyebrow — used wherever we have a tiny uppercase tracker */
 .ranger-eyebrow {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;

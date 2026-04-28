@@ -82,7 +82,7 @@ const CrowdPulse = React.memo(({ parkId }: CrowdPulseProps) => {
               className={`flex items-center justify-between rounded-xl px-4 py-3.5 ${crowdRowBg[area.crowd_level] ?? "bg-muted/20"}`}
             >
               <span className="text-[13px] font-semibold text-foreground">{area.area}</span>
-              <span className={`inline-block rounded px-2 py-0.5 text-[11px] font-bold text-white ${crowdPillBg[area.crowd_level] ?? "bg-muted"}`}>
+              <span className={`inline-block rounded px-2 py-0.5 text-[12px] font-bold text-white ${crowdPillBg[area.crowd_level] ?? "bg-muted"}`}>
                 {area.crowd_level}
               </span>
             </div>

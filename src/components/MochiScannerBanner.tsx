@@ -167,7 +167,7 @@ export default function MochiScannerBanner({
             <p
               style={{
                 fontFamily: UI,
-                fontSize: 9,
+                fontSize: 12,
                 fontWeight: 600,
                 letterSpacing: "0.18em",
                 textTransform: "uppercase",
@@ -295,7 +295,7 @@ export default function MochiScannerBanner({
                 transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
                 style={{
                   fontFamily: UI,
-                  fontSize: 9,
+                  fontSize: 12,
                   fontWeight: 700,
                   letterSpacing: "0.22em",
                   textTransform: "uppercase",
@@ -310,7 +310,7 @@ export default function MochiScannerBanner({
           <span
             style={{
               fontFamily: UI,
-              fontSize: 9,
+              fontSize: 12,
               fontWeight: 500,
               letterSpacing: "0.08em",
               textTransform: "uppercase",
@@ -341,7 +341,7 @@ export default function MochiScannerBanner({
               <p
                 style={{
                   fontFamily: UI,
-                  fontSize: 11,
+                  fontSize: 12,
                   fontWeight: 400,
                   color: "rgba(199, 232, 213, 0.55)",
                   marginTop: 3,
@@ -389,7 +389,7 @@ export default function MochiScannerBanner({
               <span
                 style={{
                   fontFamily: UI,
-                  fontSize: 9.5,
+                  fontSize: 12,
                   fontWeight: 500,
                   letterSpacing: "0.12em",
                   textTransform: "uppercase",
@@ -403,7 +403,7 @@ export default function MochiScannerBanner({
             <span
               style={{
                 fontFamily: UI,
-                fontSize: 9.5,
+                fontSize: 12,
                 fontWeight: 500,
                 letterSpacing: "0.12em",
                 textTransform: "uppercase",
@@ -416,7 +416,7 @@ export default function MochiScannerBanner({
           <span
             style={{
               fontFamily: UI,
-              fontSize: 10,
+              fontSize: 12,
               fontStyle: "italic",
               fontWeight: 400,
               color: "rgba(199, 232, 213, 0.5)",

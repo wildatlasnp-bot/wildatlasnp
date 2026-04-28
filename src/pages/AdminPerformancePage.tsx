@@ -140,8 +140,8 @@ const AdminPerformancePage = () => {
               <ChartContainer config={chartConfig} className="aspect-[2/1] w-full">
                 <LineChart data={parkChartData} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" className="stroke-border/40" />
-                  <XAxis dataKey="time" tick={{ fontSize: 10 }} className="fill-muted-foreground" />
-                  <YAxis tick={{ fontSize: 10 }} unit="ms" className="fill-muted-foreground" />
+                  <XAxis dataKey="time" tick={{ fontSize: 12 }} className="fill-muted-foreground" />
+                  <YAxis tick={{ fontSize: 12 }} unit="ms" className="fill-muted-foreground" />
                   <ChartTooltip
                     content={<ChartTooltipContent labelKey="label" />}
                   />
@@ -168,7 +168,7 @@ const AdminPerformancePage = () => {
                     stroke="hsl(var(--destructive))"
                     strokeDasharray="6 3"
                     strokeWidth={1.5}
-                    label={{ value: "200ms", position: "right", fill: "hsl(var(--destructive))", fontSize: 10 }}
+                    label={{ value: "200ms", position: "right", fill: "hsl(var(--destructive))", fontSize: 12 }}
                   />
                 </LineChart>
               </ChartContainer>

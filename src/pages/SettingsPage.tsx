@@ -114,7 +114,7 @@ const RowEyebrow = ({ children }: { children: React.ReactNode }) => (
   <p
     style={{
       fontFamily: "'DM Sans', sans-serif",
-      fontSize: 10,
+      fontSize: 12,
       fontWeight: 500,
       letterSpacing: "0.10em",
       textTransform: "uppercase",
@@ -140,7 +140,7 @@ const RefreshSubStatus = ({ refreshProStatus }: { refreshProStatus: () => Promis
 
   if (state === "idle") {
     return (
-      <button onClick={handleRefresh} className="flex items-center gap-1 cursor-pointer hover:opacity-70 transition-opacity" style={{ fontSize: 11, color: '#A8C4B8', background: "none", border: "none", padding: 0 }}>
+      <button onClick={handleRefresh} className="flex items-center gap-1 cursor-pointer hover:opacity-70 transition-opacity" style={{ fontSize: 12, color: '#A8C4B8', background: "none", border: "none", padding: 0 }}>
         <span>Already Pro? Tap to refresh</span>
         <RefreshCw size={11} strokeWidth={2} />
       </button>
@@ -153,7 +153,7 @@ const RefreshSubStatus = ({ refreshProStatus }: { refreshProStatus: () => Promis
     return <span className="flex items-center gap-1" style={{ fontSize: 12, color: "#2F6F4E" }}><CheckCircle size={12} /> Pro active</span>;
   }
   return (
-    <p className="w-full text-center mt-3" style={{ fontSize: 11, color: "#6B7280" }}>
+    <p className="w-full text-center mt-3" style={{ fontSize: 12, color: "#6B7280" }}>
       Still not active — contact support at <a href="mailto:support@wildatlas.app" className="underline">support@wildatlas.app</a>
     </p>
   );
@@ -756,14 +756,14 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 You're a Pro member.
               </p>
               {subscriptionEnd && (
-                <p style={{ fontSize: 11, color: '#7A8A82', marginTop: 6, fontFamily: "'DM Sans', sans-serif" }}>
+                <p style={{ fontSize: 12, color: '#7A8A82', marginTop: 6, fontFamily: "'DM Sans', sans-serif" }}>
                   Renews {new Date(subscriptionEnd).toLocaleDateString()}
                 </p>
               )}
               {!mochiStats.loading && mochiStats.scanCount !== null && mochiStats.scanCount > 0 && (
                 <div className="flex items-center gap-1.5 mt-1.5">
                   <Zap size={11} style={{ color: '#7A8A82' }} className="shrink-0" />
-                  <p style={{ fontSize: 11, color: '#7A8A82', fontFamily: "'DM Sans', sans-serif" }}>
+                  <p style={{ fontSize: 12, color: '#7A8A82', fontFamily: "'DM Sans', sans-serif" }}>
                     Poko has scanned {mochiStats.scanCount.toLocaleString()} permits this month
                   </p>
                 </div>
@@ -797,7 +797,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                     <AlertDialogTitle>Cancel Pro subscription?</AlertDialogTitle>
                     <AlertDialogDescription>
                       You'll keep Pro access until the end of your billing period.
-                      <span className="block mt-2 italic text-[11px] text-muted-foreground">
+                      <span className="block mt-2 italic text-[12px] text-muted-foreground">
                         Poko is actively watching your permits — cancelling will pause all scans.
                       </span>
                     </AlertDialogDescription>
@@ -822,15 +822,15 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                   onClick={handleManageSubscription}
                   disabled={managingPortal}
                   className="transition-opacity hover:opacity-80 disabled:opacity-50"
-                  style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: MUTED, background: 'none', border: 'none', cursor: 'pointer', padding: '4px 0' }}
+                  style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: MUTED, background: 'none', border: 'none', cursor: 'pointer', padding: '4px 0' }}
                 >
                   Manage subscription
                 </button>
-                <span style={{ color: GOLD, opacity: 0.5, fontSize: 11 }}>·</span>
+                <span style={{ color: GOLD, opacity: 0.5, fontSize: 12 }}>·</span>
                 <button
                   onClick={() => setRefundOpen(true)}
                   className="transition-opacity hover:opacity-80"
-                  style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: MUTED, background: 'none', border: 'none', cursor: 'pointer', padding: '4px 0' }}
+                  style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: MUTED, background: 'none', border: 'none', cursor: 'pointer', padding: '4px 0' }}
                 >
                   Refund policy
                 </button>
@@ -868,8 +868,8 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 500, color: FOREST, lineHeight: 1.1 }}>Free Plan</p>
               <div className="mt-4">
                 <div className="flex items-center justify-between mb-1.5">
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: 'rgba(58,62,59,0.6)' }}>Permit limit reached</span>
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#2F6F4E', fontWeight: 500 }}>Upgrade for unlimited</span>
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: 'rgba(58,62,59,0.6)' }}>Permit limit reached</span>
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#2F6F4E', fontWeight: 500 }}>Upgrade for unlimited</span>
                 </div>
                 <div style={{ height: 3, borderRadius: 2, backgroundColor: '#EFEAE0', overflow: 'hidden' }}>
                   <div style={{ height: 3, borderRadius: 2, background: `linear-gradient(90deg, ${GOLD} 0%, #2F6F4E 100%)`, width: '100%' }} />
@@ -888,7 +888,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 <span
                   style={{
                     fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 9,
+                    fontSize: 12,
                     fontWeight: 700,
                     letterSpacing: '0.14em',
                     textTransform: 'uppercase',
@@ -944,12 +944,12 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               <div className="flex items-center justify-center gap-3 mt-3">
                 <div className="flex items-center gap-1">
                   <Shield size={10} style={{ color: 'rgba(47,111,78,0.5)' }} />
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: 'rgba(26,24,20,0.4)' }}>Cancel anytime</span>
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: 'rgba(26,24,20,0.4)' }}>Cancel anytime</span>
                 </div>
                 <span style={{ color: 'rgba(26,24,20,0.15)' }}>·</span>
                 <div className="flex items-center gap-1">
                   <RotateCcw size={10} style={{ color: 'rgba(47,111,78,0.5)' }} />
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: 'rgba(26,24,20,0.4)' }}>7-day refund</span>
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: 'rgba(26,24,20,0.4)' }}>7-day refund</span>
                 </div>
               </div>
 
@@ -970,7 +970,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               className="flex items-center gap-1 transition-opacity"
               style={{
                 fontFamily: "'DM Sans', sans-serif",
-                fontSize: 10,
+                fontSize: 12,
                 fontWeight: 500,
                 color:
                   saveStatus === "saving" ? MUTED :
@@ -982,7 +982,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               {saveStatus === "error" && <><AlertTriangle size={10} /> Failed</>}
             </span>
           ) : (
-            <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 11, fontStyle: 'italic', color: MUTED }}>
+            <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 12, fontStyle: 'italic', color: MUTED }}>
               masked for privacy
             </span>
           )
@@ -1074,7 +1074,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 </span>
               </div>
               {phoneVerified && (
-                <span className="flex items-center gap-1 shrink-0" style={{ fontSize: 11, fontWeight: 600, color: '#2F6F4E' }}>
+                <span className="flex items-center gap-1 shrink-0" style={{ fontSize: 12, fontWeight: 600, color: '#2F6F4E' }}>
                   <Check size={12} /> Verified
                 </span>
               )}
@@ -1088,7 +1088,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 </button>
                 {savedPhone && (
                   <>
-                    <span style={{ color: GOLD, opacity: 0.5, fontSize: 11, margin: '0 6px' }}>·</span>
+                    <span style={{ color: GOLD, opacity: 0.5, fontSize: 12, margin: '0 6px' }}>·</span>
                     <button
                       onClick={handlePhoneRemove}
                       disabled={phoneRemoving}
@@ -1139,9 +1139,9 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 </button>
               </div>
               {phoneError && (
-                <p className="text-[10px] text-destructive mt-2 px-1" role="alert">{phoneError}</p>
+                <p className="text-[12px] text-destructive mt-2 px-1" role="alert">{phoneError}</p>
               )}
-              <p className="text-[10px] text-muted-foreground mt-2 px-1">By saving, you consent to receive automated permit alert texts from WildAtlas. Msg &amp; data rates may apply. Reply STOP to cancel.</p>
+              <p className="text-[12px] text-muted-foreground mt-2 px-1">By saving, you consent to receive automated permit alert texts from WildAtlas. Msg &amp; data rates may apply. Reply STOP to cancel.</p>
             </div>
           )}
         </div>
@@ -1152,7 +1152,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             className="flex items-center justify-between gap-3 mt-2 px-3 py-2.5"
             style={{ backgroundColor: '#FAF3E4', border: `1px solid ${GOLD}`, borderRadius: 10 }}
           >
-            <p style={{ fontSize: 11, color: '#7A5E1E', lineHeight: 1.4, fontFamily: "'DM Sans', sans-serif" }}>
+            <p style={{ fontSize: 12, color: '#7A5E1E', lineHeight: 1.4, fontFamily: "'DM Sans', sans-serif" }}>
               Your number isn't verified — SMS alerts are off.
             </p>
             <button
@@ -1194,7 +1194,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 ))}
               </div>
               {otpError && (
-                <p className="text-[11px] text-destructive text-center mt-2.5" role="alert">{otpError}</p>
+                <p className="text-[12px] text-destructive text-center mt-2.5" role="alert">{otpError}</p>
               )}
               <div className="flex items-center justify-center gap-4 mt-4">
                 <button
@@ -1208,19 +1208,19 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               </div>
               <div className="flex items-center justify-center gap-3 mt-3">
                 {otpResendTimer > 0 ? (
-                  <p className="text-[10px] text-muted-foreground/50">Resend in {otpResendTimer}s</p>
+                  <p className="text-[12px] text-muted-foreground/50">Resend in {otpResendTimer}s</p>
                 ) : (
                   <button
                     onClick={sendVerificationCode}
                     disabled={otpSending}
-                    className="text-[10px] text-muted-foreground hover:text-foreground underline transition-colors"
+                    className="text-[12px] text-muted-foreground hover:text-foreground underline transition-colors"
                   >
                     {otpSending ? "Sending…" : "Resend code"}
                   </button>
                 )}
                 <button
                   onClick={() => setShowVerifyOtp(false)}
-                  className="text-[10px] text-muted-foreground/50 hover:text-muted-foreground transition-colors"
+                  className="text-[12px] text-muted-foreground/50 hover:text-muted-foreground transition-colors"
                 >
                   Cancel
                 </button>
@@ -1235,7 +1235,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             </div>
           )}
 
-          <p style={{ fontSize: 11, color: MUTED, marginTop: 8, paddingLeft: 4, paddingRight: 4, fontStyle: 'italic', fontFamily: "'Cormorant Garamond', serif" }}>
+          <p style={{ fontSize: 12, color: MUTED, marginTop: 8, paddingLeft: 4, paddingRight: 4, fontStyle: 'italic', fontFamily: "'Cormorant Garamond', serif" }}>
             {phoneVerified ? "Your phone number is verified for SMS alerts." : "SMS alerts require a verified US phone number."}
           </p>
         </div>
@@ -1258,7 +1258,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                     <span
                       style={{
                         fontFamily: "'DM Sans', sans-serif",
-                        fontSize: 8,
+                        fontSize: 12,
                         fontWeight: 700,
                         letterSpacing: '0.14em',
                         textTransform: 'uppercase',
@@ -1395,14 +1395,14 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 />
               </div>
               {isGranted && (
-                <p style={{ fontSize: 11, color: MUTED, fontStyle: 'italic', fontFamily: "'Cormorant Garamond', serif", marginTop: 8, marginLeft: 40 }}>
+                <p style={{ fontSize: 12, color: MUTED, fontStyle: 'italic', fontFamily: "'Cormorant Garamond', serif", marginTop: 8, marginLeft: 40 }}>
                   {/iPad|iPhone|iPod/.test(navigator.userAgent)
                     ? "To disable: Settings → Safari → Notifications → WildAtlas"
                     : "To disable: tap the lock icon in your browser address bar"}
                 </p>
               )}
               {notifPerm === "denied" && (
-                <p style={{ fontSize: 11, color: MUTED, fontStyle: 'italic', fontFamily: "'Cormorant Garamond', serif", marginTop: 8, marginLeft: 40 }}>
+                <p style={{ fontSize: 12, color: MUTED, fontStyle: 'italic', fontFamily: "'Cormorant Garamond', serif", marginTop: 8, marginLeft: 40 }}>
                   Enable notifications in your browser settings.
                 </p>
               )}
@@ -1492,7 +1492,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                   <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontStyle: 'italic', fontWeight: 500, color: '#E24B4A' }}>
                     Account deletion scheduled
                   </p>
-                  <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
+                  <p className="text-[12px] text-muted-foreground mt-1 leading-relaxed">
                     Your account and all data will be permanently deleted on{" "}
                     <strong className="text-foreground">
                       {new Date(scheduledDeletionAt).toLocaleDateString("en-US", {
@@ -1567,11 +1567,11 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           Independent service — not affiliated with NPS or Recreation.gov.
         </p>
         <div className="flex items-center justify-center gap-2 mt-3">
-          <Link to="/privacy" className="hover:opacity-70 transition-opacity" style={{ fontSize: 11, color: MUTED, fontFamily: "'DM Sans', sans-serif" }}>Privacy Policy</Link>
-          <span style={{ fontSize: 11, color: GOLD, opacity: 0.5 }}>·</span>
-          <Link to="/terms" className="hover:opacity-70 transition-opacity" style={{ fontSize: 11, color: MUTED, fontFamily: "'DM Sans', sans-serif" }}>Terms & Conditions</Link>
+          <Link to="/privacy" className="hover:opacity-70 transition-opacity" style={{ fontSize: 12, color: MUTED, fontFamily: "'DM Sans', sans-serif" }}>Privacy Policy</Link>
+          <span style={{ fontSize: 12, color: GOLD, opacity: 0.5 }}>·</span>
+          <Link to="/terms" className="hover:opacity-70 transition-opacity" style={{ fontSize: 12, color: MUTED, fontFamily: "'DM Sans', sans-serif" }}>Terms & Conditions</Link>
         </div>
-        <p style={{ fontSize: 10, color: MUTED, opacity: 0.7, marginTop: 8, fontFamily: "'DM Sans', sans-serif", paddingBottom: embedded ? 0 : 24 }}>© 2026 WildAtlas</p>
+        <p style={{ fontSize: 12, color: MUTED, opacity: 0.7, marginTop: 8, fontFamily: "'DM Sans', sans-serif", paddingBottom: embedded ? 0 : 24 }}>© 2026 WildAtlas</p>
       </div>
 
       {!embedded && <BottomNav activeTab="settings" onTabChange={(tab) => navigate(`/app?tab=${tab}`)} />}

@@ -113,7 +113,7 @@ const AddPermitModal = ({ open, onOpenChange, parkId, parkName, trackedPermits, 
                     <div className="flex-1 min-w-0">
                       <p className="text-[13px] font-semibold text-foreground font-body">{permit.name}</p>
                       {permit.description && (
-                        <p className="text-[10px] text-muted-foreground mt-0.5 truncate font-body">{permit.description}</p>
+                        <p className="text-[12px] text-muted-foreground mt-0.5 truncate font-body">{permit.description}</p>
                       )}
                     </div>
                     {selected && (

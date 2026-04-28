@@ -118,7 +118,7 @@ const TodayParkAdvice = React.memo(({ parkId, darkMode = false }: { parkId: stri
               Next quiet window after <span className="font-bold" style={{ color: "#F5F0E8" }}>{forecast.evening_quiet}</span>
             </p>
           </div>
-          <p style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginTop: 8 }}>Based on historical visitor data · conditions vary</p>
+          <p style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", marginTop: 8 }}>Based on historical visitor data · conditions vary</p>
         </div>
       </div>
     );

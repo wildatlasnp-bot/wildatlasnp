@@ -45,13 +45,13 @@ const ScannerLine = ({ scannerState, lastScanAt, getTimeAgo, isPro = true }: Sca
             }}
           />
         </span>
-        <span style={{ fontFamily: INTER, fontSize: 10.5, color: "var(--ds-muted)" }}>
+        <span style={{ fontFamily: INTER, fontSize: 12, color: "var(--ds-muted)" }}>
           {isActive ? "Scanner active" : "Scanner paused"} · Recreation.gov
         </span>
       </div>
 
       {/* Right */}
-      <span style={{ fontFamily: INTER, fontSize: 10.5, color: "var(--dim)" }}>
+      <span style={{ fontFamily: INTER, fontSize: 12, color: "var(--dim)" }}>
         {isPro ? (
           <>
             <span style={{ color: "var(--ds-gold)" }}>Pro</span> · 2-min

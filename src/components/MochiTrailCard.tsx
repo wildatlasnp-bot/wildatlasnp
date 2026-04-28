@@ -63,7 +63,7 @@ const MochiTrailCard = forwardRef<HTMLDivElement, { trail: TrailData }>(({ trail
     >
       <p className="text-[16px] font-semibold text-foreground leading-snug">{trail.trail_name}</p>
 
-      <div className="flex items-center gap-1.5 flex-wrap text-[11px] font-medium text-muted-foreground">
+      <div className="flex items-center gap-1.5 flex-wrap text-[12px] font-medium text-muted-foreground">
         <span className="flex items-center gap-1">
           <MapPin size={10} className="shrink-0" />
           {trail.distance}

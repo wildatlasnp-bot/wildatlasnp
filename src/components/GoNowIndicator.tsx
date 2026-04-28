@@ -72,13 +72,13 @@ const GoNowIndicator = ({ headlineData }: { headlineData: GoNowData | null }) =>
           <span className={`absolute inset-1 rounded-full ${s.dot} opacity-[0.08]`} />
           <span className={`relative w-4 h-4 rounded-full ${s.dot} ring-2 ring-background`} />
         </div>
-        <span className={`text-[11px] font-extrabold ${s.text} tracking-wider leading-none`}>{label}</span>
+        <span className={`text-[12px] font-extrabold ${s.text} tracking-wider leading-none`}>{label}</span>
       </div>
 
       {/* Details — tighter hierarchy */}
       <div className="flex-1 min-w-0">
         <p className="text-[15px] font-bold text-foreground leading-tight truncate">{location}</p>
-        <p className="text-[11px] text-muted-foreground mt-0.5">{sub}</p>
+        <p className="text-[12px] text-muted-foreground mt-0.5">{sub}</p>
         <p className={`text-[12px] font-bold ${s.text} mt-1.5 tracking-tight`}>
           Best window: {timeWindow}
         </p>

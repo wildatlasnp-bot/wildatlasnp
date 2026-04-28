@@ -62,7 +62,7 @@ function CalendarPicker({ selected, onSelect }: { selected: Date | null; onSelec
       {/* Weekday headers */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", textAlign: "center", marginBottom: 4 }}>
         {WEEKDAYS.map((w) => (
-          <span key={w} style={{ fontSize: 11, fontWeight: 500, color: "#9CA3AF", padding: "4px 0" }}>{w}</span>
+          <span key={w} style={{ fontSize: 12, fontWeight: 500, color: "#9CA3AF", padding: "4px 0" }}>{w}</span>
         ))}
       </div>
 
@@ -191,7 +191,7 @@ export default function TripDateModal({ open, onClose, onSave, onRemove, initial
               </p>
 
               {/* Park selector */}
-              <label style={{ display: "block", fontSize: 10, fontWeight: 500, letterSpacing: "0.09em", textTransform: "uppercase", color: "#6B6860", marginBottom: 8 }}>
+              <label style={{ display: "block", fontSize: 12, fontWeight: 500, letterSpacing: "0.09em", textTransform: "uppercase", color: "#6B6860", marginBottom: 8 }}>
                 Park
               </label>
               <select
@@ -219,7 +219,7 @@ export default function TripDateModal({ open, onClose, onSave, onRemove, initial
               </select>
 
               {/* Calendar */}
-              <label style={{ display: "block", fontSize: 10, fontWeight: 500, letterSpacing: "0.09em", textTransform: "uppercase", color: "#6B6860", marginTop: 20, marginBottom: 12 }}>
+              <label style={{ display: "block", fontSize: 12, fontWeight: 500, letterSpacing: "0.09em", textTransform: "uppercase", color: "#6B6860", marginTop: 20, marginBottom: 12 }}>
                 Target Date
               </label>
               <CalendarPicker selected={selectedDate} onSelect={setSelectedDate} />

@@ -234,7 +234,7 @@ const SubscriptionSuccessPage = () => {
             <div
               style={{
                 fontFamily: "'DM Sans', sans-serif",
-                fontSize: 10,
+                fontSize: 12,
                 fontWeight: 500,
                 letterSpacing: "0.18em",
                 textTransform: "uppercase",
@@ -361,7 +361,7 @@ const SubscriptionSuccessPage = () => {
           <p
             style={{
               fontFamily: "'DM Sans', sans-serif",
-              fontSize: 11,
+              fontSize: 12,
               color: "#aaa",
               textAlign: "center",
               marginTop: 20,

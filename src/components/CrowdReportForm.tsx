@@ -102,12 +102,12 @@ const CrowdReportForm = React.memo(({ parkId }: CrowdReportFormProps) => {
       className="rounded-[18px] border border-border/70 bg-card p-5"
       style={{ boxShadow: "var(--card-shadow)" }}
     >
-      <p className="text-[10px] font-bold text-primary uppercase tracking-[0.12em] mb-4">
+      <p className="text-[12px] font-bold text-primary uppercase tracking-[0.12em] mb-4">
         Report Conditions
       </p>
 
       {/* Step 1: Location */}
-      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+      <p className="text-[12px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">
         1 · Location
       </p>
       {areas.length > 0 ? (
@@ -116,7 +116,7 @@ const CrowdReportForm = React.memo(({ parkId }: CrowdReportFormProps) => {
             <button
               key={area}
               onClick={() => setAreaName(area)}
-              className={`text-[10px] px-2.5 py-1.5 rounded-full border transition-all ${
+              className={`text-[12px] px-2.5 py-1.5 rounded-full border transition-all ${
                 areaName === area
                   ? "bg-primary text-primary-foreground border-primary"
                   : "bg-muted/30 text-muted-foreground border-border hover:border-primary/30"
@@ -139,7 +139,7 @@ const CrowdReportForm = React.memo(({ parkId }: CrowdReportFormProps) => {
       )}
 
       {/* Step 2: Status */}
-      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+      <p className="text-[12px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">
         2 · How crowded?
       </p>
       <div className="grid grid-cols-4 gap-2 mb-5">
@@ -154,7 +154,7 @@ const CrowdReportForm = React.memo(({ parkId }: CrowdReportFormProps) => {
             }`}
           >
             <span className={`w-3 h-3 rounded-full ${levelDotColor[level]}`} />
-            <span className="text-[10px] font-bold">{level}</span>
+            <span className="text-[12px] font-bold">{level}</span>
           </button>
         ))}
       </div>
@@ -168,9 +168,9 @@ const CrowdReportForm = React.memo(({ parkId }: CrowdReportFormProps) => {
           placeholder="Wait time at trailhead (minutes)"
           value={waitTime}
           onChange={(e) => setWaitTime(e.target.value)}
-          className="w-full text-[11px] px-3 py-2.5 rounded-lg bg-muted/30 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary"
+          className="w-full text-[12px] px-3 py-2.5 rounded-lg bg-muted/30 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary"
         />
-        <p className="text-[10px] text-muted-foreground/60 mt-1 ml-0.5 font-medium">Optional — helps other hikers plan their visit.</p>
+        <p className="text-[12px] text-muted-foreground/60 mt-1 ml-0.5 font-medium">Optional — helps other hikers plan their visit.</p>
       </div>
 
       {/* Submit */}

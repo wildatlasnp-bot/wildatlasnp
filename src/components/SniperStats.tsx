@@ -62,13 +62,13 @@ const SniperStats = ({
               >
                 <Icon size={14} className={`mx-auto mb-2.5 ${s.cls} opacity-40`} />
                 <div className={`font-body font-black text-2xl leading-none ${s.cls}`}>{s.value}</div>
-                <div className="font-body font-bold text-[9px] text-muted-foreground/50 uppercase tracking-[0.14em] mt-3">{s.label}</div>
+                <div className="font-body font-bold text-[12px] text-muted-foreground/50 uppercase tracking-[0.14em] mt-3">{s.label}</div>
               </div>
             );
           })}
         </div>
         {!isPro && (
-          <p className="text-[10px] text-muted-foreground text-center mt-2">
+          <p className="text-[12px] text-muted-foreground text-center mt-2">
             Free plan — track up to {FREE_WATCH_LIMIT} permit. <button onClick={onUpgrade} className="text-secondary font-semibold hover:underline">Upgrade for unlimited</button>
           </p>
         )}

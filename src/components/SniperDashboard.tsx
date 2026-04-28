@@ -249,7 +249,7 @@ const SniperDashboard = () => {
                   exit={{ opacity: 0 }}
                   style={{
                     fontFamily: DM_SANS,
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: 500,
                     color: "rgba(255,255,255,0.4)",
                     fontStyle: "italic",
@@ -287,7 +287,7 @@ const SniperDashboard = () => {
              <span
                 style={{
                   fontFamily: DM_SANS,
-                  fontSize: 10,
+                  fontSize: 12,
                   fontWeight: 500,
                   textTransform: "uppercase" as const,
                   letterSpacing: "0.12em",
@@ -323,7 +323,7 @@ const SniperDashboard = () => {
                  <span
                    style={{
                      fontFamily: DM_SANS,
-                     fontSize: 10,
+                     fontSize: 12,
                      fontWeight: 500,
                      textTransform: "uppercase" as const,
                      letterSpacing: "0.12em",
@@ -742,7 +742,7 @@ const PermitPhotoCard = ({
                top: 14,
                right: 16,
                fontFamily: DM_SANS,
-               fontSize: 11,
+               fontSize: 12,
                fontWeight: 500,
                letterSpacing: "0.08em",
                textTransform: "uppercase",

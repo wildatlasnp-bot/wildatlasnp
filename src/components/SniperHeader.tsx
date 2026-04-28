@@ -111,7 +111,7 @@ const SniperHeader = ({
 
           {/* Row 2 — metadata */}
           {scannerState === "active" && lastChecked && (
-            <p className="text-[11px] font-normal text-muted-foreground/70 mt-1 pl-4">
+            <p className="text-[12px] font-normal text-muted-foreground/70 mt-1 pl-4">
               Checked {getTimeAgo(lastChecked)}
             </p>
           )}

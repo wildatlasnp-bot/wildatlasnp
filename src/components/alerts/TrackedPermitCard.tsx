@@ -163,7 +163,7 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
           <span
             style={{
               position: "absolute", top: 14, left: 16, zIndex: 10,
-              fontFamily: INTER, fontSize: 9.5, fontWeight: 500,
+              fontFamily: INTER, fontSize: 12, fontWeight: 500,
               letterSpacing: "0.18em", textTransform: "uppercase",
               color: "rgba(255,255,255,0.55)", textShadow: "0 1px 3px rgba(0,0,0,0.30)",
             }}
@@ -233,7 +233,7 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
                 <span style={{ fontFamily: PLAYFAIR, fontSize: 18, fontWeight: 500, color: "white", lineHeight: 1.1 }}>
                   {permit.oddsPercent}%
                 </span>
-                <span style={{ fontFamily: INTER, fontSize: 8, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(255,255,255,0.6)", marginTop: 1 }}>
+                <span style={{ fontFamily: INTER, fontSize: 12, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(255,255,255,0.6)", marginTop: 1 }}>
                   ODDS
                 </span>
               </div>
@@ -251,10 +251,10 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
         >
           <div className="flex items-center gap-2 min-w-0 flex-1">
             <span className="shrink-0 rounded-full" style={{ width: 5, height: 5, backgroundColor: permit.statusColor }} />
-            <span style={{ fontFamily: INTER, fontSize: 11, color: permit.statusColor, fontWeight: 500 }}>
+            <span style={{ fontFamily: INTER, fontSize: 12, color: permit.statusColor, fontWeight: 500 }}>
               {permit.statusLabel}
             </span>
-            <span style={{ fontFamily: INTER, fontSize: 11, color: "var(--dim)" }}>
+            <span style={{ fontFamily: INTER, fontSize: 12, color: "var(--dim)" }}>
               · {permit.dateLabel} · {permit.daysLabel}
             </span>
           </div>
@@ -362,10 +362,10 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
                     <span style={{ fontFamily: INTER, fontSize: 13, fontWeight: 500, color: "var(--forest)", display: "block" }}>
                       SMS alerts
                     </span>
-                    <span style={{ fontFamily: INTER, fontSize: 11, fontWeight: 300, color: "var(--ds-muted)", display: "block", marginTop: 2 }}>
+                    <span style={{ fontFamily: INTER, fontSize: 12, fontWeight: 300, color: "var(--ds-muted)", display: "block", marginTop: 2 }}>
                       {smsEnabled ? "You'll get a text when this permit opens" : "Get a text the instant this permit opens"}
                     </span>
-                    <span style={{ fontFamily: INTER, fontSize: 10, fontWeight: 300, color: "var(--dim)", display: "block", marginTop: 4, lineHeight: 1.45 }}>
+                    <span style={{ fontFamily: INTER, fontSize: 12, fontWeight: 300, color: "var(--dim)", display: "block", marginTop: 4, lineHeight: 1.45 }}>
                       By enabling, you consent to receive texts from WildAtlas (up to 1 per opening). Msg & data rates may apply. Reply STOP to cancel.{" "}
                       <a
                         href="/privacy"
@@ -412,7 +412,7 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
                       transition={{ type: "spring", stiffness: 500, damping: 35 }}
                     />
                   </button>
-                  <span style={{ fontFamily: INTER, fontSize: 10, color: "var(--dim)", marginTop: 3 }}>
+                  <span style={{ fontFamily: INTER, fontSize: 12, color: "var(--dim)", marginTop: 3 }}>
                     {smsEnabled ? "On" : "Off"}
                   </span>
                 </div>
@@ -503,7 +503,7 @@ const DetailLine = ({
   valueColor?: string;
 }) => (
   <div className="flex items-center justify-between">
-    <span style={{ fontFamily: INTER, fontSize: 11, color: "var(--ds-muted)" }}>{label}</span>
+    <span style={{ fontFamily: INTER, fontSize: 12, color: "var(--ds-muted)" }}>{label}</span>
     <span style={{ fontFamily: INTER, fontSize: 12, fontWeight: 500, color: valueColor }}>{value}</span>
   </div>
 );

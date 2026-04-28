@@ -90,7 +90,7 @@ const AlertsSection = ({ trackedPark }: { trackedPark?: string }) => {
           <p style={{ fontFamily: INTER, fontSize: 12.5, fontWeight: 600, color: "var(--ds-amber)", lineHeight: 1.3 }}>
             {closureCount} active closure{closureCount !== 1 ? "s" : ""} in your parks
           </p>
-          <p style={{ fontFamily: INTER, fontSize: 10.5, fontWeight: 300, color: "var(--ds-amber)", opacity: 0.65, lineHeight: 1.3, marginTop: 1 }}>
+          <p style={{ fontFamily: INTER, fontSize: 12, fontWeight: 300, color: "var(--ds-amber)", opacity: 0.65, lineHeight: 1.3, marginTop: 1 }}>
             Tap to view closure details
           </p>
         </div>
@@ -100,13 +100,13 @@ const AlertsSection = ({ trackedPark }: { trackedPark?: string }) => {
       {/* SECTION HEADER */}
       <div style={{ padding: "20px 24px 12px", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
         <div>
-          <span style={{ fontFamily: INTER, fontSize: 9, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--dim)", display: "block" }}>
+          <span style={{ fontFamily: INTER, fontSize: 12, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--dim)", display: "block" }}>
             Park dispatches
           </span>
           <h2 style={{ fontFamily: PLAYFAIR, fontSize: 24, fontWeight: 500, color: "var(--ink)", marginTop: 2, lineHeight: 1.15 }}>
             Alerts
           </h2>
-          <p style={{ fontFamily: INTER, fontSize: 11, fontWeight: 300, color: "var(--dim)", marginTop: 3 }}>
+          <p style={{ fontFamily: INTER, fontSize: 12, fontWeight: 300, color: "var(--dim)", marginTop: 3 }}>
             {displayParks.length} park{displayParks.length !== 1 ? "s" : ""} monitored · refreshed today
           </p>
         </div>
@@ -114,7 +114,7 @@ const AlertsSection = ({ trackedPark }: { trackedPark?: string }) => {
           <span style={{ fontFamily: PLAYFAIR, fontSize: 32, fontWeight: 400, fontStyle: "italic", color: "var(--charcoal)", lineHeight: 1 }}>
             {baseAlerts.length}
           </span>
-          <span style={{ fontFamily: INTER, fontSize: 9, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--dim)", marginTop: 2 }}>
+          <span style={{ fontFamily: INTER, fontSize: 12, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--dim)", marginTop: 2 }}>
             TOTAL
           </span>
         </div>
@@ -205,7 +205,7 @@ const AlertsSection = ({ trackedPark }: { trackedPark?: string }) => {
           <span style={{ fontFamily: INTER, fontSize: 13, fontWeight: 500, color: "var(--forest-m)", display: "block" }}>
             All monitored parks
           </span>
-          <span style={{ fontFamily: INTER, fontSize: 11, fontWeight: 300, color: "var(--dim)", marginTop: 1, display: "block" }}>
+          <span style={{ fontFamily: INTER, fontSize: 12, fontWeight: 300, color: "var(--dim)", marginTop: 1, display: "block" }}>
             {USER_PARKS.length} parks · {DEMO_ALERTS.length} total alerts
           </span>
         </div>
@@ -253,7 +253,7 @@ const AlertCard = ({ alert }: { alert: ParkAlertItem }) => {
             <span
               style={{
                 fontFamily: INTER,
-                fontSize: 9,
+                fontSize: 12,
                 fontWeight: 600,
                 letterSpacing: "0.1em",
                 textTransform: "uppercase",
@@ -265,7 +265,7 @@ const AlertCard = ({ alert }: { alert: ParkAlertItem }) => {
             >
               {isClosure ? "CLOSURE" : "INFO"}
             </span>
-            <span style={{ fontFamily: INTER, fontSize: 10, color: "var(--dim)" }}>
+            <span style={{ fontFamily: INTER, fontSize: 12, color: "var(--dim)" }}>
               {alert.date}
             </span>
           </div>
@@ -289,7 +289,7 @@ const AlertCard = ({ alert }: { alert: ParkAlertItem }) => {
             className="line-clamp-2"
             style={{
               fontFamily: INTER,
-              fontSize: 11,
+              fontSize: 12,
               fontWeight: 300,
               color: "var(--ds-muted)",
               lineHeight: 1.55,
@@ -301,14 +301,14 @@ const AlertCard = ({ alert }: { alert: ParkAlertItem }) => {
 
           {/* Footer */}
           <div className="flex items-center justify-between">
-            <span style={{ fontFamily: INTER, fontSize: 10, color: "var(--dim)" }}>
+            <span style={{ fontFamily: INTER, fontSize: 12, color: "var(--dim)" }}>
               {alert.park} · {alert.date}
             </span>
             {/* Ghost status badge — NOT red, always neutral */}
             <span
               style={{
                 fontFamily: INTER,
-                fontSize: 10,
+                fontSize: 12,
                 fontWeight: 500,
                 color: "var(--dim)",
                 background: "transparent",

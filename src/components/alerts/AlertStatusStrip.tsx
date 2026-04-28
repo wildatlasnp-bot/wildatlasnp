@@ -46,7 +46,7 @@ const AlertStatusStrip = () => {
         <p
           style={{
             fontFamily: "'DM Sans', sans-serif",
-            fontSize: 10.5,
+            fontSize: 12,
             fontWeight: 300,
             color: "var(--ds-amber)",
             opacity: 0.65,

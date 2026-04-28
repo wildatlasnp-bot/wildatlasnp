@@ -41,7 +41,7 @@ const MochiStatusCard = ({
       {/* Last check — top right */}
       {lastCheckAgo && (
         <div style={{ position: 'absolute', top: 20, right: 20, textAlign: 'right' }}>
-          <p style={{ fontSize: 10, fontWeight: 500, color: '#9CA3AF', lineHeight: 1.2, margin: 0 }}>
+          <p style={{ fontSize: 12, fontWeight: 500, color: '#9CA3AF', lineHeight: 1.2, margin: 0 }}>
             Last check
           </p>
           <p style={{ fontSize: 12, fontWeight: 500, color: '#1a1a1a', lineHeight: 1.3, margin: 0, marginTop: 2 }}>
@@ -71,7 +71,7 @@ const MochiStatusCard = ({
                 {!animatedScanCount || animatedScanCount.replace(/\s*scans?$/i, '').trim() === '0' ? '—' : animatedScanCount?.replace(/\s*scans?$/i, '')}
               </motion.span>
             </AnimatePresence>
-            <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.05em', color: '#2F6F4E', lineHeight: 1 }}>
+            <span style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.05em', color: '#2F6F4E', lineHeight: 1 }}>
               SCANS
             </span>
           </div>

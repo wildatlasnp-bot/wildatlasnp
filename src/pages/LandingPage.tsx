@@ -532,7 +532,7 @@ const LandingPage = () => {
                 <span
                   style={{
                     fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 9,
+                    fontSize: 12,
                     letterSpacing: "0.28em",
                     textTransform: "uppercase",
                     color: "rgba(26, 47, 30, 0.42)",
@@ -552,7 +552,7 @@ const LandingPage = () => {
                     href="#how-it-works"
                     style={{
                       fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 11,
+                      fontSize: 12,
                       letterSpacing: "0.18em",
                       textTransform: "uppercase",
                       color: "rgba(26, 47, 30, 0.65)",
@@ -568,7 +568,7 @@ const LandingPage = () => {
                     href="#pricing"
                     style={{
                       fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 11,
+                      fontSize: 12,
                       letterSpacing: "0.18em",
                       textTransform: "uppercase",
                       color: "rgba(26, 47, 30, 0.65)",
@@ -591,7 +591,7 @@ const LandingPage = () => {
                       borderRadius: 999,
                       padding: "5px 12px",
                       fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 11,
+                      fontSize: 12,
                       letterSpacing: "0.18em",
                       textTransform: "uppercase",
                       color: "#2F6F4E",
@@ -762,7 +762,7 @@ const LandingPage = () => {
                 alignItems: "flex-start",
                 gap: 24,
                 fontFamily: "'DM Sans', sans-serif",
-                fontSize: 10,
+                fontSize: 12,
                 letterSpacing: "0.22em",
                 textTransform: "uppercase",
                 color: "rgba(240, 237, 234, 0.62)",
@@ -920,7 +920,7 @@ const LandingPage = () => {
                   <p
                     style={{
                       fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 9,
+                      fontSize: 12,
                       letterSpacing: "0.24em",
                       textTransform: "uppercase",
                       color: "rgba(240, 237, 234, 0.55)",
@@ -983,7 +983,7 @@ const LandingPage = () => {
                   <span
                     style={{
                       fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 10,
+                      fontSize: 12,
                       letterSpacing: "0.16em",
                       textTransform: "uppercase",
                       color: "rgba(240, 237, 234, 0.55)",
@@ -995,7 +995,7 @@ const LandingPage = () => {
                     aria-live="off"
                     style={{
                       fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 10,
+                      fontSize: 12,
                       color: "rgba(240, 237, 234, 0.55)",
                       fontVariantNumeric: "tabular-nums",
                     }}
@@ -1153,7 +1153,7 @@ const LandingPage = () => {
                 <p
                   style={{
                     fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 11,
+                    fontSize: 12,
                     letterSpacing: "0.16em",
                     textTransform: "uppercase",
                     color: "rgba(240, 237, 234, 0.6)",
@@ -1179,7 +1179,7 @@ const LandingPage = () => {
                 gap: 16,
                 flexWrap: "wrap",
                 fontFamily: "'DM Sans', sans-serif",
-                fontSize: 10,
+                fontSize: 12,
                 letterSpacing: "0.20em",
                 textTransform: "uppercase",
                 color: "rgba(240, 237, 234, 0.65)",
@@ -1365,7 +1365,7 @@ const LandingPage = () => {
                   alignItems: "center",
                   gap: 8,
                   fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 10,
+                  fontSize: 12,
                   letterSpacing: "0.22em",
                   textTransform: "uppercase",
                   color: "rgba(26, 47, 30, 0.55)",
@@ -1496,7 +1496,7 @@ const LandingPage = () => {
                         alignItems: "baseline",
                         gap: 10,
                         fontFamily: "'DM Sans', sans-serif",
-                        fontSize: 10,
+                        fontSize: 12,
                         fontWeight: 500,
                         letterSpacing: "0.22em",
                         textTransform: "uppercase",
@@ -1775,7 +1775,7 @@ const LandingPage = () => {
                 <div
                   style={{
                     fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 11,
+                    fontSize: 12,
                     fontWeight: 500,
                     letterSpacing: "0.16em",
                     color: "#C9A96E",
@@ -2078,7 +2078,7 @@ const LandingPage = () => {
                 <div
                   style={{
                     fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: 500,
                     textTransform: "uppercase",
                     letterSpacing: "0.22em",
@@ -2093,7 +2093,7 @@ const LandingPage = () => {
                   <div
                     style={{
                       fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 10,
+                      fontSize: 12,
                       fontWeight: 500,
                       textTransform: "uppercase",
                       letterSpacing: "0.22em",
@@ -2162,7 +2162,7 @@ const LandingPage = () => {
                       padding: 0,
                       cursor: "pointer",
                       fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 9,
+                      fontSize: 12,
                       fontWeight: 500,
                       textTransform: "uppercase",
                       letterSpacing: "0.22em",
@@ -2176,7 +2176,7 @@ const LandingPage = () => {
                   <div
                     style={{
                       fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 10,
+                      fontSize: 12,
                       fontWeight: 500,
                       textTransform: "uppercase",
                       letterSpacing: "0.22em",
@@ -2466,7 +2466,7 @@ const LandingPage = () => {
                       <div
                         style={{
                           fontFamily: "'DM Sans', sans-serif",
-                          fontSize: 10,
+                          fontSize: 12,
                           fontWeight: 500,
                           letterSpacing: "0.18em",
                           textTransform: "uppercase",
@@ -2495,7 +2495,7 @@ const LandingPage = () => {
                       <div
                         style={{
                           fontFamily: "'DM Sans', sans-serif",
-                          fontSize: 10,
+                          fontSize: 12,
                           fontWeight: 500,
                           letterSpacing: "0.18em",
                           textTransform: "uppercase",
@@ -2756,7 +2756,7 @@ const LandingPage = () => {
                 <div
                   style={{
                     fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 11,
+                    fontSize: 12,
                     fontWeight: 500,
                     letterSpacing: "0.22em",
                     textTransform: "uppercase",
@@ -2824,7 +2824,7 @@ const LandingPage = () => {
                 <div
                   style={{
                     fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 11,
+                    fontSize: 12,
                     fontWeight: 500,
                     letterSpacing: "0.22em",
                     textTransform: "uppercase",
@@ -2891,7 +2891,7 @@ const LandingPage = () => {
                 <div
                   style={{
                     fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 11,
+                    fontSize: 12,
                     fontWeight: 500,
                     letterSpacing: "0.22em",
                     textTransform: "uppercase",
@@ -2952,7 +2952,7 @@ const LandingPage = () => {
                 <p
                   style={{
                     fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 11,
+                    fontSize: 12,
                     lineHeight: 1.6,
                     color: "rgba(26, 47, 30, 0.5)",
                     margin: 0,
@@ -2965,7 +2965,7 @@ const LandingPage = () => {
                 <p
                   style={{
                     fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 11,
+                    fontSize: 12,
                     lineHeight: 1.6,
                     color: "rgba(26, 47, 30, 0.5)",
                     margin: "6px 0 0",
@@ -2993,7 +2993,7 @@ const LandingPage = () => {
               <div
                 style={{
                   fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 10,
+                  fontSize: 12,
                   letterSpacing: "0.22em",
                   textTransform: "uppercase",
                   color: "rgba(26, 47, 30, 0.5)",

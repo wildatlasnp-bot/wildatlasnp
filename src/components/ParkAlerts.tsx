@@ -505,7 +505,7 @@ function FieldDispatchHero({
         <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
           <span style={{ display: "block", width: 18, height: 1, background: "rgba(201,169,110,0.5)" }} />
           <span style={{
-            fontFamily: DM, fontSize: 10, fontWeight: 500, letterSpacing: "0.22em",
+            fontFamily: DM, fontSize: 12, fontWeight: 500, letterSpacing: "0.22em",
             textTransform: "uppercase", color: "rgba(201,169,110,0.75)",
           }}>
             Field Dispatch · {today}
@@ -641,7 +641,7 @@ function SeverityDial({ counts, total, loading }: { counts: { critical: number; 
           {total}
         </motion.span>
         <span style={{
-          fontFamily: DM, fontSize: 8.5, fontWeight: 500, letterSpacing: "0.18em",
+          fontFamily: DM, fontSize: 12, fontWeight: 500, letterSpacing: "0.18em",
           textTransform: "uppercase", color: "rgba(244,240,232,0.45)", marginTop: 3,
         }}>
           ACTIVE
@@ -679,7 +679,7 @@ function CountRow({ label, value, ink, tip }: { label: string; value: number; in
         flexShrink: 0,
       }} />
       <span style={{
-        fontFamily: DM, fontSize: 11, fontWeight: 400,
+        fontFamily: DM, fontSize: 12, fontWeight: 400,
         color: "rgba(244,240,232,0.78)", letterSpacing: "0.02em", flex: 1,
       }}>
         {label}
@@ -711,7 +711,7 @@ function CountRow({ label, value, ink, tip }: { label: string; value: number; in
               borderLeft: `2px solid ${ink}`,
               borderRadius: 8,
               boxShadow: "0 8px 24px rgba(0,0,0,0.35)",
-              fontFamily: DM, fontSize: 11.5, fontWeight: 300,
+              fontFamily: DM, fontSize: 12, fontWeight: 300,
               lineHeight: 1.45,
               color: "rgba(244,240,232,0.85)",
               pointerEvents: "none",
@@ -720,7 +720,7 @@ function CountRow({ label, value, ink, tip }: { label: string; value: number; in
             }}
           >
             <div style={{
-              fontFamily: DM, fontSize: 9, fontWeight: 600, letterSpacing: "0.16em",
+              fontFamily: DM, fontSize: 12, fontWeight: 600, letterSpacing: "0.16em",
               textTransform: "uppercase", color: ink, marginBottom: 4,
             }}>
               {label}
@@ -805,7 +805,7 @@ function HighestLevelSummary({
         alignSelf: "center", flexShrink: 0,
       }} />
       <span style={{
-        fontFamily: DM, fontSize: 10, fontWeight: 600,
+        fontFamily: DM, fontSize: 12, fontWeight: 600,
         letterSpacing: "0.18em", textTransform: "uppercase",
         color: ink, flexShrink: 0,
       }}>
@@ -874,7 +874,7 @@ function WireTicker({ active }: { active: boolean }) {
         flexShrink: 0,
       }} />
       <span style={{
-        fontFamily: "'JetBrains Mono', monospace", fontSize: 9.5, fontWeight: 400,
+        fontFamily: "'JetBrains Mono', monospace", fontSize: 12, fontWeight: 400,
         letterSpacing: "0.18em", color: "rgba(127,184,154,0.62)", textTransform: "uppercase",
       }}>
         {active ? "WIRE OPEN · LISTENING" : "WIRE QUIET"}
@@ -937,7 +937,7 @@ function RailChip({
       <span>{label}</span>
       {count != null && (
         <span style={{
-          fontFamily: "'JetBrains Mono', monospace", fontSize: 10.5,
+          fontFamily: "'JetBrains Mono', monospace", fontSize: 12,
           opacity: 0.55, fontVariantNumeric: "tabular-nums",
         }}>
           {count}
@@ -1064,7 +1064,7 @@ function TelegramCard({
           {meta.sigil}
         </span>
         <span style={{
-          fontFamily: DM, fontSize: 9.5, fontWeight: 600,
+          fontFamily: DM, fontSize: 12, fontWeight: 600,
           letterSpacing: "0.16em", textTransform: "uppercase",
           color: meta.ink,
         }}>
@@ -1072,7 +1072,7 @@ function TelegramCard({
         </span>
         {isFresh && (
           <span style={{
-            fontFamily: DM, fontSize: 8.5, fontWeight: 700,
+            fontFamily: DM, fontSize: 12, fontWeight: 700,
             letterSpacing: "0.10em", textTransform: "uppercase",
             background: "var(--ranger-forest)", color: "#F4F0E8",
             padding: "2px 6px", borderRadius: 3,
@@ -1082,7 +1082,7 @@ function TelegramCard({
         )}
         <div style={{ flex: 1 }} />
         <span style={{
-          fontFamily: DM, fontSize: 10.5, color: "var(--ranger-ink-faint)",
+          fontFamily: DM, fontSize: 12, color: "var(--ranger-ink-faint)",
           fontVariantNumeric: "tabular-nums",
         }}>
           {smartTimeAgo(new Date(alert.last_updated).getTime())}
@@ -1133,13 +1133,13 @@ function TelegramCard({
           flexShrink: 0,
         }} />
         <span style={{
-          fontFamily: DM, fontSize: 11, fontWeight: 500,
+          fontFamily: DM, fontSize: 12, fontWeight: 500,
           color: "var(--ranger-ink-muted)", letterSpacing: "0.02em",
         }}>
           {parkName}
         </span>
-        <span style={{ fontFamily: DM, fontSize: 11, color: "var(--ranger-ink-faint)" }}>·</span>
-        <span style={{ fontFamily: DM, fontSize: 11, color: "var(--ranger-ink-faint)" }}>
+        <span style={{ fontFamily: DM, fontSize: 12, color: "var(--ranger-ink-faint)" }}>·</span>
+        <span style={{ fontFamily: DM, fontSize: 12, color: "var(--ranger-ink-faint)" }}>
           {formatPostedDate(alert.last_updated)}
         </span>
         <div style={{ flex: 1 }} />

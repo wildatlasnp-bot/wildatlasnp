@@ -194,7 +194,7 @@ const ScannerStatusCard = ({
                   </span>
                 </div>
                 {/* Subtitle */}
-                <span className="font-body" style={{ fontSize: 10, fontWeight: 500, color: "#9CA3AF", lineHeight: 1.4, marginTop: 1 }}>
+                <span className="font-body" style={{ fontSize: 12, fontWeight: 500, color: "#9CA3AF", lineHeight: 1.4, marginTop: 1 }}>
                   Recreation.gov · last check {lastCheckText}
                 </span>
               </div>
@@ -230,7 +230,7 @@ const ScannerStatusCard = ({
                 <span className="font-heading" style={{ fontSize: 18, fontWeight: 700, color: (scanCount === 0 || scanCount == null) ? "#999" : "#1a1a1a", lineHeight: 1.2 }}>
                   {(scanCount === 0 || scanCount == null) ? "—" : scanCount}
                 </span>
-                <span className="font-body" style={{ fontSize: 9, fontWeight: 600, color: "#2F6F4E", lineHeight: 1.3, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                <span className="font-body" style={{ fontSize: 12, fontWeight: 600, color: "#2F6F4E", lineHeight: 1.3, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                   Scans run
                 </span>
               </div>
@@ -242,7 +242,7 @@ const ScannerStatusCard = ({
                 <span className="font-heading" style={{ fontSize: 18, fontWeight: 700, color: "#1a1a1a", lineHeight: 1.2 }}>
                   {activeCount}
                 </span>
-                <span className="font-body" style={{ fontSize: 9, fontWeight: 500, color: "#9CA3AF", lineHeight: 1.3, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                <span className="font-body" style={{ fontSize: 12, fontWeight: 500, color: "#9CA3AF", lineHeight: 1.3, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                   {activeCount === 1 ? "Permit" : "Permits"}
                 </span>
               </div>
@@ -254,7 +254,7 @@ const ScannerStatusCard = ({
                 <span className="font-heading" style={{ fontSize: 18, fontWeight: 700, color: "#1a1a1a", lineHeight: 1.2 }}>
                   {lastCheckText}
                 </span>
-                <span className="font-body" style={{ fontSize: 9, fontWeight: 500, color: "#9CA3AF", lineHeight: 1.3, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                <span className="font-body" style={{ fontSize: 12, fontWeight: 500, color: "#9CA3AF", lineHeight: 1.3, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                   Last check
                 </span>
               </div>

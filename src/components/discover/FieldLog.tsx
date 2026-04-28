@@ -394,7 +394,7 @@ export default function FieldLog({ parkId, onNavigateToSniper, onNavigateToAlert
                         >
                           <span
                             style={{
-                              fontSize: 10,
+                              fontSize: 12,
                               fontWeight: 600,
                               letterSpacing: "0.16em",
                               textTransform: "uppercase",

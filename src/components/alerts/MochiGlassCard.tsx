@@ -205,7 +205,7 @@ const MochiGlassCard = ({
         <p
           style={{
             fontFamily: CORMORANT,
-            fontSize: 11,
+            fontSize: 12,
             fontStyle: "italic",
             color: disclaimerColor,
             marginTop: 10,

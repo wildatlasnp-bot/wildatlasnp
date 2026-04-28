@@ -463,7 +463,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
                               {permit.name}
                             </span>
                             {permit.description && (
-                              <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 300, color: "var(--wa-ink-muted)", marginTop: 2, display: "block" }}>
+                              <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 300, color: "var(--wa-ink-muted)", marginTop: 2, display: "block" }}>
                                 {permit.description}
                               </span>
                             )}

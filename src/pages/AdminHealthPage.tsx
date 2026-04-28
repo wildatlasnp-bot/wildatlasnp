@@ -332,7 +332,7 @@ const AdminHealthPage = () => {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {/* Heartbeat */}
                   <div className="rounded-lg border p-3 space-y-1">
-                    <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Heartbeat</p>
+                    <p className="text-[12px] font-medium text-muted-foreground uppercase tracking-wider">Heartbeat</p>
                     <div className="flex items-center gap-2">
                       <span className={`h-2.5 w-2.5 rounded-full ${
                         scannerHealth.heartbeatStatus === "healthy" ? "bg-status-scanning" :
@@ -340,55 +340,55 @@ const AdminHealthPage = () => {
                       }`} />
                       <span className="text-sm font-bold text-foreground capitalize">{scannerHealth.heartbeatStatus}</span>
                     </div>
-                    <p className="text-[11px] text-muted-foreground">
+                    <p className="text-[12px] text-muted-foreground">
                       {scannerHealth.heartbeatAge ? `${scannerHealth.heartbeatAge} ago` : "No heartbeat"}
                     </p>
                   </div>
 
                   {/* Circuit Breakers */}
                   <div className="rounded-lg border p-3 space-y-1">
-                    <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Circuit Breakers</p>
+                    <p className="text-[12px] font-medium text-muted-foreground uppercase tracking-wider">Circuit Breakers</p>
                     <p className={`text-xl font-bold ${scannerHealth.circuitBreakersTripped > 0 ? "text-destructive" : "text-foreground"}`}>
                       {scannerHealth.circuitBreakersTripped}
                     </p>
-                    <p className="text-[11px] text-muted-foreground">
+                    <p className="text-[12px] text-muted-foreground">
                       {scannerHealth.circuitBreakersTripped === 0 ? "All clear" : "permits paused"}
                     </p>
                   </div>
 
                   {/* Orphaned Targets */}
                   <div className="rounded-lg border p-3 space-y-1">
-                    <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1">
+                    <p className="text-[12px] font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1">
                       <Skull className="h-2.5 w-2.5" /> Orphaned Targets
                     </p>
                     <p className={`text-xl font-bold ${scannerHealth.orphanedTargets > 5 ? "text-status-busy" : "text-foreground"}`}>
                       {scannerHealth.orphanedTargets}
                     </p>
-                    <p className="text-[11px] text-muted-foreground">
+                    <p className="text-[12px] text-muted-foreground">
                       paused after 24h
                     </p>
                   </div>
 
                   {/* Finds (24h) */}
                   <div className="rounded-lg border p-3 space-y-1">
-                    <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1">
+                    <p className="text-[12px] font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1">
                       <Search className="h-2.5 w-2.5" /> Finds (24h)
                     </p>
                     <p className={`text-xl font-bold ${scannerHealth.zeroFinds24h ? "text-destructive" : "text-foreground"}`}>
                       {scannerHealth.recentFindsCount}
                     </p>
-                    <p className="text-[11px] text-muted-foreground">
+                    <p className="text-[12px] text-muted-foreground">
                       {scannerHealth.activeWatches} active watches
                     </p>
                   </div>
 
                   {/* Worker Errors */}
                   <div className="rounded-lg border p-3 space-y-1">
-                    <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Last Cycle Errors</p>
+                    <p className="text-[12px] font-medium text-muted-foreground uppercase tracking-wider">Last Cycle Errors</p>
                     <p className={`text-xl font-bold ${scannerHealth.errorCount > 0 ? "text-status-busy" : "text-foreground"}`}>
                       {scannerHealth.errorCount}
                     </p>
-                    <p className="text-[11px] text-muted-foreground truncate" title={scannerHealth.lastError ?? ""}>
+                    <p className="text-[12px] text-muted-foreground truncate" title={scannerHealth.lastError ?? ""}>
                       {scannerHealth.lastError ?? "No errors"}
                     </p>
                   </div>

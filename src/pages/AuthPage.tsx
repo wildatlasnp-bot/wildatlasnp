@@ -202,7 +202,7 @@ const AuthPage = () => {
             />
             <span
               style={{
-                fontSize: 11,
+                fontSize: 12,
                 letterSpacing: "0.28em",
                 fontWeight: 500,
                 color: "#2F6F4E",
@@ -284,7 +284,7 @@ const AuthPage = () => {
               <span
                 style={{
                   fontFamily: "'DM Sans', system-ui, sans-serif",
-                  fontSize: 11,
+                  fontSize: 12,
                   color: "#9AA89F",
                   letterSpacing: "0.04em",
                   textAlign: "center",
@@ -301,7 +301,7 @@ const AuthPage = () => {
                       background: "#EDF3EE",
                       borderRadius: 20,
                       padding: "4px 10px",
-                      fontSize: 11,
+                      fontSize: 12,
                       fontWeight: 500,
                       color: "#2F6F4E",
                       whiteSpace: "nowrap",
@@ -370,7 +370,7 @@ const AuthPage = () => {
             <div style={{ flex: 1, height: 1, background: "#E0DDD9" }} aria-hidden="true" />
             <span
               style={{
-                fontSize: "11px",
+                fontSize: "12px",
                 letterSpacing: "0.1em",
                 color: "#888888",
                 textTransform: "uppercase",
