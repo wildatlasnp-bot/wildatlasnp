@@ -1067,6 +1067,49 @@ const LiveAlertBannerInner = ({
     ? `First light at ${eventTimeLabel} · low-angle glare on east-facing trails`
     : `Last light at ${eventTimeLabel} · headlamp recommended within the hour`;
   const Icon = isSunrise ? Sunrise : Sun;
+
+  /**
+   * Severity tiers — escalates visual weight as the event approaches.
+   *  • subtle  (>10 min) — low-contrast champagne wash, default ambient state.
+   *  • elevated (5–10 min) — warmer wash, brighter eyebrow, hairline thickens.
+   *  • imminent (<5 min)   — high-contrast forest panel + champagne text, gentle pulse.
+   */
+  const severity: 'subtle' | 'elevated' | 'imminent' =
+    mins < 5 ? 'imminent' : mins <= 10 ? 'elevated' : 'subtle';
+
+  const tier = {
+    subtle: {
+      bg: 'rgba(201,169,110,0.10)',
+      borderBottom: '1px solid rgba(201,169,110,0.30)',
+      eyebrow: '#C9A96E',
+      subtext: 'var(--wa-ink-subtle)',
+      icon: '#C9A96E',
+      chevron: '#C9A96E',
+      eyebrowWeight: 600 as const,
+      pulse: false,
+    },
+    elevated: {
+      bg: 'rgba(201,169,110,0.18)',
+      borderBottom: '2px solid rgba(201,169,110,0.55)',
+      eyebrow: '#B8924A',
+      subtext: 'var(--wa-ink-primary)',
+      icon: '#B8924A',
+      chevron: '#B8924A',
+      eyebrowWeight: 700 as const,
+      pulse: false,
+    },
+    imminent: {
+      bg: '#1A2F1E',
+      borderBottom: '2px solid #C9A96E',
+      eyebrow: '#E8D9B5',
+      subtext: 'rgba(240,237,234,0.78)',
+      icon: '#E8D9B5',
+      chevron: '#E8D9B5',
+      eyebrowWeight: 700 as const,
+      pulse: true,
+    },
+  }[severity];
+
   const trailExpect = isSunrise
     ? [
         'Trail temps still cold — layer up before you start moving.',
