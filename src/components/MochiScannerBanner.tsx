@@ -87,7 +87,7 @@ export default function MochiScannerBanner({
               background: "rgba(28, 56, 40, 0.06)",
             }}
           >
-            <Radar size={14} style={{ color: "rgba(28, 56, 40, 0.45)" }} />
+            <BellOff size={14} style={{ color: "rgba(28, 56, 40, 0.45)" }} strokeWidth={1.5} />
           </div>
           <div className="flex-1 min-w-0">
             <p
