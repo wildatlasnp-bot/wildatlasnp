@@ -206,6 +206,34 @@ const SeasonalBlurb = ({ body }: { body: string }) => {
   );
 };
 
+/* ── Scroll-driven reveal wrapper for editorial sections ──
+   Wraps a section so it fades + rises into view as the user scrolls
+   through Discover. Stagger via `delay` (ms). Honors prefers-reduced-motion. */
+const RevealSection = ({
+  children,
+  className = "",
+  style,
+  delay = 0,
+  as: As = "section" as any,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+  delay?: number;
+  as?: any;
+}) => {
+  const { ref, visible } = useScrollReveal<HTMLElement>();
+  return (
+    <As
+      ref={ref as any}
+      className={`wa-scroll-reveal ${visible ? "is-visible" : ""} ${className}`}
+      style={{ ...(style || {}), ["--d" as any]: `${delay}ms` }}
+    >
+      {children}
+    </As>
+  );
+};
+
 /* ── Section plate header: eyebrow + roman numeral + hairline rule ── */
 const SectionPlate = ({
   numeral, eyebrow, italic, dark = false, delay = 0,
