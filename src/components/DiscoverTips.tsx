@@ -202,17 +202,16 @@ const SeasonalBlurb = ({ body }: { body: string }) => {
   return (
     <>
       <p className="wa-dropcap" style={{
-        fontFamily: "'DM Sans', sans-serif",
         fontSize: 15, fontWeight: 400, color: "var(--ranger-ink-body)",
         lineHeight: 1.7, letterSpacing: "0.005em", margin: 0,
       }}>
         {expanded ? body : preview}
       </p>
       {needsCollapse && !expanded && (
-        <button
+        <button className="font-display-italic"
           onClick={() => setExpanded(true)}
           style={{
-            fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
+            fontStyle: "italic",
             fontSize: 14, color: "var(--ranger-gold)", background: "none", border: "none",
             padding: 0, cursor: "pointer", marginTop: 12, textDecoration: "underline",
             textUnderlineOffset: 4, textDecorationColor: "var(--ranger-rule-strong)",
@@ -275,8 +274,7 @@ const SectionPlate = ({
     </div>
     <span className="wa-rule-solid" style={{ ["--d" as any]: `${delay + 120}ms`, background: dark ? "var(--ranger-parchment-faint)" : "var(--ranger-rule-strong)" }} />
     {italic && (
-      <p style={{
-        fontFamily: "'Cormorant Garamond', serif",
+      <p className="font-display-italic" style={{
         fontStyle: "italic", fontWeight: 400, fontSize: 14,
         color: dark ? "var(--ranger-parchment-soft)" : "var(--ranger-ink-muted)",
         margin: "10px 0 0", letterSpacing: "0.01em",
@@ -809,9 +807,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
       >
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
           <div style={{ display: "flex", alignItems: "baseline", gap: 10, minWidth: 0 }}>
-            <span
+            <span className="font-display-italic"
               style={{
-                fontFamily: "'Cormorant Garamond', serif",
                 fontStyle: "italic", fontWeight: 500, fontSize: 18,
                 color: "var(--ranger-parchment)", letterSpacing: "-0.01em", lineHeight: 1,
               }}
@@ -824,7 +821,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             />
             <span
               style={{
-                fontFamily: "'DM Sans', sans-serif",
                 fontSize: 9, fontWeight: 600, letterSpacing: "0.22em",
                 color: "var(--ranger-parchment-soft)", textTransform: "uppercase",
                 whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
@@ -849,7 +845,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 8, marginTop: 8 }}>
           <span
             style={{
-              fontFamily: "'DM Sans', sans-serif",
               fontSize: 9, fontWeight: 600, letterSpacing: "0.18em",
               color: "var(--ranger-parchment-mute)", textTransform: "uppercase",
               overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
@@ -857,9 +852,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           >
             {localTime.weekday} · {localTime.dateLabel} · {coords}
           </span>
-          <span
+          <span className="font-display-italic"
             style={{
-              fontFamily: "'Cormorant Garamond', serif",
               fontStyle: "italic", fontSize: 13,
               color: "var(--ranger-parchment)", letterSpacing: "0.01em",
             }}
@@ -959,7 +953,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
             <span style={{ height: 1, width: 22, background: "var(--ranger-parchment)", flexShrink: 0 }} />
             <span style={{
-              fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600,
+              fontSize: 10, fontWeight: 600,
               letterSpacing: "0.22em", color: "var(--ranger-on-image)",
               textTransform: "uppercase", textShadow: "var(--ranger-text-shadow-1)",
               overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
@@ -978,8 +972,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             // Generous scale for solo park names; clamp gracefully.
             const heroFontSize = heroText.length <= 12 ? 56 : heroText.length <= 18 ? 46 : heroText.length <= 24 ? 38 : 30;
             return (
-              <h1 style={{
-                fontFamily: "'Cormorant Garamond', serif",
+              <h1 className="font-display-italic" style={{
                 fontSize: heroFontSize, fontStyle: "italic",
                 fontWeight: 400, letterSpacing: "-0.025em",
                 color: "var(--ranger-paper)", lineHeight: 0.98,
@@ -991,7 +984,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             );
           })()}
           <p style={{
-            fontFamily: "'DM Sans', sans-serif",
             fontSize: 13, fontWeight: 400,
             color: "var(--ranger-on-image-soft)",
             margin: "10px 0 0", letterSpacing: "0.005em",
@@ -1067,7 +1059,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             watchedParkIds={watchedParkIds}
           />
           <span style={{
-            fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 600,
+            fontSize: 9, fontWeight: 600,
             letterSpacing: "0.22em", color: "var(--ranger-parchment-mute)",
             textTransform: "uppercase",
           }}>
@@ -1101,14 +1093,14 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
               borderLeft: i === 0 ? "none" : "1px solid var(--ranger-rule-night-soft)",
             }}>
               <p style={{
-                fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 600,
+                fontSize: 9, fontWeight: 600,
                 letterSpacing: "0.18em", textTransform: "uppercase",
                 color: c.dim ? "var(--ranger-parchment-faint)" : "var(--ranger-parchment-soft)",
                 margin: 0, marginBottom: 4,
                 overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
               }}>{c.eyebrow}</p>
-              <p style={{
-                fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
+              <p className="font-display-italic" style={{
+                fontStyle: "italic",
                 fontSize: c.dim ? 14 : 17, fontWeight: 400,
                 color: c.dim ? "var(--ranger-paper-soft)" : "var(--ranger-paper-soft)",
                 letterSpacing: "-0.005em", margin: 0, lineHeight: 1.1,
@@ -1185,14 +1177,14 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         >
           <span style={{ height: 1, width: 14, background: "var(--ranger-gold)", flexShrink: 0 }} />
           <span style={{
-            fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600,
+            fontSize: 10, fontWeight: 600,
             letterSpacing: "0.18em", color: "var(--ranger-forest)", textTransform: "uppercase",
             flexShrink: 0,
           }}>
             Logged
           </span>
-          <span style={{
-            fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
+          <span className="font-display-italic" style={{
+            fontStyle: "italic",
             fontSize: 14, color: "var(--ranger-night)", flex: 1, minWidth: 0,
             overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
           }}>
@@ -1201,7 +1193,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           <button
             onClick={() => onNavigateToSniper?.()}
             style={{
-              fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600,
+              fontSize: 12, fontWeight: 600,
               color: "var(--ranger-forest)", background: "none", border: "none", cursor: "pointer",
               padding: 0, whiteSpace: "nowrap", flexShrink: 0,
             }}
@@ -1313,14 +1305,14 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             <div className="ranger-card ranger-card--rounded-lg ranger-card--flush">
               <div style={{ padding: "20px 20px 16px", borderBottom: "0.5px solid var(--ranger-rule-onlight)" }}>
                 <p style={{
-                  fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600,
+                  fontSize: 10, fontWeight: 600,
                   letterSpacing: "0.18em", textTransform: "uppercase",
                   color: "var(--ranger-ink-muted)", marginBottom: 12,
                 }}>Upcoming Trip</p>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
                   <div style={{ minWidth: 0 }}>
-                    <p style={{
-                      fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
+                    <p className="font-display-italic" style={{
+                      fontStyle: "italic",
                       fontSize: 26, fontWeight: 400, color: "var(--ranger-ink-deep)",
                       lineHeight: 1.1, letterSpacing: "-0.015em", margin: 0,
                     }}>
@@ -1337,15 +1329,15 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                     </p>
                   </div>
                   <div style={{ textAlign: "right", flexShrink: 0 }}>
-                    <p style={{
-                      fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
+                    <p className="font-display-italic" style={{
+                      fontStyle: "italic",
                       fontSize: 38, fontWeight: 500, color: "var(--ranger-forest)",
                       lineHeight: 0.95, margin: 0, letterSpacing: "-0.02em",
                     }}>
                       {daysUntilTrip <= 0 ? (daysUntilTrip === 0 ? "0" : "✓") : daysUntilTrip}
                     </p>
                     <p style={{
-                      fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 700,
+                      fontSize: 9, fontWeight: 700,
                       letterSpacing: "0.18em", color: "var(--ranger-ink-muted)", marginTop: 4,
                       textTransform: "uppercase",
                     }}>
@@ -1396,14 +1388,14 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             >
               <img src="/mochi-map.png" alt="Poko" style={{ width: 32, height: 32, flexShrink: 0, objectFit: "contain" }} />
               <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={{
-                  fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
+                <p className="font-display-italic" style={{
+                  fontStyle: "italic",
                   fontSize: 16, color: "var(--ranger-parchment)", margin: 0, letterSpacing: "-0.005em",
                 }}>
                   Get Poko's trip briefing
                 </p>
                 <p style={{
-                  fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 400,
+                  fontSize: 11, fontWeight: 400,
                   color: "var(--ranger-parchment-soft)", margin: "2px 0 0",
                 }}>
                   What to know for {parkConfig.shortName} on {format(arrivalDate, "MMM d")}
@@ -1415,8 +1407,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         ) : (
           <div className="ranger-card ranger-card--quiet">
             <CalendarIcon size={26} strokeWidth={1.5} style={{ color: "var(--ranger-gold)", margin: "0 auto 12px" }} />
-            <p style={{
-              fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
+            <p className="font-display-italic" style={{
+              fontStyle: "italic",
               fontSize: 22, fontWeight: 400, color: "var(--ranger-night)", margin: 0,
               letterSpacing: "-0.01em",
             }}>
@@ -1429,8 +1421,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
               onClick={() => setTripModalOpen(true)}
               style={{
                 display: "inline-flex", alignItems: "center", background: "var(--ranger-night)",
-                color: "var(--ranger-parchment)", fontFamily: "'DM Sans', sans-serif",
-                fontSize: 12, fontWeight: 600, letterSpacing: "0.12em",
+                color: "var(--ranger-parchment)", fontSize: 12, fontWeight: 600, letterSpacing: "0.12em",
                 textTransform: "uppercase", padding: "12px 22px",
                 borderRadius: 999, border: "1px solid var(--ranger-rule-strong)",
                 cursor: "pointer", minHeight: 44,
@@ -1460,8 +1451,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             transition={{ duration: 0.32, ease: [0.4, 0, 0.2, 1] }}
             style={{ position: "relative" }}
           >
-            <h3 style={{
-              fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
+            <h3 className="font-display-italic" style={{
+              fontStyle: "italic",
               fontSize: 32, fontWeight: 400, color: "var(--ranger-night)",
               letterSpacing: "-0.02em", lineHeight: 1.05,
               marginBottom: 16, margin: 0,
@@ -1471,10 +1462,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             <span className="wa-rule-solid" style={{ width: 28, marginBlock: "12px 18px", background: "var(--ranger-rule-strong)" }} />
             <SeasonalBlurb body={data.mochiTip.body ?? ""} />
             <div style={{ height: 1, background: "var(--ranger-rule-onlight)", marginTop: 22, marginBottom: 14 }} />
-            <button
+            <button className="font-display-italic"
               onClick={() => onNavigateToMochi?.(`Tell me Poko's pick for ${data.label.toLowerCase()} in ${parkConfig.shortName}`)}
               style={{
-                fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
+                fontStyle: "italic",
                 fontSize: 14, color: "var(--ranger-gold)", background: "none", border: "none",
                 cursor: "pointer", padding: 0, textDecoration: "underline",
                 textUnderlineOffset: 4, textDecorationColor: "var(--ranger-rule-strong)",
@@ -1556,23 +1547,23 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                 }}
               >
                 {/* Roman numeral marker top-right */}
-                <span aria-hidden="true" style={{
+                <span className="font-display-italic" aria-hidden="true" style={{
                   position: "absolute", top: 10, right: 12,
-                  fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
+                  fontStyle: "italic",
                   fontSize: 11, color: "var(--ranger-gold)", letterSpacing: "0.04em",
                 }}>
                   {ROMAN[i]}
                 </span>
                 <CardIcon size={14} strokeWidth={1.6} style={{ color: "var(--ranger-forest)", marginBottom: 10 }} />
                 <p style={{
-                  fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600,
+                  fontSize: 10, fontWeight: 600,
                   letterSpacing: "0.18em", color: "var(--ranger-ink-muted)",
                   textTransform: "uppercase", margin: "0 0 6px",
                 }}>
                   {card.title}
                 </p>
                 <p style={{
-                  fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 400,
+                  fontSize: 13, fontWeight: 400,
                   color: "var(--ranger-night)", lineHeight: 1.55, margin: 0,
                   display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden",
                 }}>
@@ -1730,9 +1721,9 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                         onClick={() => copyTipLink(tip.id)}
                         title="Copy link to this tip"
                         aria-label={`${tip.title} — copy share link`}
-                        className="wa-rich-tip-title"
+                        className="wa-rich-tip-title font-display-italic"
                         style={{
-                          fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
+                          fontStyle: "italic",
                           fontWeight: 500, fontSize: 19, color: "var(--ranger-night)",
                           lineHeight: 1.2, letterSpacing: "-0.005em",
                           margin: 0, paddingRight: 24,
@@ -1744,11 +1735,11 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                         {tip.title}
                       </button>
                     </div>
-                    <span
+                    <span className="font-display-italic"
                       aria-hidden="true"
                       style={{
                         position: "absolute", top: 12, right: 14,
-                        fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
+                        fontStyle: "italic",
                         fontSize: 12, color: "var(--ranger-gold)", letterSpacing: "0.04em",
                         lineHeight: 1,
                       }}
@@ -1759,7 +1750,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
 
                   {/* Body */}
                   <p style={{
-                    fontFamily: "'DM Sans', sans-serif", fontSize: 13.5, fontWeight: 400,
+                    fontSize: 13.5, fontWeight: 400,
                     color: "var(--ranger-ink-body)", lineHeight: 1.6, margin: 0,
                     paddingLeft: 44,
                   }}>
@@ -1802,7 +1793,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             >
               <span aria-hidden="true" style={{ width: 14, height: 1, background: "var(--ranger-gold)", flexShrink: 0 }} />
               <span style={{
-                fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600,
+                fontSize: 10, fontWeight: 600,
                 letterSpacing: "0.18em", color: "var(--ranger-ink-muted)", textTransform: "uppercase",
                 whiteSpace: "nowrap",
               }}>
@@ -1820,8 +1811,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             </button>
 
             {!crossSeasonOpen && (
-              <p style={{
-                fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
+              <p className="font-display-italic" style={{
+                fontStyle: "italic",
                 fontSize: 14, color: "var(--ranger-ink-muted)", margin: "2px 0 0 24px",
                 lineHeight: 1.4,
               }}>
@@ -1865,8 +1856,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                         </span>
                         <div style={{ minWidth: 0, flex: 1 }}>
                           <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 8, marginBottom: 4 }}>
-                            <p style={{
-                              fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
+                            <p className="font-display-italic" style={{
+                              fontStyle: "italic",
                               fontWeight: 500, fontSize: 16, color: "var(--ranger-night)",
                               lineHeight: 1.2, margin: 0,
                             }}>
@@ -1876,7 +1867,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                           </div>
                           {tip.body && (
                             <p style={{
-                              fontFamily: "'DM Sans', sans-serif", fontSize: 12.5, fontWeight: 400,
+                              fontSize: 12.5, fontWeight: 400,
                               color: "var(--ranger-ink-soft)", lineHeight: 1.55, margin: 0,
                             }}>
                               {tip.body}
@@ -1896,15 +1887,15 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
       {/* ═══════════════════════ XIII. COLOPHON ═══════════════════════ */}
       <footer style={{ padding: "44px 20px 36px", textAlign: "center" }}>
         <span className="wa-rule-solid" style={{ width: 60, marginInline: "auto", display: "block", background: "var(--ranger-rule-strong)" }} />
-        <p style={{
-          fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
+        <p className="font-display-italic" style={{
+          fontStyle: "italic",
           fontSize: 15, color: "var(--ranger-night)", margin: "16px 0 6px",
           letterSpacing: "0.005em",
         }}>
           WildAtlas · Field Edition
         </p>
         <p style={{
-          fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 500,
+          fontSize: 10, fontWeight: 500,
           letterSpacing: "0.22em", color: "var(--ranger-ink-muted)",
           textTransform: "uppercase", margin: 0,
         }}>
@@ -1915,7 +1906,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         }}>
           <Radar size={10} style={{ color: "var(--ranger-ink-muted)" }} />
           <span style={{
-            fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 500,
+            fontSize: 11, fontWeight: 500,
             color: "var(--ranger-ink-muted)",
           }}>
             Permit scanner active in Alerts
@@ -2170,7 +2161,7 @@ const LiveAlertBannerInner = ({
         <div style={{ minWidth: 0, flex: 1, display: "flex", flexDirection: "column", gap: 2 }}>
           <div style={{ display: "flex", alignItems: "baseline", gap: 8, minWidth: 0 }}>
             <p style={{
-              fontFamily: "'DM Sans', sans-serif", fontSize: 10,
+              fontSize: 10,
               fontWeight: tier.eyebrowWeight, letterSpacing: "0.18em",
               color: tier.eyebrow, textTransform: "uppercase", margin: 0,
               overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
@@ -2196,7 +2187,7 @@ const LiveAlertBannerInner = ({
           <p
             className="wa-live-alert-subtext"
             style={{
-              fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 400,
+              fontSize: 12, fontWeight: 400,
               color: tier.subtext, margin: 0,
               overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
             }}
@@ -2251,31 +2242,31 @@ const LiveAlertBannerInner = ({
 
               <div style={{ display: "flex", gap: 24, marginBottom: 14 }}>
                 <div>
-                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: "0.18em", color: "var(--wa-ink-subtle)", textTransform: "uppercase", margin: 0, marginBottom: 2 }}>
+                  <p style={{ fontSize: 9, fontWeight: 600, letterSpacing: "0.18em", color: "var(--wa-ink-subtle)", textTransform: "uppercase", margin: 0, marginBottom: 2 }}>
                     {isSunrise ? "First light" : "Last light"}
                   </p>
-                  <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: 22, fontWeight: 400, color: "var(--wa-ink-primary)", margin: 0, letterSpacing: "-0.01em" }}>
+                  <p className="font-display-italic" style={{ fontStyle: "italic", fontSize: 22, fontWeight: 400, color: "var(--wa-ink-primary)", margin: 0, letterSpacing: "-0.01em" }}>
                     {eventTimeLabel}
                   </p>
                 </div>
                 <div>
-                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: "0.18em", color: "var(--wa-ink-subtle)", textTransform: "uppercase", margin: 0, marginBottom: 2 }}>
+                  <p style={{ fontSize: 9, fontWeight: 600, letterSpacing: "0.18em", color: "var(--wa-ink-subtle)", textTransform: "uppercase", margin: 0, marginBottom: 2 }}>
                     Countdown
                   </p>
-                  <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: 22, fontWeight: 400, color: "var(--wa-ink-primary)", margin: 0, letterSpacing: "-0.01em" }}>
+                  <p className="font-display-italic" style={{ fontStyle: "italic", fontSize: 22, fontWeight: 400, color: "var(--wa-ink-primary)", margin: 0, letterSpacing: "-0.01em" }}>
                     {mins <= 0 ? "Now" : countdown}
                   </p>
                 </div>
               </div>
 
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: "0.18em", color: "var(--wa-ink-subtle)", textTransform: "uppercase", margin: 0, marginBottom: 8 }}>
+              <p style={{ fontSize: 9, fontWeight: 600, letterSpacing: "0.18em", color: "var(--wa-ink-subtle)", textTransform: "uppercase", margin: 0, marginBottom: 8 }}>
                 What to expect on trails
               </p>
               <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 6 }}>
                 {trailExpect.map((line, i) => (
                   <li key={i} style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
                     <span style={{ width: 3, height: 3, borderRadius: "50%", background: "var(--ranger-gold)", marginTop: 8, flexShrink: 0 }} />
-                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, lineHeight: 1.5, color: "var(--wa-ink-primary)" }}>
+                    <span style={{ fontSize: 13, lineHeight: 1.5, color: "var(--wa-ink-primary)" }}>
                       {line}
                     </span>
                   </li>
@@ -2318,26 +2309,26 @@ const LiveAlertBannerInner = ({
                     <div style={{ marginTop: 18 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
                         <span style={{ height: 1, width: 14, background: "var(--ranger-gold)", flexShrink: 0 }} />
-                        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: "0.18em", color: "var(--wa-ink-subtle)", textTransform: "uppercase", margin: 0 }}>
+                        <p style={{ fontSize: 9, fontWeight: 600, letterSpacing: "0.18em", color: "var(--wa-ink-subtle)", textTransform: "uppercase", margin: 0 }}>
                           Linked field tips
                         </p>
                       </div>
                       <div style={{ padding: "16px 16px 18px", background: "var(--ranger-rule-faint-2)", borderTop: "1px solid var(--ranger-rule-medium)", borderBottom: "1px solid var(--ranger-rule-night-soft)", borderRadius: 8 }}>
-                        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: 18, fontWeight: 400, lineHeight: 1.25, letterSpacing: "-0.01em", color: "var(--wa-ink-primary)", margin: 0 }}>
+                        <p className="font-display-italic" style={{ fontStyle: "italic", fontSize: 18, fontWeight: 400, lineHeight: 1.25, letterSpacing: "-0.01em", color: "var(--wa-ink-primary)", margin: 0 }}>
                           No field tips logged for {seasonLabel}.
                         </p>
                         {fallbackTips.length > 0 ? (
-                          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, lineHeight: 1.55, color: "var(--wa-ink-subtle)", margin: "6px 0 0" }}>
+                          <p style={{ fontSize: 12, lineHeight: 1.55, color: "var(--wa-ink-subtle)", margin: "6px 0 0" }}>
                             A few notes from other seasons that still apply year-round:
                           </p>
                         ) : (
                           <div role="note" style={{ marginTop: 12, paddingTop: 12, borderTop: "1px solid var(--ranger-rule-night-soft)", display: "flex", alignItems: "flex-start", gap: 10 }}>
                             <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--ranger-gold)", marginTop: 6, flexShrink: 0, opacity: 0.7 }} />
                             <div style={{ minWidth: 0, flex: 1 }}>
-                              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600, lineHeight: 1.4, color: "var(--wa-ink-primary)", margin: 0 }}>
+                              <p style={{ fontSize: 12, fontWeight: 600, lineHeight: 1.4, color: "var(--wa-ink-primary)", margin: 0 }}>
                                 No field tips logged yet for this park.
                               </p>
-                              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, lineHeight: 1.55, color: "var(--wa-ink-subtle)", margin: "4px 0 0" }}>
+                              <p style={{ fontSize: 12, lineHeight: 1.55, color: "var(--wa-ink-subtle)", margin: "4px 0 0" }}>
                                 Rangers add seasonal notes as conditions change. Check back soon.
                               </p>
                             </div>
@@ -2362,7 +2353,7 @@ const LiveAlertBannerInner = ({
                               }}
                             >
                               <span style={{ height: 1, width: 10, background: "var(--ranger-gold)", flexShrink: 0 }} />
-                              <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: "0.18em", color: "var(--wa-ink-subtle)", textTransform: "uppercase", flex: 1 }}>
+                              <span style={{ fontSize: 9, fontWeight: 600, letterSpacing: "0.18em", color: "var(--wa-ink-subtle)", textTransform: "uppercase", flex: 1 }}>
                                 From other seasons · {fallbackTips.length}
                               </span>
                               <motion.span
@@ -2391,17 +2382,17 @@ const LiveAlertBannerInner = ({
                                       <span style={{ width: 4, height: 4, borderRadius: "50%", background: "var(--ranger-gold)", marginTop: 7, flexShrink: 0 }} />
                                       <div style={{ minWidth: 0, flex: 1 }}>
                                         <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 6 }}>
-                                          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600, color: "var(--wa-ink-primary)", margin: 0, lineHeight: 1.4 }}>
+                                          <p style={{ fontSize: 12, fontWeight: 600, color: "var(--wa-ink-primary)", margin: 0, lineHeight: 1.4 }}>
                                             {tip?.title}
                                           </p>
                                           {tip?._seasonLabel && (
-                                            <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--ranger-gold-deep)", background: "var(--ranger-rule-soft)", border: "1px solid var(--ranger-rule-night)", borderRadius: 999, padding: "2px 7px", lineHeight: 1.2, whiteSpace: "nowrap" }}>
+                                            <span style={{ fontWeight: 600, fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--ranger-gold-deep)", background: "var(--ranger-rule-soft)", border: "1px solid var(--ranger-rule-night)", borderRadius: 999, padding: "2px 7px", lineHeight: 1.2, whiteSpace: "nowrap" }}>
                                               {tip._seasonLabel}
                                             </span>
                                           )}
                                         </div>
                                         {tip?.body && (
-                                          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, lineHeight: 1.5, color: "var(--wa-ink-subtle)", margin: "2px 0 0" }}>
+                                          <p style={{ fontSize: 12, lineHeight: 1.5, color: "var(--wa-ink-subtle)", margin: "2px 0 0" }}>
                                             {tip.body}
                                           </p>
                                         )}
@@ -2419,7 +2410,7 @@ const LiveAlertBannerInner = ({
 
                   {panelState === "ready" && (
                     <div style={{ marginTop: 14 }}>
-                      <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: "0.18em", color: "var(--wa-ink-subtle)", textTransform: "uppercase", margin: 0, marginBottom: 8 }}>
+                      <p style={{ fontSize: 9, fontWeight: 600, letterSpacing: "0.18em", color: "var(--wa-ink-subtle)", textTransform: "uppercase", margin: 0, marginBottom: 8 }}>
                         Linked field tips
                       </p>
                       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -2432,11 +2423,11 @@ const LiveAlertBannerInner = ({
                             style={{ display: "flex", alignItems: "center", gap: 10, minHeight: 44, width: "100%", textAlign: "left", cursor: "pointer", font: "inherit" }}
                           >
                             <div style={{ minWidth: 0, flex: 1 }}>
-                              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600, color: "var(--wa-ink-primary)", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                              <p style={{ fontSize: 13, fontWeight: 600, color: "var(--wa-ink-primary)", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                                 {tip.title}
                               </p>
                               {tip.summary && (
-                                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "var(--wa-ink-subtle)", margin: "2px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                                <p style={{ fontSize: 11, color: "var(--wa-ink-subtle)", margin: "2px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                                   {tip.summary}
                                 </p>
                               )}

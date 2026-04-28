@@ -175,7 +175,7 @@ export default function HeroLightbox({
               <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 8 }}>
                 <span aria-hidden="true" style={{ width: 18, height: 1, background: "var(--ranger-gold)" }} />
                 <span style={{
-                  fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600,
+                  fontSize: 10, fontWeight: 600,
                   letterSpacing: "0.22em", color: "var(--ranger-parchment-body)",
                   textTransform: "uppercase",
                 }}>
@@ -184,8 +184,7 @@ export default function HeroLightbox({
                 <span aria-hidden="true" style={{ width: 18, height: 1, background: "var(--ranger-gold)" }} />
               </div>
             )}
-            <h2 style={{
-              fontFamily: "'Cormorant Garamond', serif",
+            <h2 className="font-display-italic" style={{
               fontStyle: "italic", fontWeight: 400,
               fontSize: 26, lineHeight: 1.05, letterSpacing: "-0.015em",
               color: "var(--ranger-paper-cream)", margin: 0,
@@ -194,7 +193,6 @@ export default function HeroLightbox({
             </h2>
             {subtitle && (
               <p style={{
-                fontFamily: "'DM Sans', sans-serif",
                 fontSize: 13, fontWeight: 400,
                 color: "var(--ranger-paper-cream)",
                 margin: "10px auto 0", maxWidth: 480, lineHeight: 1.5,
@@ -203,7 +201,7 @@ export default function HeroLightbox({
               </p>
             )}
             <p style={{
-              fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 500,
+              fontSize: 10, fontWeight: 500,
               letterSpacing: "0.18em", color: "var(--ranger-parchment-mute)",
               textTransform: "uppercase", margin: "14px 0 0",
             }}>

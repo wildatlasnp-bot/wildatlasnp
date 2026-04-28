@@ -81,8 +81,7 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
           : { backgroundColor: hexToRgba(parkColor, 0.15), border: "1px solid var(--ranger-forest-tint-40)", color: parkColor, minHeight: 44 }}
       >
         {isOverlay ? (
-          <span style={{
-            fontFamily: "'Cormorant Garamond', serif",
+          <span className="font-display" style={{
             fontStyle: 'italic',
             fontSize: 11,
             letterSpacing: '0.12em',
