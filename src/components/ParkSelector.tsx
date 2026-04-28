@@ -73,22 +73,32 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
         aria-haspopup="listbox"
         className={`flex items-center gap-1.5 text-[12px] font-semibold tracking-wider transition-colors font-body ${
           isOverlay
-            ? "text-white hover:brightness-110"
+            ? "w-full justify-between text-white hover:brightness-110"
             : "px-3.5 py-1 rounded-full border hover:brightness-95"
         }`}
         style={isOverlay
-          ? { background: "transparent", border: "none", boxShadow: "none", borderRadius: 0, padding: 0, minHeight: 44, backdropFilter: "none" }
+          ? { background: "transparent", border: "none", boxShadow: "none", borderRadius: 0, padding: 0, minHeight: 44, backdropFilter: "none", width: "100%" }
           : { backgroundColor: hexToRgba(parkColor, 0.15), border: "1px solid var(--ranger-forest-tint-40)", color: parkColor, minHeight: 44 }}
       >
         {isOverlay ? (
-          <span className="font-display-italic" style={{
-            fontSize: 12,
-            letterSpacing: '0.12em',
-            color: 'var(--ranger-paper-soft)',
-            lineHeight: 1,
-          }}>
-            {(active?.shortName ?? "PARK").toUpperCase()} — {PARK_COORDS[activeParkId] ?? ""}
-          </span>
+          <>
+            <span className="font-display-italic" style={{
+              fontSize: 12,
+              letterSpacing: '0.12em',
+              color: 'var(--ranger-paper-soft)',
+              lineHeight: 1,
+            }}>
+              {(active?.shortName ?? "PARK").toUpperCase()} — {PARK_COORDS[activeParkId] ?? ""}
+            </span>
+            <span style={{
+              fontSize: 12, fontWeight: 600,
+              letterSpacing: "0.22em", color: "var(--ranger-parchment-mute)",
+              textTransform: "uppercase",
+              display: "inline-flex", alignItems: "center", gap: 4,
+            }}>
+              Change park <ChevronDown size={12} strokeWidth={1.5} className={`transition-transform ${open ? "rotate-180" : ""}`} />
+            </span>
+          </>
         ) : (
           <>
             <Mountain size={12} strokeWidth={1.5} />

@@ -1053,13 +1053,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             variant="overlay"
             watchedParkIds={watchedParkIds}
           />
-          <span style={{
-            fontSize: 12, fontWeight: 600,
-            letterSpacing: "0.22em", color: "var(--ranger-parchment-mute)",
-            textTransform: "uppercase",
-          }}>
-            Change park ⌄
-          </span>
         </div>
       </div>
 
