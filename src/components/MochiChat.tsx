@@ -533,7 +533,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
     };
   }, []);
 
-  // Update greeting when primary park changes (from tracked permits)
+  // Update greeting when primary park changes (from tracked permits).
+  // Note: `messages` is intentionally read via the `isBriefingState` derivation
+  // — including it in deps would cause this to refire on every chat turn and
+  // wipe the conversation. We gate strictly on the park-id transition.
   useEffect(() => {
     if (selectedParkId !== prevPrimaryParkRef.current) {
       prevPrimaryParkRef.current = selectedParkId;
@@ -542,7 +545,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
         setMessages([makeGreeting()]);
       }
     }
-  }, [selectedParkId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedParkId, firstSession, makeGreeting]);
 
   // Rebuild greeting when tracked permits load or displayName changes
   const prevNameRef = useRef(displayName);
