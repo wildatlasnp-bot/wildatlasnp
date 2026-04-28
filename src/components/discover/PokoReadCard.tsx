@@ -216,7 +216,7 @@ export default function PokoReadCard({ parkId, parkShortName, onAskPoko }: PokoR
               marginTop: 10,
               textDecoration: "underline",
               textUnderlineOffset: 3,
-              textDecorationColor: "rgba(201,169,110,0.4)",
+              textDecorationColor: "var(--ranger-rule-strong)",
               minHeight: 28,
             }}
           >
