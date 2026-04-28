@@ -17,7 +17,10 @@ interface ProModalProps {
 
 let cachedPrice: string | null = null;
 
-const EASE = "cubic-bezier(0.4, 0, 0.2, 1)";
+// Soft expo-out — long decelerating tail, no overshoot. Shared across modal.
+const EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
+// Ambient loops (ken-burns, aurora) use the global standard for a calmer drift.
+const EASE_AMBIENT = "cubic-bezier(0.4, 0, 0.2, 1)";
 
 /**
  * Premium Field Pass — dark editorial direction.
