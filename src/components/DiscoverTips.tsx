@@ -342,6 +342,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   // Fetch first forecast location for hero subtitle
   useEffect(() => {
     setHeroForecast(null);
+    setHeroImgLoaded(false);
     const season = getCurrentSeason();
     const dayType = new Date().getDay() === 0 || new Date().getDay() === 6 ? "weekend" : "weekday";
     const load = async () => {
