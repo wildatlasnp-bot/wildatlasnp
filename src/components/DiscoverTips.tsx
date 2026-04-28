@@ -19,6 +19,7 @@ import {
 } from "@/lib/discover-utils";
 import PokoReadCard from "@/components/discover/PokoReadCard";
 import FieldLog from "@/components/discover/FieldLog";
+import HeroLightbox from "@/components/discover/HeroLightbox";
 import ParkSelector from "@/components/ParkSelector";
 import { seasons, getCurrentSeason, parkSeasons, type Season } from "@/lib/park-seasons";
 import TodayParkAdvice from "@/components/TodayParkAdvice";
@@ -395,6 +396,16 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
   const [heroImgError, setHeroImgError] = useState(false);
   const [liveAlertExpanded, setLiveAlertExpanded] = useState(false);
   const heroImgRef = useRef<HTMLImageElement | null>(null);
+
+  // ── Hero lightbox (cinematic in-page image viewer) ──
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxOrigin, setLightboxOrigin] = useState<DOMRect | null>(null);
+  const openLightbox = useCallback(() => {
+    if (heroImgError || !heroImgLoaded) return;
+    const rect = heroImgRef.current?.getBoundingClientRect() ?? null;
+    setLightboxOrigin(rect);
+    setLightboxOpen(true);
+  }, [heroImgError, heroImgLoaded]);
 
   // ── Hero parallax: subtle vertical drift driven by scroll position.
   //    Honors prefers-reduced-motion (CSS guards animation; we also no-op here).
@@ -797,12 +808,27 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             </svg>
           </div>
         )}
+        {/* Tap-to-zoom: invisible button covers the photo, sits below editorial overlays */}
+        {!heroImgError && (
+          <button
+            type="button"
+            aria-label={`View larger image of ${parkConfig.shortName}`}
+            onClick={openLightbox}
+            disabled={!heroImgLoaded}
+            style={{
+              position: "absolute", inset: 0, zIndex: 3,
+              background: "transparent", border: "none", padding: 0, margin: 0,
+              cursor: heroImgLoaded ? "zoom-in" : "default",
+              WebkitTapHighlightColor: "transparent",
+            }}
+          />
+        )}
         {/* Time-of-day overlay (live) */}
-        <div className="absolute inset-0" style={{ background: photoOverlay, zIndex: 1, transition: "background 1200ms cubic-bezier(0.4, 0, 0.2, 1)" }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: photoOverlay, zIndex: 1, transition: "background 1200ms cubic-bezier(0.4, 0, 0.2, 1)" }} />
         {/* Universal photo scrim — readability for type at the bottom */}
-        <div className="park-photo-scrim wa-hero-vignette" />
+        <div className="park-photo-scrim wa-hero-vignette pointer-events-none" />
         {/* Park-tinted bottom wash */}
-        <div className="absolute inset-0" style={{
+        <div className="absolute inset-0 pointer-events-none" style={{
           background: `linear-gradient(to top, ${parkConfig.primaryColor ?? "#2F6F4E"}b8 0%, ${parkConfig.primaryColor ?? "#2F6F4E"}26 38%, transparent 68%)`,
           zIndex: 2,
         }} />
@@ -886,6 +912,19 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           )}
         </div>
       </div>
+
+      {/* Cinematic in-page lightbox for the hero photo */}
+      <HeroLightbox
+        open={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+        src={hero.image}
+        alt={hero.alt}
+        eyebrow="Field Report"
+        title={parkConfig.shortName}
+        subtitle={parkConfig.heroDescription}
+        originRect={lightboxOrigin}
+        objectPosition={hero.objectPosition ?? "center 30%"}
+      />
 
       {/* ═══════════════════════ III. PARK SELECTOR STRIP ═══════════════════════
           Sticky just under the hero, on a near-black ribbon so the choice
