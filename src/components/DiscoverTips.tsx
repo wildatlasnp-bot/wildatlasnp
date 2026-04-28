@@ -1669,7 +1669,8 @@ const LiveAlertBannerInner = ({
                             </div>
                           </li>
                         ))}
-                      </ul>
+                        </ul>
+                      </>
                     )}
                   </div>
                 </div>
