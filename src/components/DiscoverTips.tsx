@@ -1345,6 +1345,14 @@ const LiveAlertBannerInner = ({
     }
   }, [expanded, panelState, linked.length, seasonLabel]);
 
+  // Collapsed by default to keep the empty state compact on mobile (390px).
+  // Resets whenever the panel collapses, the season changes, or the underlying
+  // fallback list changes — so the user always re-encounters the compact view.
+  const [fallbackOpen, setFallbackOpen] = useState(false);
+  useEffect(() => {
+    setFallbackOpen(false);
+  }, [expanded, seasonLabel, fallbackKey]);
+
   // Brief shimmer while fallback tips are being derived. Even though the
   // computation is synchronous, a short perceived-loading window smooths the
   // transition from `loading` → `empty` and signals that we're looking for
