@@ -138,7 +138,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
       opacity: visible ? 1 : 0,
       transform: visible ? "translate3d(0, 0, 0)" : offset,
       transition: REVEAL_TRANSITION,
-      willChange: "opacity, transform",
+      // No `will-change` here — it would promote 14 layers and balloon GPU memory
+      // on mobile. translate3d already hints the compositor for the brief reveal.
     };
   };
 
