@@ -1384,7 +1384,55 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           delay={60}
         />
         <div className="grid grid-cols-2" style={{ gap: 10 }}>
-          {(parkHighlights[parkId] ?? []).map((card, i) => {
+          {cardsSettling
+            ? Array.from({ length: 4 }).map((_, i) => (
+                <div
+                  key={`hl-skel-${i}`}
+                  className="wa-highlight-card content-crossfade"
+                  aria-hidden="true"
+                  style={{
+                    background: "#FFFFFF",
+                    border: "1px solid rgba(201,169,110,0.18)",
+                    boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
+                    borderRadius: 10,
+                    padding: 16,
+                    minHeight: 148,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    position: "relative",
+                    overflow: "hidden",
+                  }}
+                >
+                  {/* Shimmer wash mirroring the .permit-skeleton-shimmer system */}
+                  <span className="permit-skeleton-shimmer" style={{
+                    position: "absolute", inset: 0, borderRadius: 10,
+                    background: "linear-gradient(135deg, rgba(201,169,110,0.06) 0%, rgba(245,240,232,0.55) 100%)",
+                  }} />
+                  {/* Skeleton stand-ins matching the real layout's rhythm */}
+                  <span style={{
+                    width: 14, height: 14, borderRadius: 3, marginBottom: 10,
+                    background: "rgba(47,111,78,0.14)", flexShrink: 0,
+                  }} />
+                  <span style={{
+                    width: "62%", height: 8, borderRadius: 999, marginBottom: 10,
+                    background: "rgba(107,104,96,0.18)",
+                  }} />
+                  <span style={{
+                    width: "100%", height: 8, borderRadius: 999, marginBottom: 6,
+                    background: "rgba(26,46,31,0.10)",
+                  }} />
+                  <span style={{
+                    width: "88%", height: 8, borderRadius: 999, marginBottom: 6,
+                    background: "rgba(26,46,31,0.10)",
+                  }} />
+                  <span style={{
+                    width: "54%", height: 8, borderRadius: 999,
+                    background: "rgba(26,46,31,0.10)",
+                  }} />
+                </div>
+              ))
+            : (parkHighlights[parkId] ?? []).map((card, i) => {
             const CardIcon = card.icon;
             return (
               <motion.div
