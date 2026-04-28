@@ -647,7 +647,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
     setInput("");
     setIsLoading(true);
     setMochiPose("scanning");
-
+    // Cancel any pending finishing→idle timer from a prior run.
+    if (finishingTimeoutRef.current) {
+      clearTimeout(finishingTimeoutRef.current);
+      finishingTimeoutRef.current = null;
+    }
+    setStreamPhase('starting');
     const history = [...messages, userMsg]
       .filter((m) => m.id !== 1)
       .map((m) => ({ role: m.role, content: m.content }));
