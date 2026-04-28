@@ -1310,7 +1310,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         />
         {arrivalDate && daysUntilTrip !== null ? (
           <>
-            <div style={{ background: "var(--ranger-paper)", boxShadow: "0 1px 3px var(--ranger-rule-onlight)", borderRadius: 14, overflow: "hidden", border: "1px solid var(--ranger-rule-night-soft)" }}>
+            <div className="ranger-card ranger-card--rounded-lg ranger-card--flush">
               <div style={{ padding: "20px 20px 16px", borderBottom: "0.5px solid var(--ranger-rule-onlight)" }}>
                 <p style={{
                   fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600,
