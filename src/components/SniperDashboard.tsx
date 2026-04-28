@@ -205,32 +205,76 @@ const SniperDashboard = () => {
   return (
     <>
     <PullToRefresh onRefresh={handlePullRefresh} className="flex flex-col h-full relative content-crossfade [background-color:#F0EDEA]">
-      {/* ── Dark Header Section ── */}
-      <div style={{ background: "linear-gradient(180deg, #0B2B1B 0%, #051A10 100%)" }}>
-        <div ref={headerFadeRef} style={{ padding: "32px 20px 0" }}>
+      {/* ── Dark Header Section — atmospheric, layered ── */}
+      <div
+        style={{
+          position: "relative",
+          background:
+            "radial-gradient(ellipse 120% 80% at 50% -10%, rgba(201,169,110,0.10) 0%, rgba(201,169,110,0.03) 35%, transparent 65%)," +
+            "radial-gradient(ellipse 90% 60% at 100% 0%, rgba(76,175,125,0.08) 0%, transparent 55%)," +
+            "linear-gradient(180deg, #0E2E1E 0%, #08210F 55%, #051A0C 100%)",
+          overflow: "hidden",
+        }}
+      >
+        {/* Topographic noise overlay — subtle film grain feel */}
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage:
+              "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.95  0 0 0 0 0.93  0 0 0 0 0.88  0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>\")",
+            opacity: 0.55,
+            mixBlendMode: "overlay",
+            pointerEvents: "none",
+          }}
+        />
+        <div ref={headerFadeRef} style={{ position: "relative", padding: "36px 20px 0" }}>
+          {/* Editorial eyebrow */}
+          <div
+            style={{
+              fontFamily: DM_SANS,
+              fontSize: 10,
+              fontWeight: 500,
+              letterSpacing: "0.32em",
+              textTransform: "uppercase",
+              color: "rgba(201,169,110,0.85)",
+              marginBottom: 14,
+              opacity: "var(--header-opacity, 1)" as any,
+              willChange: "opacity",
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+            }}
+          >
+            <span style={{ display: "inline-block", width: 18, height: 1, background: "rgba(201,169,110,0.55)" }} />
+            Field Journal
+          </div>
           <h1
             style={{
               fontFamily: CORMORANT,
-              fontSize: 56,
+              fontSize: 60,
               fontWeight: 200,
-              color: "#F0EDEA",
-              lineHeight: 1.1,
-              letterSpacing: "-0.01em",
+              color: "#F4F1EC",
+              lineHeight: 1.0,
+              letterSpacing: "-0.02em",
               opacity: "var(--header-opacity, 1)" as any,
               willChange: "opacity",
+              textShadow: "0 1px 24px rgba(0,0,0,0.25)",
             }}
           >
             My Parks
           </h1>
           {/* Status summary */}
-          <div className="flex items-center gap-2" style={{ marginTop: 6, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
+          <div className="flex items-center gap-2" style={{ marginTop: 10, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
              <span
                style={{
                  fontFamily: CORMORANT,
-                 fontSize: 16,
+                 fontSize: 17,
                  fontStyle: "italic",
                  fontWeight: 400,
-                 color: "rgba(255,255,255,0.85)",
+                 color: "rgba(244,241,236,0.78)",
+                 letterSpacing: "0.005em",
                }}
              >
               {s.watches.length === 0
@@ -261,11 +305,11 @@ const SniperDashboard = () => {
             </AnimatePresence>
           </div>
         </div>
-        <div style={{ marginBottom: 24 }} />
+        <div style={{ marginBottom: 26 }} />
 
         {/* ── Mochi Insight Card (borderless) ── */}
         {s.watches.length > 0 && (
-          <div style={{ marginBottom: 0 }}>
+          <div style={{ position: "relative", marginBottom: 0 }}>
           <MochiGlassCard
             permitName={s.watches[0]?.permit_name}
             parkName={s.watches[0]?.park_id}
@@ -277,23 +321,39 @@ const SniperDashboard = () => {
          )}
 
         {/* ── Tracked Permits Section (inside dark zone) ── */}
-        <div style={{ padding: "0 0 14px" }}>
-        {/* Section label */}
+        <div style={{ position: "relative", padding: "0 0 18px" }}>
+        {/* Section label — editorial centered ornament */}
         {s.watches.length > 0 && (
            <div
             className="flex items-center justify-between"
-           style={{ margin: "0 20px 14px", paddingTop: 28, marginTop: 28, borderTop: '1px solid rgba(240,237,234,0.12)' }}
+           style={{ margin: "0 20px 16px", paddingTop: 32, marginTop: 32, position: "relative" }}
           >
+            {/* Hairline rule with center-cut ornament */}
+            <div
+              aria-hidden
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                height: 1,
+                background: "linear-gradient(90deg, transparent 0%, rgba(201,169,110,0.28) 20%, rgba(201,169,110,0.28) 80%, transparent 100%)",
+              }}
+            />
              <span
                 style={{
                   fontFamily: DM_SANS,
-                  fontSize: 12,
+                  fontSize: 11,
                   fontWeight: 500,
                   textTransform: "uppercase" as const,
-                  letterSpacing: "0.12em",
-                  color: "rgba(240,237,234,0.5)",
+                  letterSpacing: "0.22em",
+                  color: "rgba(244,241,236,0.62)",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 10,
                 }}
               >
+               <span style={{ width: 4, height: 4, borderRadius: "50%", background: "rgba(201,169,110,0.7)", display: "inline-block" }} />
                Watching
              </span>
              <span style={{ minWidth: 120, textAlign: "right" as const, display: "inline-block" }}>
@@ -305,33 +365,35 @@ const SniperDashboard = () => {
                    onKeyDown={(e) => e.key === "Enter" && s.setProModalOpen(true)}
                    style={{
                      fontFamily: DM_SANS,
-                     fontSize: 12,
+                     fontSize: 11,
                      fontWeight: 500,
-                     color: "#2F6F4E",
+                     letterSpacing: "0.18em",
+                     textTransform: "uppercase",
+                     color: "rgba(201,169,110,0.95)",
                      cursor: "pointer",
                      background: "none",
                      border: "none",
                      padding: 0,
                    }}
                  >
-                   Add another park
-                   <svg width="7" height="10" viewBox="0 0 7 10" fill="none" style={{ marginLeft: 4, verticalAlign: "middle", display: "inline" }}>
-                     <path d="M1 1L5 5L1 9" stroke="#2F6F4E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                   Add park
+                   <svg width="7" height="10" viewBox="0 0 7 10" fill="none" style={{ marginLeft: 6, verticalAlign: "middle", display: "inline" }}>
+                     <path d="M1 1L5 5L1 9" stroke="rgba(201,169,110,0.95)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                    </svg>
                  </span>
                ) : (
                  <span
-                   style={{
-                     fontFamily: DM_SANS,
-                     fontSize: 12,
-                     fontWeight: 500,
-                     textTransform: "uppercase" as const,
-                     letterSpacing: "0.12em",
-                     color: "rgba(240,237,234,0.5)",
-                   }}
-                 >
-                   Watching · {s.activeCount} of 3
-                 </span>
+                  style={{
+                    fontFamily: DM_SANS,
+                    fontSize: 11,
+                    fontWeight: 500,
+                    textTransform: "uppercase" as const,
+                    letterSpacing: "0.18em",
+                    color: "rgba(244,241,236,0.55)",
+                  }}
+                >
+                  {s.activeCount} of 3
+                </span>
                )}
              </span>
            </div>
@@ -641,11 +703,13 @@ const PermitPhotoCard = ({
     <>
       <div
         style={{
-          margin: "0 12px 0",
-          borderRadius: 12,
+          margin: "0 16px 0",
+          borderRadius: 14,
           overflow: "hidden",
           cursor: "pointer",
-          border: "1px solid rgba(240,237,234,0.10)",
+          border: "1px solid rgba(201,169,110,0.18)",
+          boxShadow:
+            "0 1px 0 rgba(255,255,255,0.04) inset, 0 22px 50px -28px rgba(0,0,0,0.6), 0 4px 14px -6px rgba(0,0,0,0.35)",
         }}
         onClick={onToggleExpand}
         role="button"
@@ -654,7 +718,7 @@ const PermitPhotoCard = ({
       >
         <div>
         {/* Photo zone */}
-        <div style={{ height: 220, position: "relative", overflow: "hidden", background: "linear-gradient(135deg, #1C2E22 0%, #2F4A38 50%, #1A2820 100%)" }}>
+        <div style={{ height: 240, position: "relative", overflow: "hidden", background: "linear-gradient(135deg, #1C2E22 0%, #2F4A38 50%, #1A2820 100%)" }}>
           {parkConfig.heroImage ? (
             <img
               src={parkConfig.heroImage}
@@ -664,7 +728,7 @@ const PermitPhotoCard = ({
               height={640}
               style={{
                 width: "100%",
-                height: "220px",
+                height: "240px",
                 objectFit: "cover" as const,
                 position: "absolute",
                 top: 0,
@@ -685,21 +749,48 @@ const PermitPhotoCard = ({
           )}
           {/* Gradient scrim */}
           <div className="park-photo-scrim" />
+          {/* Cinematic top vignette for badge legibility */}
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 90,
+              background: "linear-gradient(180deg, rgba(8,21,15,0.55) 0%, rgba(8,21,15,0.20) 50%, transparent 100%)",
+              pointerEvents: "none",
+            }}
+          />
+          {/* Cinematic bottom gradient for title */}
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: 130,
+              background: "linear-gradient(180deg, transparent 0%, rgba(8,21,15,0.55) 60%, rgba(8,21,15,0.85) 100%)",
+              pointerEvents: "none",
+            }}
+          />
           {/* Liveness pill — scan timestamp */}
           <div
             style={{
               position: "absolute",
-              top: 12,
-              left: 12,
+              top: 14,
+              left: 14,
               zIndex: 10,
               display: "flex",
               alignItems: "center",
-              gap: 6,
-              background: "rgba(255,255,255,0.35)",
-              backdropFilter: "blur(10px)",
-              WebkitBackdropFilter: "blur(10px)",
-              borderRadius: 20,
-              padding: "4px 10px",
+              gap: 7,
+              background: "rgba(244,241,236,0.92)",
+              backdropFilter: "blur(14px)",
+              WebkitBackdropFilter: "blur(14px)",
+              borderRadius: 999,
+              padding: "5px 11px 5px 10px",
+              boxShadow: "0 2px 10px rgba(0,0,0,0.18), 0 0 0 0.5px rgba(0,0,0,0.04) inset",
             }}
           >
             <div style={{ position: "relative", width: 8, height: 8, flexShrink: 0 }}>
@@ -707,12 +798,12 @@ const PermitPhotoCard = ({
                 <>
                   <span style={{
                     position: "absolute", top: 0, left: 0, width: 8, height: 8,
-                    borderRadius: "50%", border: "1.5px solid #4CAF7D",
+                    borderRadius: "50%", border: "1.5px solid #2F6F4E",
                     animation: "scan-ring-1 1.8s ease-out infinite",
                   }} />
                   <span style={{
                     position: "absolute", top: 0, left: 0, width: 8, height: 8,
-                    borderRadius: "50%", border: "1.5px solid #4CAF7D",
+                    borderRadius: "50%", border: "1.5px solid #2F6F4E",
                     animation: "scan-ring-2 1.8s ease-out 0.4s infinite",
                   }} />
                 </>
@@ -720,39 +811,41 @@ const PermitPhotoCard = ({
               <span style={{
                 position: "absolute", top: 0, left: 0,
                 width: 8, height: 8, borderRadius: "50%",
-                backgroundColor: isStale ? "#A8A89A" : "#4CAF7D",
+                backgroundColor: isStale ? "#A8A89A" : "#2F6F4E",
               }} />
             </div>
              <span
                style={{
                  fontFamily: DM_SANS,
-                 fontSize: 12,
-                 fontWeight: 400,
-                 color: "#9CA3AF",
+                 fontSize: 11,
+                 fontWeight: 500,
+                 letterSpacing: "0.04em",
+                 color: "#1A2820",
                  whiteSpace: "nowrap",
                }}
              >
               {scannedAgoText}
             </span>
           </div>
-           {/* Park label */}
+           {/* Park label — editorial gold-bordered chip */}
            <span
              style={{
                position: "absolute",
                top: 14,
-               right: 16,
+               right: 14,
                fontFamily: DM_SANS,
-               fontSize: 12,
-               fontWeight: 500,
-               letterSpacing: "0.08em",
+               fontSize: 10,
+               fontWeight: 600,
+               letterSpacing: "0.24em",
                textTransform: "uppercase",
-               color: "rgba(255,255,255,0.90)",
-               background: "rgba(255,255,255,0.15)",
-               backdropFilter: "blur(8px)",
-               WebkitBackdropFilter: "blur(8px)",
-               padding: "4px 10px",
-               borderRadius: 6,
-               border: "none",
+               color: "rgba(244,241,236,0.95)",
+               background: "rgba(8,21,15,0.45)",
+               backdropFilter: "blur(10px)",
+               WebkitBackdropFilter: "blur(10px)",
+               padding: "5px 10px",
+               borderRadius: 4,
+               border: "1px solid rgba(201,169,110,0.55)",
+               boxShadow: "0 2px 8px rgba(0,0,0,0.20)",
               zIndex: 10,
              }}
            >
@@ -762,16 +855,18 @@ const PermitPhotoCard = ({
           <span
             style={{
               position: "absolute",
-              bottom: 20,
+              bottom: 22,
               left: 20,
+              right: 20,
               zIndex: 10,
                fontFamily: CORMORANT,
-              fontSize: 26,
-              fontWeight: 400,
-              color: "#FFFFFF",
-              lineHeight: 1.2,
-              letterSpacing: "-0.01em",
-              textShadow: "0 1px 3px rgba(0, 0, 0, 0.30)",
+              fontSize: 28,
+              fontWeight: 300,
+              color: "#F4F1EC",
+              lineHeight: 1.15,
+              letterSpacing: "-0.015em",
+              textShadow: "0 2px 12px rgba(0, 0, 0, 0.45)",
+              display: "block",
             }}
           >
             {permitDef.name}
