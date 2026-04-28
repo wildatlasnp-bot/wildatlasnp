@@ -799,6 +799,20 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               eventLabel={liveAlertSnapshot.eventLabel}
               tips={data?.tips ?? null}
               seasonLabel={data?.label ?? activeSeason}
+              fallbackTips={(() => {
+                // Pull one representative tip from each *other* season of the same park,
+                // so the empty state still surfaces real, park-specific guidance.
+                if (!seasonContent) return [];
+                const out: any[] = [];
+                for (const s of seasons) {
+                  if (s === activeSeason) continue;
+                  const sd = seasonContent[s];
+                  const first = sd?.tips?.[0];
+                  if (first) out.push({ ...first, _seasonLabel: sd.label });
+                  if (out.length >= 3) break;
+                }
+                return out;
+              })()}
               expanded={liveAlertExpanded}
               onToggle={() => setLiveAlertExpanded((v) => !v)}
               onTipClick={handleTipNavigate}
@@ -1150,6 +1164,7 @@ type LiveAlertBannerProps = {
   eventLabel: string;
   tips: any[] | null;
   seasonLabel: string;
+  fallbackTips?: any[];
   expanded: boolean;
   onToggle: () => void;
   onTipClick?: (tipId: string) => void;
@@ -1161,6 +1176,7 @@ const LiveAlertBannerInner = ({
   eventLabel,
   tips,
   seasonLabel,
+  fallbackTips = [],
   expanded,
   onToggle,
   onTipClick,
@@ -1501,25 +1517,124 @@ const LiveAlertBannerInner = ({
               )}
 
               {panelState === 'empty' && (
-                <div style={{ marginTop: 14 }}>
-                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: '0.16em', color: 'var(--wa-ink-subtle)', textTransform: 'uppercase', margin: 0, marginBottom: 8 }}>
-                    Linked field tips
-                  </p>
+                <div style={{ marginTop: 18 }}>
+                  {/* Eyebrow with hairline rule — matches "What to expect on trails" treatment */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+                    <span style={{ height: 1, width: 14, background: '#C9A96E', flexShrink: 0 }} />
+                    <p style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 9,
+                      fontWeight: 600,
+                      letterSpacing: '0.16em',
+                      color: 'var(--wa-ink-subtle)',
+                      textTransform: 'uppercase',
+                      margin: 0,
+                    }}>
+                      Linked field tips
+                    </p>
+                  </div>
+
+                  {/* Editorial empty card — flat champagne wash, hairline rule, no dashed border */}
                   <div
                     style={{
-                      padding: '12px 14px',
-                      background: 'rgba(201,169,110,0.06)',
-                      border: '1px dashed rgba(201,169,110,0.35)',
+                      padding: '16px 16px 18px',
+                      background: 'rgba(201,169,110,0.05)',
+                      borderTop: '1px solid rgba(201,169,110,0.30)',
+                      borderBottom: '1px solid rgba(201,169,110,0.18)',
                       borderRadius: 8,
                     }}
                   >
-                    <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, lineHeight: 1.5, color: 'var(--wa-ink-subtle)', margin: 0 }}>
-                      No tips for this season{' '}
-                      <span style={{ color: 'var(--wa-ink-primary)', fontWeight: 600 }}>
-                        ({seasonLabel})
-                      </span>
-                      .
+                    <p style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontSize: 18,
+                      fontWeight: 400,
+                      lineHeight: 1.25,
+                      letterSpacing: '-0.01em',
+                      color: 'var(--wa-ink-primary)',
+                      margin: 0,
+                    }}>
+                      No field tips logged for {seasonLabel}.
                     </p>
+                    <p style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 12,
+                      lineHeight: 1.55,
+                      color: 'var(--wa-ink-subtle)',
+                      margin: 0,
+                      marginTop: 6,
+                    }}>
+                      {fallbackTips.length > 0
+                        ? 'A few notes from other seasons that still apply year-round:'
+                        : 'Check back next season — rangers add seasonal notes as conditions change.'}
+                    </p>
+
+                    {fallbackTips.length > 0 && (
+                      <ul style={{
+                        listStyle: 'none',
+                        padding: 0,
+                        margin: '12px 0 0',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 10,
+                      }}>
+                        {fallbackTips.map((tip: any, i: number) => (
+                          <li
+                            key={tip?.id ?? i}
+                            style={{
+                              display: 'flex',
+                              gap: 10,
+                              alignItems: 'flex-start',
+                              paddingTop: i === 0 ? 10 : 0,
+                              borderTop: i === 0 ? '1px solid rgba(201,169,110,0.18)' : 'none',
+                            }}
+                          >
+                            <span style={{
+                              width: 4,
+                              height: 4,
+                              borderRadius: '50%',
+                              background: '#C9A96E',
+                              marginTop: 7,
+                              flexShrink: 0,
+                            }} />
+                            <div style={{ minWidth: 0, flex: 1 }}>
+                              <p style={{
+                                fontFamily: "'DM Sans', sans-serif",
+                                fontSize: 12,
+                                fontWeight: 600,
+                                color: 'var(--wa-ink-primary)',
+                                margin: 0,
+                                lineHeight: 1.4,
+                              }}>
+                                {tip?.title}
+                                {tip?._seasonLabel && (
+                                  <span style={{
+                                    fontWeight: 500,
+                                    fontSize: 9,
+                                    letterSpacing: '0.14em',
+                                    textTransform: 'uppercase',
+                                    color: 'var(--wa-ink-subtle)',
+                                    marginLeft: 8,
+                                  }}>
+                                    {tip._seasonLabel}
+                                  </span>
+                                )}
+                              </p>
+                              {tip?.body && (
+                                <p style={{
+                                  fontFamily: "'DM Sans', sans-serif",
+                                  fontSize: 12,
+                                  lineHeight: 1.5,
+                                  color: 'var(--wa-ink-subtle)',
+                                  margin: '2px 0 0',
+                                }}>
+                                  {tip.body}
+                                </p>
+                              )}
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
                 </div>
               )}
