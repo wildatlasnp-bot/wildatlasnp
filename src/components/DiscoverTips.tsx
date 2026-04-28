@@ -1291,8 +1291,16 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           eyebrow="Plan ahead"
           italic="Crowd patterns by season — typical, not live"
           delay={60}
+          focusKey={focusKey}
         />
-        <div className="ranger-card ranger-card--rounded-lg" style={{ padding: 16 }}>
+        <motion.div
+          key={`crowd-${parkId}`}
+          initial={{ opacity: 0, y: 8, filter: "blur(4px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 0.5, delay: 0.24, ease: [0.4, 0, 0.2, 1] }}
+          className="ranger-card ranger-card--rounded-lg"
+          style={{ padding: 16 }}
+        >
           <CrowdWindows parkId={parkId} season={activeSeason}>
             <div className="flex bg-muted rounded-[10px] p-1 gap-1 mb-3">
               {seasons.map((s) => {
@@ -1316,7 +1324,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
               })}
             </div>
           </CrowdWindows>
-        </div>
+        </motion.div>
       </section>
 
       {/* ═══════════════════════ IX. PLAN YOUR VISIT ═══════════════════════ */}
