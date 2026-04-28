@@ -235,7 +235,7 @@ export default function FieldLog({ parkId, onNavigateToSniper, onNavigateToAlert
           {[0, 1, 2, 3].map((i) => (
             <div
               key={i}
-              style={{ height: 14, backgroundColor: "#ECE7DF", borderRadius: 4, opacity: 0.6 }}
+              style={{ height: 14, backgroundColor: "var(--ranger-rule-bone)", borderRadius: "var(--ranger-r-sm)", opacity: 0.6 }}
               className="animate-pulse"
             />
           ))}
