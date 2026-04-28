@@ -72,6 +72,23 @@ const THEME_LABELS: Record<TipTheme, string> = {
 /* Stable ordering for clusters — keeps layout deterministic across seasons */
 const THEME_ORDER: TipTheme[] = ["trail", "wildlife", "weather", "logistics", "moments"];
 
+/* Normalize a tip title for fuzzy dedup across seasons.
+   Lowercases, strips diacritics, drops punctuation, collapses whitespace,
+   and trims a few common filler words so near-identical guidance collapses. */
+const TITLE_FILLER = /\b(the|a|an|your|tip|note|reminder)\b/g;
+const normalizeTipTitle = (raw: unknown): string => {
+  const s = String(raw ?? "");
+  if (!s) return "";
+  return s
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}\s]/gu, " ")
+    .replace(TITLE_FILLER, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+};
+
 const classifyTip = (tip: { icon: any; title?: string }): TipTheme => {
   const iconName = String(tip?.icon?.displayName ?? tip?.icon?.name ?? "").toLowerCase();
   const title = String(tip?.title ?? "").toLowerCase();
