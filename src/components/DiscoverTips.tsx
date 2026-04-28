@@ -1148,6 +1148,7 @@ type LiveAlertBannerProps = {
   mins: number;
   eventLabel: string;
   tips: any[] | null;
+  seasonLabel: string;
   expanded: boolean;
   onToggle: () => void;
   onTipClick?: (tipId: string) => void;
@@ -1158,6 +1159,7 @@ const LiveAlertBannerInner = ({
   mins,
   eventLabel,
   tips,
+  seasonLabel,
   expanded,
   onToggle,
   onTipClick,
