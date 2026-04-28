@@ -494,14 +494,9 @@ const SniperDashboard = () => {
       <div style={{ backgroundColor: "#F2F1ED", position: "relative" }}>
       <RecentCatchesFeed />
 
-      {/* Divider between Recent Catches and Park Alerts */}
-      <div style={{ height: 1, background: "rgba(0,0,0,0.08)", margin: "0 20px" }} />
-
-      {/* ── Park Alerts (secondary section) ── */}
-      <div>
-        <div style={{ background: "#F2F1ED", padding: "24px 20px 0" }}>
-          <ParkAlerts trackedParkIds={trackedParkIds} />
-        </div>
+      {/* ── Park Alerts — Field Dispatch (full-bleed hero) ── */}
+      <div style={{ background: "#F2F1ED", marginTop: 20 }}>
+        <ParkAlerts trackedParkIds={trackedParkIds} />
       </div>
 
       {/* Inline "Watch a permit" button */}
