@@ -1299,7 +1299,11 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
           <div style={{
             position: 'sticky', top: 0, zIndex: 10,
             height: 48, flexShrink: 0,
-            background: 'linear-gradient(to bottom, #0B2B1B, transparent)',
+            // Slightly taller scrim that matches the new layered base, so
+            // the header dissolves into the field instead of sitting on it.
+            background: 'linear-gradient(to bottom, rgba(11,43,27,0.92) 0%, rgba(11,43,27,0.55) 60%, transparent 100%)',
+            backdropFilter: 'blur(6px)',
+            WebkitBackdropFilter: 'blur(6px)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
             {selectedParkId && PARKS[selectedParkId] ? (
