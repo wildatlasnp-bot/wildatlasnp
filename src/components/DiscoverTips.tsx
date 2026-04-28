@@ -1136,6 +1136,54 @@ const LiveAlertBannerInner = ({
   onToggle,
   onTipClick,
 }: LiveAlertBannerProps) => {
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  // Tracks whether the most recent toggle was user-initiated (so we only
+  // move focus on real interactions — not the auto-collapse on event flips).
+  const userToggledRef = useRef(false);
+  const prevExpandedRef = useRef(expanded);
+
+  const handleToggle = useCallback(() => {
+    userToggledRef.current = true;
+    onToggle();
+  }, [onToggle]);
+
+  const handleTriggerKeyDown = useCallback((e: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (e.key === 'Escape' && expanded) {
+      e.preventDefault();
+      userToggledRef.current = true;
+      onToggle();
+    }
+  }, [expanded, onToggle]);
+
+  const handlePanelKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Escape' && expanded) {
+      e.preventDefault();
+      e.stopPropagation();
+      userToggledRef.current = true;
+      onToggle();
+    }
+  }, [expanded, onToggle]);
+
+  // Focus management: move focus into the panel on open, restore to trigger on close.
+  // Skips programmatic toggles (e.g. sunrise↔sunset auto-collapse) to avoid
+  // hijacking focus from wherever the user currently is.
+  useEffect(() => {
+    const wasExpanded = prevExpandedRef.current;
+    prevExpandedRef.current = expanded;
+    if (!userToggledRef.current) return;
+    if (expanded && !wasExpanded) {
+      // Defer until the AnimatePresence height transition has started so
+      // the panel is in the layout tree and focusable.
+      const id = window.setTimeout(() => panelRef.current?.focus(), 30);
+      return () => window.clearTimeout(id);
+    }
+    if (!expanded && wasExpanded) {
+      triggerRef.current?.focus();
+    }
+    userToggledRef.current = false;
+  }, [expanded]);
+
   const isSunrise = eventType === 'sunrise';
   const m = eventLabel.match(/^(\d{1,2}):(\d{2})([ap])$/i);
   const eventTimeLabel = m ? `${m[1]}:${m[2]} ${m[3].toUpperCase()}M` : eventLabel;
