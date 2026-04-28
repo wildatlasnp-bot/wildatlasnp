@@ -1615,6 +1615,7 @@ const LiveAlertBannerInner = ({
         onKeyDown={handleTriggerKeyDown}
         aria-expanded={expanded}
         aria-controls="live-alert-panel"
+        aria-label={`${headline}. ${subtext}. ${expanded ? "Collapse" : "Expand"} field tips.`}
         id="live-alert-trigger"
         className="wa-live-alert-trigger"
         style={{
