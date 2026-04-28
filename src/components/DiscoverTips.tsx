@@ -259,7 +259,8 @@ const SectionPlate = ({
   <div className="wa-reveal" style={{ ["--d" as any]: `${delay}ms`, marginBottom: 18 }}>
     <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 12, marginBottom: 10 }}>
       <span
-        className="wa-plate-eyebrow"
+        key={focusKey ? `eyebrow-${focusKey}` : undefined}
+        className={`wa-plate-eyebrow ${focusKey ? "wa-eyebrow-flash" : ""}`}
         style={{ color: dark ? "var(--ranger-parchment-soft)" : "var(--ranger-ink-muted)" }}
       >
         {eyebrow}
