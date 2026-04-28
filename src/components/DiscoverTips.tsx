@@ -1277,14 +1277,46 @@ const LiveAlertBannerInner = ({
       ];
   const linkedTipKeys = isSunrise ? ['weather', 'wildlife'] : ['weather', 'safety'];
   const linked = (tips ?? [])
-    .filter((t: any) =>
-      linkedTipKeys.some(
-        (k) =>
-          (t.id ?? '').toLowerCase().includes(k) ||
-          (t.title ?? '').toLowerCase().includes(k)
-      )
-    )
+    .filter((t: any) => {
+      const id = String(t?.id ?? '').toLowerCase();
+      const title = String(t?.title ?? '').toLowerCase();
+      return linkedTipKeys.some((k) => id.includes(k) || title.includes(k));
+    })
     .slice(0, 2);
+
+  // Three explicit panel states for both visual + screen-reader treatment:
+  //   • 'loading'  — tips fetch in flight (tips === null)
+  //   • 'empty'    — tips loaded but no linked field tips for this event
+  //   • 'ready'    — tips loaded and at least one linked field tip available
+  const panelState: 'loading' | 'empty' | 'ready' =
+    tips === null ? 'loading' : linked.length > 0 ? 'ready' : 'empty';
+
+  // Screen-reader announcement: fires only when the panel is open, and only
+  // when the state actually transitions (so the live region is not re-spoken
+  // on every render). Cleared after announcement to avoid stale repeats.
+  const [tipsStatus, setTipsStatus] = useState('');
+  const prevPanelStateRef = useRef<'loading' | 'empty' | 'ready' | null>(null);
+  useEffect(() => {
+    if (!expanded) {
+      prevPanelStateRef.current = null;
+      setTipsStatus('');
+      return;
+    }
+    const prev = prevPanelStateRef.current;
+    if (prev === panelState) return;
+    prevPanelStateRef.current = panelState;
+    const message =
+      panelState === 'loading'
+        ? 'Loading field tips…'
+        : panelState === 'ready'
+        ? `Field tips ready. ${linked.length} linked tip${linked.length === 1 ? '' : 's'}.`
+        : 'No linked field tips available for this window.';
+    setTipsStatus(message);
+    if (panelState !== 'loading') {
+      const id = window.setTimeout(() => setTipsStatus(''), 1500);
+      return () => window.clearTimeout(id);
+    }
+  }, [expanded, panelState, linked.length]);
 
   return (
     <div
