@@ -552,10 +552,10 @@ function FieldDispatchHero({
       <div style={{ display: "flex", alignItems: "center", gap: 18, marginTop: 22, position: "relative", zIndex: 2 }}>
         <SeverityDial counts={counts} total={total} loading={loading} />
         <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 6 }}>
-          <CountRow label="Emergencies" value={counts.critical} ink="#E24B4A" />
-          <CountRow label="Closures"    value={counts.closure}  ink="#C9A96E" />
-          <CountRow label="Caution"     value={counts.caution}  ink="#E0B560" />
-          <CountRow label="Info"        value={counts.info}     ink="#7FB89A" />
+          <CountRow label="Emergency"  value={counts.critical} ink="#E24B4A" tip="Immediate danger — evacuations, search-and-rescue, or active hazards. Act now." />
+          <CountRow label="Closure"    value={counts.closure}  ink="#C9A96E" tip="Trail, road, or area closed by the park. Plan an alternate route." />
+          <CountRow label="Caution"    value={counts.caution}  ink="#E0B560" tip="Heightened risk — wildlife activity, weather, or trail conditions. Proceed prepared." />
+          <CountRow label="Dispatch"   value={counts.info}     ink="#7FB89A" tip="General park notice — service updates, advisories, and seasonal news." />
         </div>
       </div>
 
