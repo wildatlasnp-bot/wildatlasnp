@@ -1500,21 +1500,31 @@ const LiveAlertBannerInner = ({
                 ))}
               </ul>
 
-              {/* Section 2 — Linked field tips: loading / empty / ready */}
-              {panelState === 'loading' && (
-                <div style={{ marginTop: 14 }} aria-busy="true">
-                  <div className="permit-skeleton-shimmer" style={{ height: 8, width: 110, borderRadius: 2, marginBottom: 10, background: 'rgba(201,169,110,0.18)' }} />
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                    {[0, 1].map((i) => (
-                      <div
-                        key={i}
-                        className="permit-skeleton-shimmer"
-                        style={{ height: 44, width: '100%', borderRadius: 8, background: 'rgba(201,169,110,0.14)' }}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
+              {/* Section 2 — Linked field tips: loading / empty / ready
+                  Wrapped in AnimatePresence so transitions between the three
+                  states fade + slide subtly instead of snapping. */}
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={panelState}
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
+                >
+                  {panelState === 'loading' && (
+                    <div style={{ marginTop: 14 }} aria-busy="true">
+                      <div className="permit-skeleton-shimmer" style={{ height: 8, width: 110, borderRadius: 2, marginBottom: 10, background: 'rgba(201,169,110,0.18)' }} />
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                        {[0, 1].map((i) => (
+                          <div
+                            key={i}
+                            className="permit-skeleton-shimmer"
+                            style={{ height: 44, width: '100%', borderRadius: 8, background: 'rgba(201,169,110,0.14)' }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
               {panelState === 'empty' && (
                 <div style={{ marginTop: 18 }}>
