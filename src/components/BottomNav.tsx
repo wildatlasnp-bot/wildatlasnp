@@ -135,7 +135,7 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
             <span
               style={{
                 fontFamily: "'DM Sans', sans-serif",
-                fontSize: 10,
+                fontSize: 12,
                 fontWeight: isActive ? 600 : 500,
                 letterSpacing: "0.10em",
                 textTransform: "uppercase",
