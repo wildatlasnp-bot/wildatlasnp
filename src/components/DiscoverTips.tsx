@@ -751,18 +751,34 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
 
       {/* ── Live Alert banner: sunrise/sunset proximity (≤30 min) ──
           Memoized via LiveAlertBanner so the 30s `now` tick does not re-render
-          this subtree — only whole-minute changes or sunrise↔sunset flips do. */}
-      {liveAlertSnapshot && (
-        <LiveAlertBanner
-          eventType={liveAlertSnapshot.eventType}
-          mins={liveAlertSnapshot.mins}
-          eventLabel={liveAlertSnapshot.eventLabel}
-          tips={data?.tips ?? null}
-          expanded={liveAlertExpanded}
-          onToggle={() => setLiveAlertExpanded((v) => !v)}
-          onTipClick={handleTipNavigate}
-        />
-      )}
+          this subtree — only whole-minute changes or sunrise↔sunset flips do.
+          Wrapped in AnimatePresence so entry/exit at the 30-min threshold
+          animates height + opacity (no reflow snap). */}
+      <AnimatePresence initial={false}>
+        {liveAlertSnapshot && (
+          <motion.div
+            key={`live-alert-${liveAlertSnapshot.eventType}`}
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{
+              height: { duration: 0.32, ease: [0.4, 0, 0.2, 1] },
+              opacity: { duration: 0.22, ease: [0.4, 0, 0.2, 1] },
+            }}
+            style={{ overflow: 'hidden' }}
+          >
+            <LiveAlertBanner
+              eventType={liveAlertSnapshot.eventType}
+              mins={liveAlertSnapshot.mins}
+              eventLabel={liveAlertSnapshot.eventLabel}
+              tips={data?.tips ?? null}
+              expanded={liveAlertExpanded}
+              onToggle={() => setLiveAlertExpanded((v) => !v)}
+              onTipClick={handleTipNavigate}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ── Permit-found bar (editorial field-log strip) ── */}
       {!findsLoading && recentFinds > 0 && (
