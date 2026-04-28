@@ -60,7 +60,7 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
         display: "flex",
         justifyContent: "space-around",
         alignItems: "center",
-        height: 64,
+        height: 76,
         padding: "0 4px",
         paddingBottom: "env(safe-area-inset-bottom, 0px)",
         background: "#1A2F1E",
