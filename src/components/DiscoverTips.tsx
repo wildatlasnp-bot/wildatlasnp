@@ -471,7 +471,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       </div>
 
       {/* ── Full-bleed Hero Image (time-of-day color graded) ── */}
-      <div className="relative w-full h-[380px] overflow-hidden mt-3">
+      <div className="relative w-full overflow-hidden mt-3" style={{ height: 'clamp(320px, 52vh, 420px)' }}>
         <img
           src={hero.image}
           alt={hero.alt}
@@ -490,25 +490,26 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         <div className="absolute inset-0" style={{ background: `linear-gradient(to top, ${parkConfig.primaryColor ?? '#2F6F4E'}b3 0%, ${parkConfig.primaryColor ?? '#2F6F4E'}26 38%, transparent 68%)`, zIndex: 2 }} />
 
         {/* Top-left: gold hairline + eyebrow (FIELD REPORT · date · weekday) */}
-        <div className="absolute top-5 left-5 right-5" style={{ zIndex: 10 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <div style={{ height: 1, width: 24, background: '#C9A96E', opacity: 0.85 }} />
-            <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600, letterSpacing: '0.22em', color: 'rgba(255,255,255,0.85)', textTransform: 'uppercase', textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
+        <div className="absolute top-4 left-4 right-4" style={{ zIndex: 10 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
+            <div style={{ height: 1, width: 20, background: '#C9A96E', opacity: 0.85, flexShrink: 0 }} />
+            <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600, letterSpacing: '0.18em', color: 'rgba(255,255,255,0.88)', textTransform: 'uppercase', textShadow: '0 1px 2px rgba(0,0,0,0.4)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>
               Field Report · {localTime.dateLabel} · {localTime.weekday}
             </span>
           </div>
-          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 500, letterSpacing: '0.18em', color: 'rgba(255,255,255,0.55)', marginTop: 6, textTransform: 'uppercase', textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 500, letterSpacing: '0.16em', color: 'rgba(255,255,255,0.6)', marginTop: 4, textTransform: 'uppercase', textShadow: '0 1px 2px rgba(0,0,0,0.4)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {coords}
           </p>
         </div>
 
-        {/* Bottom: editorial title stack */}
-        <div className="absolute bottom-6 left-5 right-5" style={{ zIndex: 10 }}>
+        {/* Bottom: editorial title stack — extra clearance for the telemetry strip below */}
+        <div className="absolute left-4 right-4" style={{ bottom: 18, zIndex: 10 }}>
           {(() => {
             const heroText = `${parkConfig.shortName}${heroForecast?.location ? ` · ${heroForecast.location}` : ""}`;
-            const heroFontSize = heroText.length <= 20 ? 38 : heroText.length <= 35 ? 30 : 24;
+            // Clamp font size so long park names don't overflow the 390px viewport.
+            const heroFontSize = heroText.length <= 18 ? 34 : heroText.length <= 28 ? 28 : 22;
             return (
-              <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: heroFontSize, fontStyle: 'italic', fontWeight: 400, letterSpacing: "-0.015em", color: "white", lineHeight: 1.1, textShadow: "0 2px 8px rgba(0,0,0,0.45)" }}>
+              <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: heroFontSize, fontStyle: 'italic', fontWeight: 400, letterSpacing: "-0.015em", color: "white", lineHeight: 1.1, textShadow: "0 2px 8px rgba(0,0,0,0.5)", margin: 0, wordBreak: 'break-word' }}>
                 {heroText}
               </h2>
             );
@@ -518,13 +519,14 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               display: 'inline-flex',
               alignItems: 'center',
               gap: 6,
+              maxWidth: '100%',
               background: badgeBg(parkConfig.primaryColor),
               backdropFilter: 'blur(8px)',
               WebkitBackdropFilter: 'blur(8px)',
               border: '0.5px solid rgba(255,255,255,0.2)',
               borderRadius: 20,
               padding: '4px 12px',
-              marginTop: 10,
+              marginTop: 8,
             }}>
               <span style={{
                 width: 6,
@@ -536,7 +538,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
                   : heroForecast.status === "Packed" ? "var(--wa-crowd-packed)"
                   : "var(--wa-crowd-quiet)",
               }} />
-              <span style={{ fontSize: 12, fontWeight: 500, color: '#ffffff', whiteSpace: 'nowrap' }}>
+              <span style={{ fontSize: 12, fontWeight: 500, color: '#ffffff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {heroForecast.status} now{heroForecast.quietsAfter ? ` · quiets after ${heroForecast.quietsAfter}` : ""}
               </span>
             </div>
@@ -544,9 +546,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         </div>
       </div>
 
-      {/* ── Telemetry strip (sun ephemeris) ── */}
+      {/* ── Telemetry strip (sun ephemeris) ──
+          Two stacked rows on narrow screens: top row = primary (Local · Countdown),
+          bottom row = secondary (Sunrise · Sunset). Prevents 4-col crush at 390px. */}
       {(() => {
-        // Consistent 12-hour formatting in the park's local timezone (e.g. "6:42 AM").
         const localTimeLabel = new Intl.DateTimeFormat('en-US', {
           timeZone: localTime.tz,
           hour: 'numeric',
@@ -554,7 +557,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           hour12: true,
         }).format(now).replace(/\u202f/g, ' ');
 
-        // Normalize sunrise/sunset labels from "6:42a" → "6:42 AM" for consistency.
         const normalizeSunLabel = (label: string) => {
           const m = label.match(/^(\d{1,2}):(\d{2})([ap])$/i);
           if (!m) return label;
@@ -562,33 +564,71 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         };
         const sunriseLabel = normalizeSunLabel(sun.sunriseLabel);
         const sunsetLabel = normalizeSunLabel(sun.sunsetLabel);
-
-        // Clearer countdown wording: "Sunrise in 5h 12m" / "Sunset in 38m".
         const countdownEyebrow = sun.nextEventLabel === 'Sunrise' ? 'Sunrise in' : 'Sunset in';
         const countdownValue = formatCountdown(sun.minutesToNextEvent);
 
-        const items = [
-          { eyebrow: 'Local time', value: localTimeLabel },
-          { eyebrow: 'Sunrise', value: sunriseLabel },
-          { eyebrow: 'Sunset', value: sunsetLabel },
-          { eyebrow: countdownEyebrow, value: countdownValue },
-        ];
+        const Cell = ({ eyebrow, value, dim, borderLeft }: { eyebrow: string; value: string; dim?: boolean; borderLeft?: boolean }) => (
+          <div style={{
+            textAlign: 'center',
+            padding: '0 6px',
+            minWidth: 0,
+            borderLeft: borderLeft ? '1px solid rgba(255,255,255,0.08)' : 'none',
+          }}>
+            <p style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 9,
+              fontWeight: 600,
+              letterSpacing: '0.14em',
+              color: dim ? 'rgba(168,196,184,0.55)' : 'rgba(168,196,184,0.78)',
+              textTransform: 'uppercase',
+              margin: 0,
+              marginBottom: 2,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}>{eyebrow}</p>
+            <p style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: dim ? 15 : 18,
+              fontWeight: 400,
+              color: dim ? 'rgba(240,237,234,0.78)' : '#F0EDEA',
+              letterSpacing: '-0.01em',
+              margin: 0,
+              lineHeight: 1.1,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}>{value}</p>
+          </div>
+        );
 
         return (
           <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
             background: '#1A2F1E',
             borderTop: '1px solid rgba(201,169,110,0.35)',
             borderBottom: '1px solid rgba(201,169,110,0.18)',
-            padding: '10px 12px',
+            paddingTop: 10,
+            paddingBottom: 10,
+            paddingLeft: 12,
+            paddingRight: 12,
           }}>
-            {items.map((item, i) => (
-              <div key={item.eyebrow} style={{ textAlign: 'center', borderLeft: i === 0 ? 'none' : '1px solid rgba(255,255,255,0.08)', padding: '0 4px' }}>
-                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: '0.16em', color: 'rgba(168,196,184,0.75)', textTransform: 'uppercase', margin: 0, marginBottom: 3, whiteSpace: 'nowrap' }}>{item.eyebrow}</p>
-                <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 17, fontWeight: 400, color: '#F0EDEA', letterSpacing: '-0.01em', margin: 0, lineHeight: 1.1, whiteSpace: 'nowrap' }}>{item.value}</p>
-              </div>
-            ))}
+            {/* Primary row */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center' }}>
+              <Cell eyebrow="Local time" value={localTimeLabel} />
+              <Cell eyebrow={countdownEyebrow} value={countdownValue} borderLeft />
+            </div>
+            {/* Secondary row */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              alignItems: 'center',
+              marginTop: 8,
+              paddingTop: 8,
+              borderTop: '1px solid rgba(255,255,255,0.06)',
+            }}>
+              <Cell eyebrow="Sunrise" value={sunriseLabel} dim />
+              <Cell eyebrow="Sunset" value={sunsetLabel} dim borderLeft />
+            </div>
           </div>
         );
       })()}
