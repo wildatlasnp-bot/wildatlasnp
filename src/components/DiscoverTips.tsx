@@ -559,8 +559,20 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               </span>
             </div>
           )}
-        </div>
-      </div>
+          {!heroForecast && (
+            <div
+              aria-hidden="true"
+              className="permit-skeleton-shimmer"
+              style={{
+                width: 168,
+                height: 22,
+                borderRadius: 20,
+                marginTop: 8,
+                background: 'rgba(255,255,255,0.10)',
+                border: '0.5px solid rgba(255,255,255,0.12)',
+              }}
+            />
+          )}
 
       {/* ── Telemetry strip (sun ephemeris) ──
           Two stacked rows on narrow screens: top row = primary (Local · Countdown),
