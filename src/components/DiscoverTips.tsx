@@ -658,6 +658,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
       >
         {!heroImgError && (
           <img
+            ref={heroImgRef}
             src={hero.image}
             alt={hero.alt}
             width={1600}
