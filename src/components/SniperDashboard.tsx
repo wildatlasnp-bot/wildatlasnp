@@ -703,11 +703,13 @@ const PermitPhotoCard = ({
     <>
       <div
         style={{
-          margin: "0 12px 0",
-          borderRadius: 12,
+          margin: "0 16px 0",
+          borderRadius: 14,
           overflow: "hidden",
           cursor: "pointer",
-          border: "1px solid rgba(240,237,234,0.10)",
+          border: "1px solid rgba(201,169,110,0.18)",
+          boxShadow:
+            "0 1px 0 rgba(255,255,255,0.04) inset, 0 22px 50px -28px rgba(0,0,0,0.6), 0 4px 14px -6px rgba(0,0,0,0.35)",
         }}
         onClick={onToggleExpand}
         role="button"
@@ -716,7 +718,7 @@ const PermitPhotoCard = ({
       >
         <div>
         {/* Photo zone */}
-        <div style={{ height: 220, position: "relative", overflow: "hidden", background: "linear-gradient(135deg, #1C2E22 0%, #2F4A38 50%, #1A2820 100%)" }}>
+        <div style={{ height: 240, position: "relative", overflow: "hidden", background: "linear-gradient(135deg, #1C2E22 0%, #2F4A38 50%, #1A2820 100%)" }}>
           {parkConfig.heroImage ? (
             <img
               src={parkConfig.heroImage}
@@ -726,7 +728,7 @@ const PermitPhotoCard = ({
               height={640}
               style={{
                 width: "100%",
-                height: "220px",
+                height: "240px",
                 objectFit: "cover" as const,
                 position: "absolute",
                 top: 0,
@@ -747,21 +749,48 @@ const PermitPhotoCard = ({
           )}
           {/* Gradient scrim */}
           <div className="park-photo-scrim" />
+          {/* Cinematic top vignette for badge legibility */}
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 90,
+              background: "linear-gradient(180deg, rgba(8,21,15,0.55) 0%, rgba(8,21,15,0.20) 50%, transparent 100%)",
+              pointerEvents: "none",
+            }}
+          />
+          {/* Cinematic bottom gradient for title */}
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: 130,
+              background: "linear-gradient(180deg, transparent 0%, rgba(8,21,15,0.55) 60%, rgba(8,21,15,0.85) 100%)",
+              pointerEvents: "none",
+            }}
+          />
           {/* Liveness pill — scan timestamp */}
           <div
             style={{
               position: "absolute",
-              top: 12,
-              left: 12,
+              top: 14,
+              left: 14,
               zIndex: 10,
               display: "flex",
               alignItems: "center",
-              gap: 6,
-              background: "rgba(255,255,255,0.35)",
-              backdropFilter: "blur(10px)",
-              WebkitBackdropFilter: "blur(10px)",
-              borderRadius: 20,
-              padding: "4px 10px",
+              gap: 7,
+              background: "rgba(244,241,236,0.92)",
+              backdropFilter: "blur(14px)",
+              WebkitBackdropFilter: "blur(14px)",
+              borderRadius: 999,
+              padding: "5px 11px 5px 10px",
+              boxShadow: "0 2px 10px rgba(0,0,0,0.18), 0 0 0 0.5px rgba(0,0,0,0.04) inset",
             }}
           >
             <div style={{ position: "relative", width: 8, height: 8, flexShrink: 0 }}>
@@ -769,12 +798,12 @@ const PermitPhotoCard = ({
                 <>
                   <span style={{
                     position: "absolute", top: 0, left: 0, width: 8, height: 8,
-                    borderRadius: "50%", border: "1.5px solid #4CAF7D",
+                    borderRadius: "50%", border: "1.5px solid #2F6F4E",
                     animation: "scan-ring-1 1.8s ease-out infinite",
                   }} />
                   <span style={{
                     position: "absolute", top: 0, left: 0, width: 8, height: 8,
-                    borderRadius: "50%", border: "1.5px solid #4CAF7D",
+                    borderRadius: "50%", border: "1.5px solid #2F6F4E",
                     animation: "scan-ring-2 1.8s ease-out 0.4s infinite",
                   }} />
                 </>
@@ -782,39 +811,41 @@ const PermitPhotoCard = ({
               <span style={{
                 position: "absolute", top: 0, left: 0,
                 width: 8, height: 8, borderRadius: "50%",
-                backgroundColor: isStale ? "#A8A89A" : "#4CAF7D",
+                backgroundColor: isStale ? "#A8A89A" : "#2F6F4E",
               }} />
             </div>
              <span
                style={{
                  fontFamily: DM_SANS,
-                 fontSize: 12,
-                 fontWeight: 400,
-                 color: "#9CA3AF",
+                 fontSize: 11,
+                 fontWeight: 500,
+                 letterSpacing: "0.04em",
+                 color: "#1A2820",
                  whiteSpace: "nowrap",
                }}
              >
               {scannedAgoText}
             </span>
           </div>
-           {/* Park label */}
+           {/* Park label — editorial gold-bordered chip */}
            <span
              style={{
                position: "absolute",
                top: 14,
-               right: 16,
+               right: 14,
                fontFamily: DM_SANS,
-               fontSize: 12,
-               fontWeight: 500,
-               letterSpacing: "0.08em",
+               fontSize: 10,
+               fontWeight: 600,
+               letterSpacing: "0.24em",
                textTransform: "uppercase",
-               color: "rgba(255,255,255,0.90)",
-               background: "rgba(255,255,255,0.15)",
-               backdropFilter: "blur(8px)",
-               WebkitBackdropFilter: "blur(8px)",
-               padding: "4px 10px",
-               borderRadius: 6,
-               border: "none",
+               color: "rgba(244,241,236,0.95)",
+               background: "rgba(8,21,15,0.45)",
+               backdropFilter: "blur(10px)",
+               WebkitBackdropFilter: "blur(10px)",
+               padding: "5px 10px",
+               borderRadius: 4,
+               border: "1px solid rgba(201,169,110,0.55)",
+               boxShadow: "0 2px 8px rgba(0,0,0,0.20)",
               zIndex: 10,
              }}
            >
@@ -824,16 +855,18 @@ const PermitPhotoCard = ({
           <span
             style={{
               position: "absolute",
-              bottom: 20,
+              bottom: 22,
               left: 20,
+              right: 20,
               zIndex: 10,
                fontFamily: CORMORANT,
-              fontSize: 26,
-              fontWeight: 400,
-              color: "#FFFFFF",
-              lineHeight: 1.2,
-              letterSpacing: "-0.01em",
-              textShadow: "0 1px 3px rgba(0, 0, 0, 0.30)",
+              fontSize: 28,
+              fontWeight: 300,
+              color: "#F4F1EC",
+              lineHeight: 1.15,
+              letterSpacing: "-0.015em",
+              textShadow: "0 2px 12px rgba(0, 0, 0, 0.45)",
+              display: "block",
             }}
           >
             {permitDef.name}
