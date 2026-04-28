@@ -23,6 +23,7 @@ import ParkSelector from "@/components/ParkSelector";
 import { seasons, getCurrentSeason, parkSeasons, type Season } from "@/lib/park-seasons";
 import TodayParkAdvice from "@/components/TodayParkAdvice";
 import { useRecentFinds } from "@/hooks/useRecentFinds";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 import yosemiteHero from "@/assets/yosemite-hero.jpg";
 import rainierHero from "@/assets/rainier-hero.jpg";
@@ -202,6 +203,34 @@ const SeasonalBlurb = ({ body }: { body: string }) => {
         </button>
       )}
     </>
+  );
+};
+
+/* ── Scroll-driven reveal wrapper for editorial sections ──
+   Wraps a section so it fades + rises into view as the user scrolls
+   through Discover. Stagger via `delay` (ms). Honors prefers-reduced-motion. */
+const RevealSection = ({
+  children,
+  className = "",
+  style,
+  delay = 0,
+  as: As = "section" as any,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+  delay?: number;
+  as?: any;
+}) => {
+  const { ref, visible } = useScrollReveal<HTMLElement>();
+  return (
+    <As
+      ref={ref as any}
+      className={`wa-scroll-reveal ${visible ? "is-visible" : ""} ${className}`}
+      style={{ ...(style || {}), ["--d" as any]: `${delay}ms` }}
+    >
+      {children}
+    </As>
   );
 };
 
@@ -1020,7 +1049,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
       {/* ═══════════════════════ V. EDITORIAL INTRO — POKO'S READ ═══════════════════════
           Pure data still flows from PokoReadCard child (preserves caching,
           streaming animation, edge-function call). We frame it with a plate. */}
-      <section style={{ padding: "32px 20px 4px" }}>
+      <RevealSection style={{ padding: "32px 20px 4px" }}>
         <SectionPlate
           numeral="I"
           eyebrow="Today's read"
@@ -1035,10 +1064,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             onAskPoko={onNavigateToMochi}
           />
         </div>
-      </section>
+      </RevealSection>
 
       {/* ═══════════════════════ VI. FIELD LOG (live signals) ═══════════════════════ */}
-      <section style={{ padding: "30px 20px 4px" }}>
+      <RevealSection style={{ padding: "30px 20px 4px" }} delay={60}>
         <SectionPlate
           numeral="II"
           eyebrow="Field log"
@@ -1048,18 +1077,16 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         <div style={{ marginInline: -20 }}>
           <FieldLog parkId={parkId} onNavigateToSniper={onNavigateToSniper} />
         </div>
-      </section>
+      </RevealSection>
 
       {/* ═══════════════════════ VII. TODAY IN PARK (dark plate) ═══════════════════════ */}
-      <section
-        className="wa-reveal"
+      <RevealSection
         style={{
           marginTop: 32,
           background: "linear-gradient(180deg, #1A2F1E 0%, #142519 100%)",
           padding: "26px 20px 28px",
           borderTop: "1px solid rgba(201,169,110,0.32)",
           borderBottom: "1px solid rgba(201,169,110,0.18)",
-          ["--d" as any]: "0ms",
         }}
       >
         <SectionPlate
@@ -1071,7 +1098,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         />
         <TypicalPatternsHeader />
         <TodayParkAdvice parkId={parkId} darkMode />
-      </section>
+      </RevealSection>
 
       {/* ═══════════════════════ VIII. PLAN AHEAD — CROWD WINDOWS ═══════════════════════ */}
       <section style={{ padding: "32px 20px 4px" }}>
@@ -1255,7 +1282,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
       </section>
 
       {/* ═══════════════════════ X. SEASONAL INSIGHT — gallery plate ═══════════════════════ */}
-      <section style={{ padding: "36px 20px 4px" }}>
+      <RevealSection style={{ padding: "36px 20px 4px" }}>
         <SectionPlate
           numeral="VI"
           eyebrow={`${data.label} · in residence`}
@@ -1302,10 +1329,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             </button>
           </motion.div>
         </AnimatePresence>
-      </section>
+      </RevealSection>
 
       {/* ═══════════════════════ XI. LOCAL KNOWLEDGE — paired plates ═══════════════════════ */}
-      <section style={{ padding: "36px 20px 4px" }}>
+      <RevealSection style={{ padding: "36px 20px 4px" }} delay={60}>
         <SectionPlate
           numeral="VII"
           eyebrow="Local knowledge"
@@ -1362,10 +1389,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             );
           })}
         </div>
-      </section>
+      </RevealSection>
 
       {/* ═══════════════════════ XII. RANGER NOTES — clustered chronicle ═══════════════════════ */}
-      <section style={{ padding: "36px 20px 4px" }}>
+      <RevealSection style={{ padding: "36px 20px 4px" }}>
         <SectionPlate
           numeral="VIII"
           eyebrow={`Ranger notes · ${data.label}`}
@@ -1564,7 +1591,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             </AnimatePresence>
           </div>
         )}
-      </section>
+      </RevealSection>
 
       {/* ═══════════════════════ XIII. COLOPHON ═══════════════════════ */}
       <footer style={{ padding: "44px 20px 36px", textAlign: "center" }}>
