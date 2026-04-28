@@ -2238,6 +2238,54 @@ button.wa-cluster-head-toggle:hover .wa-cluster-chevron {
   flex-shrink: 0;
 }
 
+/* ─────────────────────────────────────────────────────────────
+   MODERN RANGER · shared card surfaces.
+   One canonical surface treatment for every Discover subcomponent.
+   Variants opt-in for warm paper, featured left-rule, larger radius,
+   or flat inset rows. Inline style props on Discover surfaces should
+   prefer these classes over repeating background/border/shadow values.
+   ───────────────────────────────────────────────────────────── */
+.ranger-card {
+  background: var(--ranger-paper);
+  border: 1px solid var(--ranger-rule-night-soft);
+  border-radius: var(--ranger-r-lg);              /* 10px default */
+  box-shadow: var(--ranger-shadow-softer);        /* 0 1px 2px on-light */
+  padding: var(--ranger-space-card);              /* 16px */
+}
+.ranger-card--rounded-lg {
+  border-radius: 14px;                            /* trip-card / read-card alt */
+  box-shadow: var(--ranger-shadow-soft);          /* 0 1px 3px */
+  padding: 0;                                     /* internal sections own padding */
+  overflow: hidden;
+}
+.ranger-card--warm {
+  background: var(--ranger-paper-warm);
+  border-color: var(--ranger-rule);
+}
+.ranger-card--featured {
+  background: var(--ranger-paper-warm);
+  border: 1px solid var(--ranger-rule);
+  border-left: 3px solid var(--ranger-night);
+  border-radius: var(--ranger-r-lg);
+  box-shadow: none;
+  padding: 26px 24px 22px;
+}
+.ranger-card--quiet {
+  background: var(--ranger-paper);
+  border: 1px solid var(--ranger-rule-night);
+  border-radius: 14px;
+  box-shadow: none;
+  padding: 26px 20px;
+  text-align: center;
+}
+.ranger-card--inset {
+  background: var(--ranger-paper);
+  border: 1px solid var(--ranger-rule-bone);
+  border-radius: var(--ranger-r-md);              /* 8px */
+  box-shadow: none;
+  padding: 10px 12px;
+}
+
 /* Signal chip row — uses the existing tip.signals data.
    Premium label/value hierarchy: tiny tracked uppercase eyebrow above a
    confident, tabular-numbered value, separated by a hairline rule. */
