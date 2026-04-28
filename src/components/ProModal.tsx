@@ -51,13 +51,97 @@ const PILLARS: Array<{ kicker: string; title: string; body: string }> = [
   },
 ];
 
+// Single coherent reveal timeline. Every element subscribes to `phase`,
+// so reveals are driven by one shared state — no per-element animation-delay drift.
+// Steps must match the visual order of the modal (top → bottom).
+const STEP = {
+  CORNER_LEFT:  0,
+  CORNER_RIGHT: 1,
+  TITLE:        2,
+  SUBDECK:      3,
+  RULE:         4,
+  PILLAR_0:     5,
+  PILLAR_1:     6,
+  PILLAR_2:     7,
+  PRICE:        8,
+  CTA:          9,
+  ARL:         10,
+  DIVIDER:     11,
+  TRUST:       12,
+  REFUND:      13,
+} as const;
+
+// Tempo: gap between consecutive reveals. One value, one rhythm.
+const STEP_GAP_MS = 110;
+// Initial delay so the modal's own entrance settles first.
+const TIMELINE_OFFSET_MS = 380;
+// Single transition spec shared by every revealed element.
+const REVEAL_TRANSITION = "opacity 600ms cubic-bezier(0.16, 1, 0.3, 1), transform 600ms cubic-bezier(0.16, 1, 0.3, 1)";
+
 const ProModal = ({ open, onOpenChange }: ProModalProps) => {
   const [loading, setLoading] = useState(false);
   const [refundOpen, setRefundOpen] = useState(false);
   const [displayPrice, setDisplayPrice] = useState<string | null>(cachedPrice);
+  const [phase, setPhase] = useState(-1); // -1 = nothing revealed yet
+  const timersRef = useRef<number[]>([]);
   const { toast } = useToast();
   const { user, signOut } = useAuth();
   const { isPro } = useProStatus();
+
+  // Drive the single timeline. One scheduler, one source of truth.
+  useEffect(() => {
+    // Clean any prior run.
+    timersRef.current.forEach((t) => window.clearTimeout(t));
+    timersRef.current = [];
+
+    if (!open) {
+      setPhase(-1);
+      return;
+    }
+
+    // Honor reduced-motion: reveal everything immediately.
+    const reduce =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      setPhase(Object.keys(STEP).length);
+      return;
+    }
+
+    const totalSteps = Object.keys(STEP).length;
+    for (let i = 0; i < totalSteps; i++) {
+      const id = window.setTimeout(
+        () => setPhase((p) => (p < i ? i : p)),
+        TIMELINE_OFFSET_MS + i * STEP_GAP_MS,
+      );
+      timersRef.current.push(id);
+    }
+
+    return () => {
+      timersRef.current.forEach((t) => window.clearTimeout(t));
+      timersRef.current = [];
+    };
+  }, [open]);
+
+  // Helper: produce the reveal style for a given step.
+  // `from` lets each element choose its motion vector while sharing the timeline.
+  const revealStyle = (
+    step: number,
+    from: "up" | "down" | "none" = "up",
+  ): CSSProperties => {
+    const visible = phase >= step;
+    const offset =
+      from === "up" ? "translate3d(0, 12px, 0)"
+      : from === "down" ? "translate3d(0, -8px, 0)"
+      : "none";
+    return {
+      opacity: visible ? 1 : 0,
+      transform: visible ? "translate3d(0, 0, 0)" : offset,
+      transition: REVEAL_TRANSITION,
+      willChange: "opacity, transform",
+    };
+  };
+
 
   useEffect(() => {
     if (!open || cachedPrice !== null) return;
