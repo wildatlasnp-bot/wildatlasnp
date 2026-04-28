@@ -1319,7 +1319,7 @@ const LiveAlertBannerInner = ({
       const id = window.setTimeout(() => setTipsStatus(''), 1500);
       return () => window.clearTimeout(id);
     }
-  }, [expanded, panelState, linked.length]);
+  }, [expanded, panelState, linked.length, seasonLabel]);
 
   return (
     <div
