@@ -596,28 +596,29 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
 
   // Snap the status row back to fully visible on every composer mode toggle.
   // The scroll container, padding, and footer change identity across modes,
-  // so any prior fade state is stale — re-sample once layout settles so user
-  // scrolling resumes the natural fade behavior.
+  // so any prior fade state is stale. Rapid toggles cancel the previous
+  // resample timer before scheduling a fresh one — this guarantees the row
+  // never gets stuck at partial opacity even when the user flips modes
+  // faster than the trailing-sample window.
   const prevComposerModeRef = useRef(composerMode);
   useEffect(() => {
     if (prevComposerModeRef.current !== composerMode) {
+      cancelScheduledResample();
       snapToFull();
-      const r = requestAnimationFrame(() => computeStatusOpacityFromEl(activeScrollEl));
-      const t = setTimeout(() => computeStatusOpacityFromEl(activeScrollEl), 360);
+      scheduleResample(activeScrollEl, 360);
       prevComposerModeRef.current = composerMode;
-      return () => { cancelAnimationFrame(r); clearTimeout(t); };
     }
-  }, [composerMode, activeScrollEl, computeStatusOpacityFromEl, snapToFull]);
+  }, [composerMode, activeScrollEl, snapToFull, scheduleResample, cancelScheduledResample]);
 
   // When the scroll container is re-attached (mode swap remounts the node),
-  // snap to full opacity and re-sample once the new element has laid out.
+  // cancel any pending resample, snap to full opacity, and schedule a single
+  // trailing recompute against the new element.
   useEffect(() => {
     if (!activeScrollEl) return;
+    cancelScheduledResample();
     snapToFull();
-    const r = requestAnimationFrame(() => computeStatusOpacityFromEl(activeScrollEl));
-    const t = setTimeout(() => computeStatusOpacityFromEl(activeScrollEl), 360);
-    return () => { cancelAnimationFrame(r); clearTimeout(t); };
-  }, [activeScrollEl, computeStatusOpacityFromEl, snapToFull]);
+    scheduleResample(activeScrollEl, 360);
+  }, [activeScrollEl, snapToFull, scheduleResample, cancelScheduledResample]);
 
   // Handle initialQuery from external navigation (e.g. Discover trip card)
   useEffect(() => {
