@@ -1502,9 +1502,11 @@ const LiveAlertBannerInner = ({
   const m = eventLabel.match(/^(\d{1,2}):(\d{2})([ap])$/i);
   const eventTimeLabel = m ? `${m[1]}:${m[2]} ${m[3].toUpperCase()}M` : eventLabel;
   const countdown = formatCountdown(mins);
+  // headline retained as ARIA-friendly fallback for the trigger label
   const headline = isSunrise
     ? mins <= 5 ? "Sunrise now" : `Sunrise in ${countdown}`
     : mins <= 5 ? "Sunset now" : `Sunset in ${countdown}`;
+  void headline;
   const subtext = isSunrise
     ? `First light at ${eventTimeLabel} · low-angle glare on east-facing trails`
     : `Last light at ${eventTimeLabel} · headlamp recommended within the hour`;
