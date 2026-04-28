@@ -104,6 +104,47 @@
     --wa-crowd-packed: #B85450;
     --wa-crowd-needle: #2F6B4F;
 
+    /* ─────────────────────────────────────────────────────────────
+       MODERN RANGER — canonical Discover token set.
+       Single source of truth for every Discover subcomponent.
+       Use these (or the .text-ranger-* / .bg-ranger-* helpers) instead
+       of repeating literal hex/rgba in component style props.
+       ───────────────────────────────────────────────────────────── */
+    /* Inks */
+    --ranger-ink:        #1A2E1F;   /* primary forest ink */
+    --ranger-ink-warm:   #1A2F1E;   /* alt forest used by Poko/Field surfaces */
+    --ranger-ink-body:   #3D3D3A;   /* long-form body copy */
+    --ranger-ink-muted:  #6B6860;   /* eyebrows, secondary labels */
+    --ranger-ink-faint:  #8A8780;   /* chip labels, captions */
+    --ranger-ink-soft:   #5A574F;   /* cross-season body */
+    /* Surfaces */
+    --ranger-paper:      #FFFFFF;   /* card surface */
+    --ranger-paper-warm: #FAF7F2;   /* tinted card / read-card surface */
+    --ranger-paper-bone: #F8F5EE;   /* signal-chip surface */
+    --ranger-paper-cream:#F5F0E8;   /* Discover scroll background */
+    /* Hairlines & rules */
+    --ranger-rule:       rgba(201,169,110,0.22);  /* default hairline */
+    --ranger-rule-soft:  rgba(201,169,110,0.16);
+    --ranger-rule-strong:rgba(201,169,110,0.42);
+    --ranger-rule-bone:  #ECE7DF;
+    /* Brand accents */
+    --ranger-gold:       #C9A96E;   /* Champagne Pearl — primary accent */
+    --ranger-gold-warm:  #B8924A;   /* hover / elevated state */
+    --ranger-gold-deep:  #8A6B2E;   /* high-contrast on light */
+    --ranger-forest:     #2F6F4E;   /* primary green action */
+    --ranger-forest-soft:#7A9B7A;   /* secondary italic accents */
+    /* Shadows — three-step elevation */
+    --ranger-shadow-1: 0 1px 2px rgba(26,46,31,0.05);
+    --ranger-shadow-2: 0 1px 3px rgba(26,46,31,0.07), 0 1px 2px rgba(26,46,31,0.04);
+    --ranger-shadow-3: 0 10px 24px -16px rgba(26,46,31,0.22), 0 1px 3px rgba(26,46,31,0.05);
+    /* Radii */
+    --ranger-r-sm: 6px;
+    --ranger-r-md: 8px;
+    --ranger-r-lg: 10px;
+    /* Spacing scale (Discover sections) */
+    --ranger-space-section: 36px;
+    --ranger-space-card: 16px;
+
     --font-heading: 'Cormorant Garamond', Georgia, serif;
     --font-body: 'DM Sans', system-ui, sans-serif;
 
@@ -2008,12 +2049,12 @@
 /* Rich tip card — promoted from row to artifact */
 .wa-rich-tip {
   position: relative;
-  background: #FFFFFF;
-  border: 1px solid rgba(201,169,110,0.20);
-  border-radius: 10px;
+  background: var(--ranger-paper);
+  border: 1px solid var(--ranger-rule);
+  border-radius: var(--ranger-r-lg);
   padding: 16px 16px 14px;
   margin-bottom: 10px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  box-shadow: var(--ranger-shadow-1);
   transition:
     transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 320ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -2021,12 +2062,11 @@
   scroll-margin-top: 80px;
 }
 .wa-rich-tip::before {
-  /* Gold side-rail (matches .wa-tip-card aesthetic) */
   content: "";
   position: absolute;
   left: 0; top: 14px; bottom: 14px;
   width: 2px;
-  background: #C9A96E;
+  background: var(--ranger-gold);
   transform: scaleY(0); transform-origin: top center;
   transition: transform 460ms cubic-bezier(0.22, 1, 0.36, 1);
   border-radius: 1px;
@@ -2035,12 +2075,12 @@
 @media (hover: hover) {
   .wa-rich-tip:hover {
     transform: translate3d(0, -2px, 0);
-    box-shadow: 0 10px 24px -16px rgba(26,46,31,0.22), 0 1px 3px rgba(26,46,31,0.05);
-    border-color: rgba(201,169,110,0.42);
+    box-shadow: var(--ranger-shadow-3);
+    border-color: var(--ranger-rule-strong);
   }
   .wa-rich-tip:hover::before { transform: scaleY(1); }
 }
-.wa-rich-tip:focus-within { border-color: rgba(201,169,110,0.42); }
+.wa-rich-tip:focus-within { border-color: var(--ranger-rule-strong); }
 
 /* Icon-in-frame */
 .wa-tip-icon-frame {
@@ -2119,3 +2159,53 @@
     transform: none !important;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────────
+   MODERN RANGER — typography & surface utilities.
+   Drop-in replacements for repeated inline fontFamily / color pairs.
+   ───────────────────────────────────────────────────────────────── */
+.font-display { font-family: var(--font-heading); }
+.font-display-italic { font-family: var(--font-heading); font-style: italic; }
+.font-ui { font-family: var(--font-body); }
+
+/* Editorial eyebrow — used wherever we have a tiny uppercase tracker */
+.ranger-eyebrow {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ranger-ink-muted);
+}
+
+/* Italic display headline (Cormorant) */
+.ranger-display {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-weight: 500;
+  color: var(--ranger-ink);
+  letter-spacing: -0.005em;
+  line-height: 1.2;
+}
+
+/* Standard card surface */
+.ranger-card {
+  background: var(--ranger-paper);
+  border: 1px solid var(--ranger-rule);
+  border-radius: var(--ranger-r-lg);
+  box-shadow: var(--ranger-shadow-1);
+}
+.ranger-card-warm {
+  background: var(--ranger-paper-warm);
+  border: 1px solid var(--ranger-rule-bone);
+  border-left: 2px solid var(--ranger-gold);
+  border-radius: var(--ranger-r-lg);
+}
+
+/* Color helpers (semantic, not raw hex) */
+.text-ranger-ink     { color: var(--ranger-ink); }
+.text-ranger-body    { color: var(--ranger-ink-body); }
+.text-ranger-muted   { color: var(--ranger-ink-muted); }
+.text-ranger-faint   { color: var(--ranger-ink-faint); }
+.text-ranger-gold    { color: var(--ranger-gold); }
+.text-ranger-forest  { color: var(--ranger-forest); }

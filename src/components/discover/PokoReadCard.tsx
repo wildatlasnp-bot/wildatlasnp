@@ -5,9 +5,11 @@ import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
 
-const GOLD = "#C9A96E";
-const FOREST = "#1A2F1E";
-const MUTED = "#6B6860";
+// Modern Ranger tokens — keep local aliases for terse inline use,
+// but resolved via the canonical CSS variables in :root (index.css).
+const GOLD = "var(--ranger-gold)";
+const FOREST = "var(--ranger-ink-warm)";
+const MUTED = "var(--ranger-ink-muted)";
 
 interface PokoReadCardProps {
   parkId: string;
@@ -86,10 +88,11 @@ export default function PokoReadCard({ parkId, parkShortName, onAskPoko }: PokoR
     <div style={{ paddingTop: 16, paddingLeft: 20, paddingRight: 20 }}>
       <div
         style={{
-          background: "#FAF7F2",
-          border: `1px solid #ECE7DF`,
+          background: "var(--ranger-paper-warm)",
+          border: "1px solid var(--ranger-rule-bone)",
           borderLeft: `2px solid ${GOLD}`,
-          borderRadius: 10,
+          borderRadius: "var(--ranger-r-lg)",
+          boxShadow: "var(--ranger-shadow-1)",
           padding: "16px 18px 14px 18px",
           position: "relative",
           overflow: "hidden",
@@ -213,7 +216,7 @@ export default function PokoReadCard({ parkId, parkShortName, onAskPoko }: PokoR
               marginTop: 10,
               textDecoration: "underline",
               textUnderlineOffset: 3,
-              textDecorationColor: "rgba(201,169,110,0.4)",
+              textDecorationColor: "var(--ranger-rule-strong)",
               minHeight: 28,
             }}
           >

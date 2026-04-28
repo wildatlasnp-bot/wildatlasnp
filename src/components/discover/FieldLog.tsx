@@ -7,9 +7,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
 import { getParkLocation } from "@/lib/discover-utils";
 
-const GOLD = "#C9A96E";
-const FOREST = "#1A2F1E";
-const MUTED = "#6B6860";
+// Modern Ranger tokens — see :root in src/index.css for the source of truth.
+const GOLD = "var(--ranger-gold)";
+const FOREST = "var(--ranger-ink-warm)";
+const MUTED = "var(--ranger-ink-muted)";
 const EASE: [number, number, number, number] = [0.4, 0, 0.2, 1];
 
 interface FieldLogProps {
@@ -234,7 +235,7 @@ export default function FieldLog({ parkId, onNavigateToSniper, onNavigateToAlert
           {[0, 1, 2, 3].map((i) => (
             <div
               key={i}
-              style={{ height: 14, backgroundColor: "#ECE7DF", borderRadius: 4, opacity: 0.6 }}
+              style={{ height: 14, backgroundColor: "var(--ranger-rule-bone)", borderRadius: "var(--ranger-r-sm)", opacity: 0.6 }}
               className="animate-pulse"
             />
           ))}
@@ -255,12 +256,12 @@ export default function FieldLog({ parkId, onNavigateToSniper, onNavigateToAlert
             fontFamily: "'Cormorant Garamond', serif",
             fontStyle: "italic",
             fontSize: 13,
-            color: "#7A9B7A",
+            color: "var(--ranger-forest-soft)",
           }}
         >
           Field log
         </span>
-        <span style={{ flex: 1, height: 1, backgroundColor: "#ECE7DF" }} />
+        <span style={{ flex: 1, height: 1, backgroundColor: "var(--ranger-rule-bone)" }} />
       </div>
 
       <div style={{ display: "flex", flexDirection: "column" }}>
@@ -274,7 +275,7 @@ export default function FieldLog({ parkId, onNavigateToSniper, onNavigateToAlert
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.28, delay: idx * 0.05, ease: EASE }}
-              style={{ borderBottom: isLast && !isOpen ? "none" : `1px solid ${GOLD}1A` }}
+              style={{ borderBottom: isLast && !isOpen ? "none" : "1px solid var(--ranger-rule-soft)" }}
             >
               <button
                 type="button"
@@ -301,7 +302,7 @@ export default function FieldLog({ parkId, onNavigateToSniper, onNavigateToAlert
                       width: 6,
                       height: 6,
                       borderRadius: "50%",
-                      backgroundColor: row.pulse ? "#2F6F4E" : MUTED,
+                      backgroundColor: row.pulse ? "var(--ranger-forest)" : MUTED,
                       opacity: row.pulse ? 1 : 0.35,
                       flexShrink: 0,
                       animation: row.pulse ? "fieldLogPulse 2s cubic-bezier(0.4,0,0.2,1) infinite" : undefined,
@@ -435,7 +436,7 @@ export default function FieldLog({ parkId, onNavigateToSniper, onNavigateToAlert
                           gap: 12,
                           marginTop: 8,
                           paddingTop: 8,
-                          borderTop: `1px solid ${GOLD}1A`,
+                          borderTop: "1px solid var(--ranger-rule-soft)",
                         }}
                       >
                         <span
@@ -462,7 +463,7 @@ export default function FieldLog({ parkId, onNavigateToSniper, onNavigateToAlert
                               fontFamily: "'DM Sans', sans-serif",
                               fontSize: 12,
                               fontWeight: 600,
-                              color: "#2F6F4E",
+                              color: "var(--ranger-forest)",
                               background: "none",
                               border: "none",
                               cursor: "pointer",
