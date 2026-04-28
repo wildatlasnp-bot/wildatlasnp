@@ -2253,9 +2253,12 @@ button.wa-cluster-head-toggle:hover .wa-cluster-chevron {
   padding: var(--ranger-space-card);              /* 16px */
 }
 .ranger-card--rounded-lg {
-  border-radius: 14px;                            /* trip-card / read-card alt */
-  box-shadow: var(--ranger-shadow-soft);          /* 0 1px 3px */
-  padding: 0;                                     /* internal sections own padding */
+  border-radius: 14px;
+  box-shadow: var(--ranger-shadow-soft);
+}
+.ranger-card--flush {
+  /* For cards whose interior sections own their own padding */
+  padding: 0;
   overflow: hidden;
 }
 .ranger-card--warm {
