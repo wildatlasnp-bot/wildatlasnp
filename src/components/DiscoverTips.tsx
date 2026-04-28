@@ -1336,13 +1336,18 @@ const LiveAlertBannerInner = ({
       <AnimatePresence initial={false}>
         {expanded && (
           <motion.div
+            ref={panelRef}
             id="live-alert-panel"
             key="live-alert-panel"
+            role="region"
+            aria-labelledby="live-alert-trigger"
+            tabIndex={-1}
+            onKeyDown={handlePanelKeyDown}
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
-            style={{ overflow: 'hidden', background: 'rgba(201,169,110,0.06)' }}
+            style={{ overflow: 'hidden', background: 'rgba(201,169,110,0.06)', outline: 'none' }}
           >
             <div style={{ padding: '14px 16px 16px' }}>
               {tips === null ? (
