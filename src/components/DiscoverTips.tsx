@@ -330,6 +330,30 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   const photoOverlay = useMemo(() => getPhotoOverlayColor(sun.phase), [sun.phase]);
   const coords = useMemo(() => formatCoordinates(parkId), [parkId]);
 
+  /**
+   * Live Alert banner snapshot.
+   * Bucketed to whole-minute resolution so that the 30s `now` tick does not
+   * cause the memoized banner subtree to re-render. The banner is also gated
+   * to the visible window (≤ 30 min until next sunrise/sunset) — outside
+   * that window we return null and React unmounts/skips the subtree entirely.
+   */
+  const liveAlertSnapshot = useMemo(() => {
+    const mins = sun.minutesToNextEvent;
+    if (mins === null || mins < 0 || mins > 30) return null;
+    const eventType: 'sunrise' | 'sunset' =
+      sun.nextEventLabel === 'Sunrise' ? 'sunrise' : 'sunset';
+    return {
+      eventType,
+      mins, // whole minutes — only changes ~once per minute
+      eventLabel: eventType === 'sunrise' ? sun.sunriseLabel : sun.sunsetLabel,
+    };
+  }, [
+    sun.minutesToNextEvent,
+    sun.nextEventLabel,
+    sun.sunriseLabel,
+    sun.sunsetLabel,
+  ]);
+
 
   const parkConfig = PARKS[parkId];
   const tripParkConfig = PARKS[tripParkId];
