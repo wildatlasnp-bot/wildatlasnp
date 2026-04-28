@@ -1678,6 +1678,8 @@ const LiveAlertBannerInner = ({
                   </div>
                 </div>
               )}
+                </motion.div>
+              </AnimatePresence>
             </div>
           </motion.div>
         )}
