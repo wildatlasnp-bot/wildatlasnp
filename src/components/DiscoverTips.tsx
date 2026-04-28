@@ -658,15 +658,21 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         );
 
         return (
-          <div style={{
-            background: '#1A2F1E',
-            borderTop: '1px solid rgba(201,169,110,0.35)',
-            borderBottom: '1px solid rgba(201,169,110,0.18)',
-            paddingTop: 10,
-            paddingBottom: 10,
-            paddingLeft: 12,
-            paddingRight: 12,
-          }}>
+          <motion.div
+            key={parkId}
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
+            style={{
+              background: '#1A2F1E',
+              borderTop: '1px solid rgba(201,169,110,0.35)',
+              borderBottom: '1px solid rgba(201,169,110,0.18)',
+              paddingTop: 10,
+              paddingBottom: 10,
+              paddingLeft: 12,
+              paddingRight: 12,
+            }}
+          >
             {/* Primary row */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center' }}>
               <Cell eyebrow="Local time" value={localTimeLabel} />
@@ -684,7 +690,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               <Cell eyebrow="Sunrise" value={sunriseLabel} dim />
               <Cell eyebrow="Sunset" value={sunsetLabel} dim borderLeft />
             </div>
-          </div>
+          </motion.div>
         );
       })()}
 
