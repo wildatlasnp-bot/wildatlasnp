@@ -181,7 +181,7 @@ export function getSunEphemeris(parkId: string, when: Date = new Date()): SunEph
     phase = "NIGHT";
     // Compute tomorrow's sunrise
     const tomorrow = new Date(when.getTime() + 24 * 60 * 60 * 1000);
-    const { sunrise: nextSunrise } = solarTimes(lat, lon, tomorrow);
+    const { sunrise: nextSunrise } = solarTimes(lat, lon, tomorrow, tz);
     minutesToNextEvent = Math.round((nextSunrise.getTime() - now) / 60_000);
     nextEventLabel = "Sunrise";
   }
