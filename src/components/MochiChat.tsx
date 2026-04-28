@@ -1054,15 +1054,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
         {showDisclaimer && (
           <p style={{
             // Layout: explicit block sizing prevents wrapper width inheritance
-            // quirks (flex/inline-block) from changing the measured box.
+            // quirks (flex/inline-block) from changing the measured box. Width
+            // tracks the composer wrapper, and box-sizing folds the padding
+            // INTO the box so the resulting outer width always equals 100%.
             display: 'block',
             boxSizing: 'border-box',
             width: '100%',
-            // Cap content width to match the briefing card's content area
-            // so the wrap point lands at the same horizontal rhythm.
-            maxWidth: `calc(100% - ${disclaimerPaddingX * 2}px + ${disclaimerPaddingX * 2}px)`,
-            marginLeft: 'auto',
-            marginRight: 'auto',
             margin: 0,
 
             // Typography
