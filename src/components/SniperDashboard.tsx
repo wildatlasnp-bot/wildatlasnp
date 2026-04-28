@@ -747,9 +747,48 @@ const PermitPhotoCard = ({
               }}
             />
           )}
+          {/* Color-matched duotone tint — pulls photo into the dark green palette */}
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              inset: 0,
+              background:
+                "linear-gradient(180deg, rgba(8,33,15,0.28) 0%, rgba(8,33,15,0.10) 35%, rgba(8,33,15,0.18) 100%)",
+              mixBlendMode: "multiply",
+              pointerEvents: "none",
+            }}
+          />
+          {/* Subtle green wash to harmonize warm photos with hero */}
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: "rgba(28,56,35,0.14)",
+              mixBlendMode: "color",
+              pointerEvents: "none",
+            }}
+          />
           {/* Gradient scrim */}
           <div className="park-photo-scrim" />
-          {/* Cinematic top vignette for badge legibility */}
+          {/* Top edge — feathered dissolve into hero green */}
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 56,
+              background:
+                "linear-gradient(180deg, #08210F 0%, rgba(8,33,15,0.85) 30%, rgba(8,33,15,0.45) 65%, transparent 100%)",
+              filter: "blur(0.5px)",
+              pointerEvents: "none",
+              zIndex: 2,
+            }}
+          />
+          {/* Cinematic top vignette for badge legibility (above feather) */}
           <div
             aria-hidden
             style={{
