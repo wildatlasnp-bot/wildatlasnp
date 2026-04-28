@@ -897,6 +897,15 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   }) => {
     const isDark = tone === "dark";
 
+    // Single source of truth for screen-edge inset. The briefing bubble
+    // container uses `padding: '0 24px'`; we mirror it here so any future
+    // change cascades to the composer wrapper AND the disclaimer.
+    const BRIEFING_CARD_INSET = 24;
+    const wrapperPaddingX = isDark ? 16 : 20;
+    // Disclaimer adds whatever's missing to reach the briefing inset.
+    // Math.max guards against the wrapper ever exceeding the target inset.
+    const disclaimerPaddingX = Math.max(0, BRIEFING_CARD_INSET - wrapperPaddingX);
+
     return (
       <div
         style={{
@@ -904,8 +913,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
           background: isDark ? "transparent" : "var(--wa-cream)",
           borderTop: isDark ? undefined : "1px solid var(--wa-rule)",
           paddingTop: isDark ? 8 : 10,
-          paddingLeft: isDark ? 16 : 20,
-          paddingRight: isDark ? 16 : 20,
+          paddingLeft: wrapperPaddingX,
+          paddingRight: wrapperPaddingX,
           paddingBottom: isDark ? 8 : 8,
         }}
       >
@@ -1023,13 +1032,13 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
             fontFamily: "'DM Sans', sans-serif",
             color: isDark ? 'rgba(240,237,234,0.62)' : 'rgba(26,47,30,0.58)',
             textAlign: 'center',
-            // Compensate for the composer container's horizontal padding
-            // (16px dark / 20px light) so the disclaimer aligns to the same
-            // 24px screen inset as the briefing card.
+            // Derived from BRIEFING_CARD_INSET above so the disclaimer text
+            // always aligns to the same screen inset as the briefing card,
+            // regardless of how the composer wrapper padding evolves.
             paddingTop: 10,
             paddingBottom: 14,
-            paddingLeft: isDark ? 8 : 4,
-            paddingRight: isDark ? 8 : 4,
+            paddingLeft: disclaimerPaddingX,
+            paddingRight: disclaimerPaddingX,
             lineHeight: 1.55,
             letterSpacing: '0.01em',
             margin: 0,
