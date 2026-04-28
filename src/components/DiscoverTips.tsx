@@ -545,9 +545,96 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
   const [crossSeasonOpen, setCrossSeasonOpen] = useState(false);
   useEffect(() => { setCrossSeasonOpen(false); }, [activeSeason, parkId]);
 
+  // ── Cluster collapse state ── tap a theme header to fold/unfold its tips.
+  // Reset on park or season change so users always start with everything open.
+  const [collapsedClusters, setCollapsedClusters] = useState<Set<string>>(new Set());
+  useEffect(() => { setCollapsedClusters(new Set()); }, [parkId, activeSeason]);
+  const toggleCluster = useCallback((theme: string) => {
+    setCollapsedClusters((prev) => {
+      const next = new Set(prev);
+      if (next.has(theme)) next.delete(theme);
+      else next.add(theme);
+      return next;
+    });
+  }, []);
+
   // ── Premium "settling" beat ── brief shimmer when park or season changes,
   // so highlight + ranger cards crossfade in instead of snapping.
   const cardsSettling = useSettlingSkeleton(`${parkId}|${activeSeason}`, 320);
+
+  // ── Tip deep-links ──
+  // Tap a tip's title → copy `#tip-<id>` to clipboard, update the URL hash
+  // without scroll-jumping, and restore focus to the tip article so screen
+  // readers and keyboard users land on the right thing.
+  const copyTipLink = useCallback(
+    async (tipId: string) => {
+      const hash = `#tip-${tipId}`;
+      try {
+        // Update hash without triggering the browser's default jump.
+        const url = `${window.location.pathname}${window.location.search}${hash}`;
+        window.history.replaceState(null, "", url);
+
+        const fullUrl = `${window.location.origin}${url}`;
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(fullUrl);
+        }
+
+        // Restore focus to the article so the deep-link target is announced.
+        const el = document.getElementById(`tip-${tipId}`);
+        if (el) {
+          el.setAttribute("tabindex", "-1");
+          el.focus({ preventScroll: true });
+        }
+
+        toast({
+          title: "Link copied",
+          description: "Share this tip — it'll open right here.",
+        });
+      } catch {
+        toast({
+          title: "Couldn't copy link",
+          description: "Tap and hold the address bar to share manually.",
+          variant: "destructive",
+        });
+      }
+    },
+    [toast]
+  );
+
+  // On first paint (and after settling), if the URL points at a tip, scroll
+  // that tip into view and focus it. Re-runs when the cluster set changes.
+  useEffect(() => {
+    if (cardsSettling) return;
+    const hash = window.location.hash;
+    if (!hash.startsWith("#tip-")) return;
+    const id = hash.slice(1);
+    const tipId = id.replace(/^tip-/, "");
+
+    // Make sure the targeted tip's cluster is expanded.
+    const targetCluster = tipClusters.find((c) =>
+      c.tips.some(({ tip }) => String(tip.id) === tipId)
+    );
+    if (targetCluster && collapsedClusters.has(targetCluster.theme)) {
+      setCollapsedClusters((prev) => {
+        const next = new Set(prev);
+        next.delete(targetCluster.theme);
+        return next;
+      });
+    }
+
+    const el = document.getElementById(id);
+    if (!el) return;
+    // Small delay so reveal animations settle before scrolling.
+    const t = window.setTimeout(() => {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+      el.setAttribute("tabindex", "-1");
+      el.focus({ preventScroll: true });
+      el.classList.add("wa-rich-tip-targeted");
+      window.setTimeout(() => el.classList.remove("wa-rich-tip-targeted"), 2400);
+    }, 240);
+    return () => window.clearTimeout(t);
+  }, [cardsSettling, parkId, activeSeason, tipClusters, collapsedClusters]);
+
 
   // ── Hero forecast load ──
   useEffect(() => {
@@ -1547,9 +1634,21 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
               </div>
             ))}
           </>
-        ) : tipClusters.map((cluster, ci) => (
+        ) : tipClusters.map((cluster, ci) => {
+          const isCollapsed = collapsedClusters.has(cluster.theme);
+          const panelId = `cluster-panel-${cluster.theme}`;
+          const headerId = `cluster-head-${cluster.theme}`;
+          return (
           <div key={cluster.theme}>
-            <div className="wa-cluster-head" role="presentation">
+            <button
+              type="button"
+              id={headerId}
+              className="wa-cluster-head wa-cluster-head-toggle"
+              onClick={() => toggleCluster(cluster.theme)}
+              aria-expanded={!isCollapsed}
+              aria-controls={panelId}
+              aria-label={`${cluster.label}, ${cluster.tips.length} ${cluster.tips.length === 1 ? "note" : "notes"}. ${isCollapsed ? "Expand" : "Collapse"}.`}
+            >
               <span aria-hidden="true" className="wa-cluster-pip" />
               <span className="wa-cluster-eyebrow">
                 {cluster.label}
@@ -1558,9 +1657,37 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                 </span>
               </span>
               <span aria-hidden="true" className="wa-cluster-rule" />
-            </div>
+              <ChevronRight
+                size={14}
+                aria-hidden="true"
+                className="wa-cluster-chevron"
+                style={{
+                  color: "#C9A96E",
+                  flexShrink: 0,
+                  marginLeft: 8,
+                  transition: "transform 280ms cubic-bezier(0.4, 0, 0.2, 1)",
+                  transform: isCollapsed ? "rotate(0deg)" : "rotate(90deg)",
+                }}
+              />
+            </button>
 
-            {cluster.tips.map(({ tip, idx }, j) => {
+            <AnimatePresence initial={false}>
+              {!isCollapsed && (
+                <motion.div
+                  key={panelId}
+                  id={panelId}
+                  role="region"
+                  aria-labelledby={headerId}
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{
+                    height: { duration: 0.32, ease: [0.22, 1, 0.36, 1] },
+                    opacity: { duration: 0.22, ease: [0.4, 0, 0.2, 1] },
+                  }}
+                  style={{ overflow: "hidden" }}
+                >
+                  {cluster.tips.map(({ tip, idx }, j) => {
               const Icon = tip.icon;
               const signals = Array.isArray(tip.signals) ? tip.signals.slice(0, 2) : [];
               return (
@@ -1583,17 +1710,25 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                       <Icon size={15} strokeWidth={1.6} style={{ color: "#2F6F4E" }} />
                     </span>
                     <div style={{ minWidth: 0, flex: 1 }}>
-                      <p
+                      <button
+                        type="button"
                         id={`tip-${tip.id}-title`}
+                        onClick={() => copyTipLink(tip.id)}
+                        title="Copy link to this tip"
+                        aria-label={`${tip.title} — copy share link`}
+                        className="wa-rich-tip-title"
                         style={{
                           fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
                           fontWeight: 500, fontSize: 19, color: "#1A2E1F",
                           lineHeight: 1.2, letterSpacing: "-0.005em",
                           margin: 0, paddingRight: 24,
+                          background: "none", border: "none", padding: 0,
+                          textAlign: "left", cursor: "pointer", display: "inline",
+                          font: "inherit",
                         }}
                       >
                         {tip.title}
-                      </p>
+                      </button>
                     </div>
                     <span
                       aria-hidden="true"
@@ -1633,9 +1768,13 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                   )}
                 </motion.article>
               );
-            })}
+                  })}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
-        ))}
+          );
+        })}
 
         {/* ── From other seasons — elegant collapsed drawer ── */}
         {crossSeasonTips.length > 0 && (
