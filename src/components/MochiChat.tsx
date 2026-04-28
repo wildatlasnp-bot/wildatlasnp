@@ -478,6 +478,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
     statusSnap,
     setScrollRef: setStatusScrollRef,
     handleChatScroll,
+    activeScrollEl,
   } = useStatusRowOpacity({
     isLoading,
     composerMode,
@@ -485,8 +486,11 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
     debugLabel: 'MochiChat',
   });
 
-  // Bridge the hook's callback ref to the existing scrollRef so call sites
-  // like `scrollRef.current?.scrollTo(...)` keep working unchanged.
+  // Bridge the hook's callback ref to the existing scrollRef so legacy
+  // imperative APIs that need a stable ref (e.g. third-party libs) still
+  // work — but all opacity/scroll logic in this component now reads from
+  // `activeScrollEl` directly to avoid any chance of a stale ref read
+  // during scroll-container re-attachment between briefing/conversation.
   const setScrollRef = useCallback((el: HTMLDivElement | null) => {
     scrollRef.current = el;
     setStatusScrollRef(el);
