@@ -478,6 +478,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
     statusSnap,
     setScrollRef: setStatusScrollRef,
     handleChatScroll,
+    activeScrollEl,
   } = useStatusRowOpacity({
     isLoading,
     composerMode,
@@ -485,8 +486,11 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
     debugLabel: 'MochiChat',
   });
 
-  // Bridge the hook's callback ref to the existing scrollRef so call sites
-  // like `scrollRef.current?.scrollTo(...)` keep working unchanged.
+  // Bridge the hook's callback ref to the existing scrollRef so legacy
+  // imperative APIs that need a stable ref (e.g. third-party libs) still
+  // work — but all opacity/scroll logic in this component now reads from
+  // `activeScrollEl` directly to avoid any chance of a stale ref read
+  // during scroll-container re-attachment between briefing/conversation.
   const setScrollRef = useCallback((el: HTMLDivElement | null) => {
     scrollRef.current = el;
     setStatusScrollRef(el);
@@ -569,12 +573,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
 
   useEffect(() => {
     if (initialMountRef.current) { initialMountRef.current = false; return; }
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+    if (!activeScrollEl) return;
+    activeScrollEl.scrollTo({ top: activeScrollEl.scrollHeight, behavior: "smooth" });
     // Sanitize warning emojis in chat bubbles
     requestAnimationFrame(() => {
-      const container = scrollRef.current;
-      if (!container) return;
-      const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT);
+      if (!activeScrollEl) return;
+      const walker = document.createTreeWalker(activeScrollEl, NodeFilter.SHOW_TEXT);
       const emojiPattern = /[⚠️🔶⚡🚨🔺]/g;
       let node: Text | null;
       while ((node = walker.nextNode() as Text | null)) {
@@ -585,7 +589,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
         }
       }
     });
-  }, [messages]);
+  }, [messages, activeScrollEl]);
 
   // Auto-send when pendingSendRef is set
   useEffect(() => {
@@ -752,8 +756,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   const composerBottomPadding = `calc(env(safe-area-inset-bottom, 0px) + ${keyboardInset > 0 ? keyboardInset + 12 : 96}px)`;
 
   useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
-  }, [keyboardInset]);
+    if (!activeScrollEl) return;
+    activeScrollEl.scrollTo({ top: activeScrollEl.scrollHeight, behavior: "smooth" });
+  }, [keyboardInset, activeScrollEl]);
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== "Enter" || e.nativeEvent.isComposing) return;
