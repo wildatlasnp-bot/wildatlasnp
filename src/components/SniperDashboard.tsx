@@ -305,11 +305,11 @@ const SniperDashboard = () => {
             </AnimatePresence>
           </div>
         </div>
-        <div style={{ marginBottom: 24 }} />
+        <div style={{ marginBottom: 26 }} />
 
         {/* ── Mochi Insight Card (borderless) ── */}
         {s.watches.length > 0 && (
-          <div style={{ marginBottom: 0 }}>
+          <div style={{ position: "relative", marginBottom: 0 }}>
           <MochiGlassCard
             permitName={s.watches[0]?.permit_name}
             parkName={s.watches[0]?.park_id}
@@ -321,23 +321,39 @@ const SniperDashboard = () => {
          )}
 
         {/* ── Tracked Permits Section (inside dark zone) ── */}
-        <div style={{ padding: "0 0 14px" }}>
-        {/* Section label */}
+        <div style={{ position: "relative", padding: "0 0 18px" }}>
+        {/* Section label — editorial centered ornament */}
         {s.watches.length > 0 && (
            <div
             className="flex items-center justify-between"
-           style={{ margin: "0 20px 14px", paddingTop: 28, marginTop: 28, borderTop: '1px solid rgba(240,237,234,0.12)' }}
+           style={{ margin: "0 20px 16px", paddingTop: 32, marginTop: 32, position: "relative" }}
           >
+            {/* Hairline rule with center-cut ornament */}
+            <div
+              aria-hidden
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                height: 1,
+                background: "linear-gradient(90deg, transparent 0%, rgba(201,169,110,0.28) 20%, rgba(201,169,110,0.28) 80%, transparent 100%)",
+              }}
+            />
              <span
                 style={{
                   fontFamily: DM_SANS,
-                  fontSize: 12,
+                  fontSize: 11,
                   fontWeight: 500,
                   textTransform: "uppercase" as const,
-                  letterSpacing: "0.12em",
-                  color: "rgba(240,237,234,0.5)",
+                  letterSpacing: "0.22em",
+                  color: "rgba(244,241,236,0.62)",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 10,
                 }}
               >
+               <span style={{ width: 4, height: 4, borderRadius: "50%", background: "rgba(201,169,110,0.7)", display: "inline-block" }} />
                Watching
              </span>
              <span style={{ minWidth: 120, textAlign: "right" as const, display: "inline-block" }}>
