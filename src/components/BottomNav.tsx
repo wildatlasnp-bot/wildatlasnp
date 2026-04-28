@@ -89,9 +89,9 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
               border: "none",
               padding: 0,
               WebkitTapHighlightColor: "transparent",
-              width: 56,
-              height: 56,
-              gap: 3,
+              width: 60,
+              height: 60,
+              gap: 4,
             }}
           >
             <div
