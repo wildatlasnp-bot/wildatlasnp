@@ -983,7 +983,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
                 fontSize: heroFontSize, fontStyle: "italic",
                 fontWeight: 400, letterSpacing: "-0.025em",
                 color: "var(--ranger-paper)", lineHeight: 0.98,
-                textShadow: "0 2px 14px rgba(0,0,0,0.55)",
+                textShadow: "var(--ranger-text-shadow-2)",
                 margin: "8px 0 0", wordBreak: "break-word",
               }}>
                 {heroText}
