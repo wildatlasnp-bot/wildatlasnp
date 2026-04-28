@@ -1499,14 +1499,9 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             ? Array.from({ length: 4 }).map((_, i) => (
                 <div
                   key={`hl-skel-${i}`}
-                  className="wa-highlight-card content-crossfade"
+                  className="wa-highlight-card content-crossfade ranger-card"
                   aria-hidden="true"
                   style={{
-                    background: "var(--ranger-paper)",
-                    border: "1px solid var(--ranger-rule-night-soft)",
-                    boxShadow: "0 1px 2px var(--ranger-rule-onlight)",
-                    borderRadius: 10,
-                    padding: 16,
                     minHeight: 148,
                     display: "flex",
                     flexDirection: "column",
