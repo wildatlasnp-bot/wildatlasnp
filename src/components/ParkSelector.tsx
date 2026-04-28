@@ -127,24 +127,34 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
           </>
         )}
       </button>
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, y: -4, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -4, scale: 0.95 }}
-            transition={{ duration: 0.15 }}
-            className={`${dropdownRelative ? 'mt-1.5' : 'absolute top-full left-0 mt-1.5'} border border-border rounded-xl overflow-hidden min-w-[210px]`}
-            style={{
-              ...(dropdownRelative ? { maxHeight: 240, overflowY: 'auto', width: '100%' } : {}),
-              zIndex: 1000,
-              position: dropdownRelative ? 'relative' : 'absolute',
-              backgroundColor: 'var(--ranger-paper, #faf7f0)',
-              backgroundImage: 'none',
-              boxShadow: '0 1px 0 rgba(255,255,255,0.6) inset, 0 12px 32px -12px rgba(20, 30, 24, 0.28), 0 4px 12px -4px rgba(20, 30, 24, 0.18)',
-              isolation: 'isolate',
-            }}
-          >
+      {(() => {
+        const menu = (
+          <AnimatePresence>
+            {open && (
+              <motion.div
+                initial={{ opacity: 0, y: -4, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -4, scale: 0.97 }}
+                transition={{ duration: 0.15 }}
+                className={`${dropdownRelative ? 'mt-1.5' : ''} border border-border rounded-xl overflow-hidden min-w-[210px]`}
+                style={{
+                  ...(dropdownRelative
+                    ? { maxHeight: 240, overflowY: 'auto', width: '100%', position: 'relative' }
+                    : {
+                        position: 'fixed',
+                        top: menuRect?.top ?? -9999,
+                        left: menuRect?.left ?? -9999,
+                        width: menuRect?.width,
+                        maxHeight: 'calc(100vh - 120px)',
+                        overflowY: 'auto',
+                      }),
+                  zIndex: 9999,
+                  backgroundColor: 'var(--ranger-paper, #faf7f0)',
+                  boxShadow:
+                    '0 1px 0 rgba(255,255,255,0.6) inset, 0 18px 48px -16px rgba(20, 30, 24, 0.35), 0 6px 16px -6px rgba(20, 30, 24, 0.22)',
+                  isolation: 'isolate',
+                }}
+              >
             {parkList.map((park) => {
               const isWatched = watchedParkIds?.has(park.id) ?? false;
               const sublabel = PARK_SUBLABELS[park.id] ?? "";
