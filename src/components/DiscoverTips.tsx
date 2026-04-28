@@ -1345,6 +1345,22 @@ const LiveAlertBannerInner = ({
     }
   }, [expanded, panelState, linked.length, seasonLabel]);
 
+  // Brief shimmer while fallback tips are being derived. Even though the
+  // computation is synchronous, a short perceived-loading window smooths the
+  // transition from `loading` → `empty` and signals that we're looking for
+  // year-round notes before declaring the season truly empty.
+  const [fallbackResolving, setFallbackResolving] = useState(false);
+  const fallbackKey = fallbackTips.map((t: any) => t?.id ?? t?.title ?? '').join('|');
+  useEffect(() => {
+    if (panelState !== 'empty' || !expanded) {
+      setFallbackResolving(false);
+      return;
+    }
+    setFallbackResolving(true);
+    const id = window.setTimeout(() => setFallbackResolving(false), 350);
+    return () => window.clearTimeout(id);
+  }, [panelState, expanded, fallbackKey]);
+
   return (
     <div
       data-severity={severity}
