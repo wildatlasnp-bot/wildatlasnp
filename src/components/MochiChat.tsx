@@ -573,7 +573,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
         setMessages([makeGreeting()]);
       }
     }
-  }, [displayName, trackedPermits]);
+    // `messages` is intentionally omitted — it's only sampled at the moment a
+    // name/tracked-permits change fires, never as the trigger.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [displayName, trackedPermits, selectedParkId, firstSession, makeGreeting]);
 
   useEffect(() => {
     if (initialMountRef.current) { initialMountRef.current = false; return; }
