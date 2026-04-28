@@ -1282,7 +1282,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
       </section>
 
       {/* ═══════════════════════ X. SEASONAL INSIGHT — gallery plate ═══════════════════════ */}
-      <section style={{ padding: "36px 20px 4px" }}>
+      <RevealSection style={{ padding: "36px 20px 4px" }}>
         <SectionPlate
           numeral="VI"
           eyebrow={`${data.label} · in residence`}
@@ -1329,10 +1329,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             </button>
           </motion.div>
         </AnimatePresence>
-      </section>
+      </RevealSection>
 
       {/* ═══════════════════════ XI. LOCAL KNOWLEDGE — paired plates ═══════════════════════ */}
-      <section style={{ padding: "36px 20px 4px" }}>
+      <RevealSection style={{ padding: "36px 20px 4px" }} delay={60}>
         <SectionPlate
           numeral="VII"
           eyebrow="Local knowledge"
@@ -1389,10 +1389,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             );
           })}
         </div>
-      </section>
+      </RevealSection>
 
       {/* ═══════════════════════ XII. RANGER NOTES — clustered chronicle ═══════════════════════ */}
-      <section style={{ padding: "36px 20px 4px" }}>
+      <RevealSection style={{ padding: "36px 20px 4px" }}>
         <SectionPlate
           numeral="VIII"
           eyebrow={`Ranger notes · ${data.label}`}
@@ -1591,7 +1591,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             </AnimatePresence>
           </div>
         )}
-      </section>
+      </RevealSection>
 
       {/* ═══════════════════════ XIII. COLOPHON ═══════════════════════ */}
       <footer style={{ padding: "44px 20px 36px", textAlign: "center" }}>
