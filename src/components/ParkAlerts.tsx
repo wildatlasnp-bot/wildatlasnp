@@ -673,8 +673,6 @@ function CountRow({ label, value, ink, tip }: { label: string; value: number; in
       <span style={{
         fontFamily: DM, fontSize: 11, fontWeight: 400,
         color: "rgba(244,240,232,0.78)", letterSpacing: "0.02em", flex: 1,
-        borderBottom: tip ? "1px dotted rgba(244,240,232,0.18)" : "none",
-        paddingBottom: 1,
       }}>
         {label}
       </span>
