@@ -25,6 +25,7 @@ import { seasons, getCurrentSeason, parkSeasons, type Season } from "@/lib/park-
 import TodayParkAdvice from "@/components/TodayParkAdvice";
 import { useRecentFinds } from "@/hooks/useRecentFinds";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useSettlingSkeleton } from "@/hooks/useSettlingSkeleton";
 
 import yosemiteHero from "@/assets/yosemite-hero.jpg";
 import rainierHero from "@/assets/rainier-hero.jpg";
