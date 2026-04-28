@@ -1369,11 +1369,31 @@ const LiveAlertBannerInner = ({
             aria-labelledby="live-alert-trigger"
             tabIndex={-1}
             onKeyDown={handlePanelKeyDown}
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
-            style={{ overflow: 'hidden', background: 'rgba(201,169,110,0.06)', outline: 'none' }}
+            initial={{ height: 0, opacity: 0, y: -4 }}
+            animate={{
+              height: 'auto',
+              opacity: 1,
+              y: 0,
+              transition: {
+                height: { duration: 0.26, ease: [0.4, 0, 0.2, 1] },
+                opacity: { duration: 0.22, ease: [0.4, 0, 0.2, 1], delay: 0.04 },
+                y: { duration: 0.24, ease: [0.4, 0, 0.2, 1] },
+              },
+            }}
+            exit={{
+              height: 0,
+              opacity: 0,
+              y: -4,
+              transition: {
+                // Slightly softer + longer exit so the auto-collapse at the
+                // 30-min threshold (and manual close) reads as a deliberate
+                // slide-up/fade rather than an abrupt clip.
+                height: { duration: 0.32, ease: [0.4, 0, 0.2, 1], delay: 0.04 },
+                opacity: { duration: 0.18, ease: [0.4, 0, 0.2, 1] },
+                y: { duration: 0.28, ease: [0.4, 0, 0.2, 1] },
+              },
+            }}
+            style={{ overflow: 'hidden', background: 'rgba(201,169,110,0.06)', outline: 'none', willChange: 'height, opacity, transform' }}
           >
             <div style={{ padding: '14px 16px 16px' }}>
               {tips === null ? (
