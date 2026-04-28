@@ -214,9 +214,15 @@ export default function MochiScannerBanner({
           borderRadius: 14,
           padding: "14px 16px 13px",
           background:
-            "linear-gradient(180deg, hsl(150 16% 18%) 0%, hsl(150 18% 13%) 100%)",
+            scannerState === "error"
+              ? "linear-gradient(180deg, hsl(8 22% 18%) 0%, hsl(150 18% 13%) 100%)"
+              : scannerState === "delayed" || scannerState === "starting"
+              ? "linear-gradient(180deg, hsl(36 18% 19%) 0%, hsl(150 18% 13%) 100%)"
+              : "linear-gradient(180deg, hsl(150 16% 18%) 0%, hsl(150 18% 13%) 100%)",
           boxShadow:
-            "0 1px 0 rgba(255,255,255,0.04) inset, 0 0 0 1px rgba(255,255,255,0.04), 0 8px 24px -12px rgba(0,0,0,0.4)",
+            scannerState === "error"
+              ? "0 1px 0 rgba(255,255,255,0.04) inset, 0 0 0 1px rgba(212,110,95,0.18), 0 8px 24px -12px rgba(0,0,0,0.45)"
+              : "0 1px 0 rgba(255,255,255,0.04) inset, 0 0 0 1px rgba(255,255,255,0.04), 0 8px 24px -12px rgba(0,0,0,0.4)",
         }}
       >
       {/* Subtle radial sheen, top-left */}
