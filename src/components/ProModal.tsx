@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, CSSProperties } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { motion } from "framer-motion";
 import { Crown, ArrowRight, Loader2, Lock, RefreshCw, ShieldCheck } from "lucide-react";
@@ -51,13 +51,97 @@ const PILLARS: Array<{ kicker: string; title: string; body: string }> = [
   },
 ];
 
+// Single coherent reveal timeline. Every element subscribes to `phase`,
+// so reveals are driven by one shared state — no per-element animation-delay drift.
+// Steps must match the visual order of the modal (top → bottom).
+const STEP = {
+  CORNER_LEFT:  0,
+  CORNER_RIGHT: 1,
+  TITLE:        2,
+  SUBDECK:      3,
+  RULE:         4,
+  PILLAR_0:     5,
+  PILLAR_1:     6,
+  PILLAR_2:     7,
+  PRICE:        8,
+  CTA:          9,
+  ARL:         10,
+  DIVIDER:     11,
+  TRUST:       12,
+  REFUND:      13,
+} as const;
+
+// Tempo: gap between consecutive reveals. One value, one rhythm.
+const STEP_GAP_MS = 110;
+// Initial delay so the modal's own entrance settles first.
+const TIMELINE_OFFSET_MS = 380;
+// Single transition spec shared by every revealed element.
+const REVEAL_TRANSITION = "opacity 600ms cubic-bezier(0.16, 1, 0.3, 1), transform 600ms cubic-bezier(0.16, 1, 0.3, 1)";
+
 const ProModal = ({ open, onOpenChange }: ProModalProps) => {
   const [loading, setLoading] = useState(false);
   const [refundOpen, setRefundOpen] = useState(false);
   const [displayPrice, setDisplayPrice] = useState<string | null>(cachedPrice);
+  const [phase, setPhase] = useState(-1); // -1 = nothing revealed yet
+  const timersRef = useRef<number[]>([]);
   const { toast } = useToast();
   const { user, signOut } = useAuth();
   const { isPro } = useProStatus();
+
+  // Drive the single timeline. One scheduler, one source of truth.
+  useEffect(() => {
+    // Clean any prior run.
+    timersRef.current.forEach((t) => window.clearTimeout(t));
+    timersRef.current = [];
+
+    if (!open) {
+      setPhase(-1);
+      return;
+    }
+
+    // Honor reduced-motion: reveal everything immediately.
+    const reduce =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      setPhase(Object.keys(STEP).length);
+      return;
+    }
+
+    const totalSteps = Object.keys(STEP).length;
+    for (let i = 0; i < totalSteps; i++) {
+      const id = window.setTimeout(
+        () => setPhase((p) => (p < i ? i : p)),
+        TIMELINE_OFFSET_MS + i * STEP_GAP_MS,
+      );
+      timersRef.current.push(id);
+    }
+
+    return () => {
+      timersRef.current.forEach((t) => window.clearTimeout(t));
+      timersRef.current = [];
+    };
+  }, [open]);
+
+  // Helper: produce the reveal style for a given step.
+  // `from` lets each element choose its motion vector while sharing the timeline.
+  const revealStyle = (
+    step: number,
+    from: "up" | "down" | "none" = "up",
+  ): CSSProperties => {
+    const visible = phase >= step;
+    const offset =
+      from === "up" ? "translate3d(0, 12px, 0)"
+      : from === "down" ? "translate3d(0, -8px, 0)"
+      : "none";
+    return {
+      opacity: visible ? 1 : 0,
+      transform: visible ? "translate3d(0, 0, 0)" : offset,
+      transition: REVEAL_TRANSITION,
+      willChange: "opacity, transform",
+    };
+  };
+
 
   useEffect(() => {
     if (!open || cachedPrice !== null) return;
@@ -186,8 +270,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             className="absolute"
             style={{
               top: 18, left: 20,
-              opacity: 0,
-              animation: `proFadeDown 800ms ${EASE} 320ms both`,
+              ...revealStyle(STEP.CORNER_LEFT, "down"),
             }}
           >
             <div
@@ -222,8 +305,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             className="absolute text-right"
             style={{
               top: 18, right: 20,
-              opacity: 0,
-              animation: `proFadeDown 800ms ${EASE} 420ms both`,
+              ...revealStyle(STEP.CORNER_RIGHT, "down"),
             }}
           >
             <div
@@ -260,8 +342,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             marginTop: -36,
             position: "relative",
             zIndex: 2,
-            opacity: 0,
-            animation: `proFadeUp 900ms ${EASE} 560ms both`,
+            ...revealStyle(STEP.TITLE, "up"),
           }}
         >
           <h2
@@ -293,8 +374,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               color: "rgba(245,235,211,0.72)",
               lineHeight: 1.6,
               marginTop: 4,
-              opacity: 0,
-              animation: `proFadeUp 760ms ${EASE} 780ms both`,
+              ...revealStyle(STEP.SUBDECK, "up"),
             }}
           >
             A permit slips back into the wild every few minutes.
@@ -308,8 +388,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               height: 1,
               background:
                 "linear-gradient(90deg, rgba(201,169,110,0) 0%, rgba(201,169,110,0.45) 50%, rgba(201,169,110,0) 100%)",
-              opacity: 0,
-              animation: `proFadeUp 600ms ${EASE} 940ms both`,
+              ...revealStyle(STEP.RULE, "up"),
             }}
           />
 
@@ -328,8 +407,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                     i === PILLARS.length - 1
                       ? "none"
                       : "1px solid rgba(201,169,110,0.10)",
-                  opacity: 0,
-                  animation: `proRowIn 700ms ${EASE} ${1060 + i * 130}ms both`,
+                  ...revealStyle(STEP.PILLAR_0 + i, "up"),
                 }}
               >
                 <span
@@ -400,8 +478,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                     "0 1px 0 rgba(245,235,211,0.04)",
                     "0 22px 44px -24px rgba(0,0,0,0.7)",
                   ].join(", "),
-                  opacity: 0,
-                  animation: `proFadeUp 720ms ${EASE} ${1060 + PILLARS.length * 130 + 120}ms both`,
+                  ...revealStyle(STEP.PRICE, "up"),
                 }}
               >
                 {/* Hairline gold corner ticks — top-left & bottom-right */}
@@ -546,8 +623,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           <div
             style={{
               marginTop: 18,
-              opacity: 0,
-              animation: `proFadeUp 720ms ${EASE} 1700ms both`,
+              ...revealStyle(STEP.CTA, "up"),
             }}
           >
             <motion.button
@@ -643,8 +719,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               textAlign: "center",
               margin: "12px 4px 0",
               lineHeight: 1.55,
-              opacity: 0,
-              animation: `proFadeUp 600ms ${EASE} 1880ms both`,
+              ...revealStyle(STEP.ARL, "up"),
             }}
           >
             By subscribing, you authorize a recurring{" "}
@@ -667,8 +742,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               height: 1,
               background:
                 "linear-gradient(90deg, transparent 0%, rgba(201,169,110,0.28) 50%, transparent 100%)",
-              opacity: 0,
-              animation: `proFadeUp 600ms ${EASE} 1980ms both`,
+              ...revealStyle(STEP.DIVIDER, "up"),
             }}
           />
 
@@ -678,8 +752,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             style={{
               gap: 18,
               marginTop: 14,
-              opacity: 0,
-              animation: `proFadeUp 600ms ${EASE} 2080ms both`,
+              ...revealStyle(STEP.TRUST, "up"),
             }}
           >
             {[
@@ -711,8 +784,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               color: "rgba(245,235,211,0.40)",
               textAlign: "center",
               marginTop: 14,
-              opacity: 0,
-              animation: `proFadeUp 600ms ${EASE} 2180ms both`,
+              ...revealStyle(STEP.REFUND, "up"),
             }}
           >
             <button
