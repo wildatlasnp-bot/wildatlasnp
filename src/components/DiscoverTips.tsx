@@ -17,6 +17,9 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { format, differenceInDays } from "date-fns";
 import { PARKS } from "@/lib/parks";
+import { getSunEphemeris, getParkLocalTime, getPhotoGradeFilter, getPhotoOverlayColor, formatCoordinates, formatCountdown } from "@/lib/discover-utils";
+import PokoReadCard from "@/components/discover/PokoReadCard";
+import FieldLog from "@/components/discover/FieldLog";
 
 /** Returns an rgba badge background from a hex color, clamping hue to green range (90°–180°). */
 function badgeBg(hex: string | undefined, opacity = 0.85): string {
@@ -312,6 +315,20 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
   const [highlightsOpen] = useState(true);
   const [heroForecast, setHeroForecast] = useState<{ location: string; status: string; quietsAfter: string } | null>(null);
 
+  // Live tick — drives hero telemetry, sun phase, countdowns. 60s cadence is enough.
+  const [now, setNow] = useState<Date>(() => new Date());
+  useEffect(() => {
+    const id = window.setInterval(() => setNow(new Date()), 60_000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const sun = useMemo(() => getSunEphemeris(parkId, now), [parkId, now]);
+  const localTime = useMemo(() => getParkLocalTime(parkId, now), [parkId, now]);
+  const photoFilter = useMemo(() => getPhotoGradeFilter(sun.phase), [sun.phase]);
+  const photoOverlay = useMemo(() => getPhotoOverlayColor(sun.phase), [sun.phase]);
+  const coords = useMemo(() => formatCoordinates(parkId), [parkId]);
+
+
   const parkConfig = PARKS[parkId];
   const tripParkConfig = PARKS[tripParkId];
   const seasonContent = parkSeasons[parkId];
@@ -453,23 +470,45 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         </button>
       </div>
 
-      {/* ── Full-bleed Hero Image ── */}
-      <div className="relative w-full h-[320px] overflow-hidden mt-3">
+      {/* ── Full-bleed Hero Image (time-of-day color graded) ── */}
+      <div className="relative w-full h-[380px] overflow-hidden mt-3">
         <img
           src={hero.image}
           alt={hero.alt}
-          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-100"
-          style={{ objectPosition: hero.objectPosition ?? "center 30%" }}
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{
+            objectPosition: hero.objectPosition ?? "center 30%",
+            filter: photoFilter,
+            transform: 'scale(1.06)',
+            animation: 'kenBurnsDrift 38s ease-in-out infinite alternate',
+            transition: 'filter 1200ms cubic-bezier(0.4, 0, 0.2, 1)',
+          }}
         />
+        {/* Phase-driven overlay */}
+        <div className="absolute inset-0" style={{ background: photoOverlay, zIndex: 1, transition: 'background 1200ms cubic-bezier(0.4, 0, 0.2, 1)' }} />
         <div className="park-photo-scrim" />
-        <div className="absolute inset-0" style={{ background: `linear-gradient(to top, ${parkConfig.primaryColor ?? '#2F6F4E'}cc 0%, ${parkConfig.primaryColor ?? '#2F6F4E'}33 40%, transparent 70%)`, zIndex: 2 }} />
-        <div className="absolute bottom-5 left-5 right-5" style={{ zIndex: 10 }}>
-          {/* Permit found pill moved to bar below hero */}
+        <div className="absolute inset-0" style={{ background: `linear-gradient(to top, ${parkConfig.primaryColor ?? '#2F6F4E'}b3 0%, ${parkConfig.primaryColor ?? '#2F6F4E'}26 38%, transparent 68%)`, zIndex: 2 }} />
+
+        {/* Top-left: gold hairline + eyebrow (FIELD REPORT · date · weekday) */}
+        <div className="absolute top-5 left-5 right-5" style={{ zIndex: 10 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ height: 1, width: 24, background: '#C9A96E', opacity: 0.85 }} />
+            <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600, letterSpacing: '0.22em', color: 'rgba(255,255,255,0.85)', textTransform: 'uppercase', textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
+              Field Report · {localTime.dateLabel} · {localTime.weekday}
+            </span>
+          </div>
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 500, letterSpacing: '0.18em', color: 'rgba(255,255,255,0.55)', marginTop: 6, textTransform: 'uppercase', textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
+            {coords}
+          </p>
+        </div>
+
+        {/* Bottom: editorial title stack */}
+        <div className="absolute bottom-6 left-5 right-5" style={{ zIndex: 10 }}>
           {(() => {
             const heroText = `${parkConfig.shortName}${heroForecast?.location ? ` · ${heroForecast.location}` : ""}`;
-            const heroFontSize = heroText.length <= 20 ? 30 : heroText.length <= 35 ? 24 : 20;
+            const heroFontSize = heroText.length <= 20 ? 38 : heroText.length <= 35 ? 30 : 24;
             return (
-              <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: heroFontSize, fontWeight: 400, letterSpacing: "-0.01em", color: "white", lineHeight: 1.2, textShadow: "0 1px 3px rgba(0,0,0,0.30)" }}>
+              <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: heroFontSize, fontStyle: 'italic', fontWeight: 400, letterSpacing: "-0.015em", color: "white", lineHeight: 1.1, textShadow: "0 2px 8px rgba(0,0,0,0.45)" }}>
                 {heroText}
               </h2>
             );
@@ -485,7 +524,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               border: '0.5px solid rgba(255,255,255,0.2)',
               borderRadius: 20,
               padding: '4px 12px',
-              marginTop: 8,
+              marginTop: 10,
             }}>
               <span style={{
                 width: 6,
@@ -505,20 +544,45 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
         </div>
       </div>
 
-      {/* ── Permit-found bar ── */}
+      {/* ── Telemetry strip (sun ephemeris) ── */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr 1fr',
+        background: '#1A2F1E',
+        borderTop: '1px solid rgba(201,169,110,0.35)',
+        borderBottom: '1px solid rgba(201,169,110,0.18)',
+        padding: '10px 16px',
+      }}>
+        {[
+          { eyebrow: 'Local time', value: `${((localTime.hour + 11) % 12 + 1)}:${String(localTime.minute).padStart(2, '0')}${localTime.hour < 12 ? 'a' : 'p'}` },
+          { eyebrow: 'Sunrise', value: sun.sunriseLabel },
+          { eyebrow: sun.nextEventLabel === 'Sunrise' ? `Until sunrise` : 'Until sunset', value: formatCountdown(sun.minutesToNextEvent) },
+        ].map((item, i) => (
+          <div key={item.eyebrow} style={{ textAlign: 'center', borderLeft: i === 0 ? 'none' : '1px solid rgba(255,255,255,0.08)' }}>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: '0.18em', color: 'rgba(168,196,184,0.75)', textTransform: 'uppercase', margin: 0, marginBottom: 3 }}>{item.eyebrow}</p>
+            <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontWeight: 400, color: '#F0EDEA', letterSpacing: '-0.01em', margin: 0, lineHeight: 1.1 }}>{item.value}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Permit-found bar (editorial field-log strip) ── */}
       {!findsLoading && recentFinds > 0 && (
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: 8,
+            gap: 10,
             background: 'rgba(47,111,78,0.08)',
-            padding: '10px 20px',
+            padding: '11px 20px',
+            borderBottom: '1px solid rgba(201,169,110,0.25)',
           }}
         >
-          <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#2F6F4E', flexShrink: 0 }} />
+          <div style={{ height: 1, width: 14, background: '#C9A96E' }} />
+          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600, letterSpacing: '0.18em', color: '#2F6F4E', textTransform: 'uppercase' }}>
+            Logged
+          </span>
           <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 500, color: '#2F6F4E', flex: 1 }}>
-            {recentFinds} permit{recentFinds > 1 ? "s" : ""} found in the last {timeWindow}
+            {recentFinds} permit{recentFinds > 1 ? "s" : ""} found · last {timeWindow}
           </span>
           <button
             onClick={() => onNavigateToSniper?.()}
@@ -528,6 +592,16 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           </button>
         </div>
       )}
+
+      {/* ── Poko's Read (single-sentence AI brief) ── */}
+      <div className="px-5" style={{ paddingTop: 18, paddingBottom: 4 }}>
+        <PokoReadCard parkId={parkId} parkShortName={parkConfig.shortName} onAskPoko={onNavigateToMochi} />
+      </div>
+
+      {/* ── Field Log (live signals) ── */}
+      <div className="px-5" style={{ paddingTop: 14 }}>
+        <FieldLog parkId={parkId} onNavigateToSniper={onNavigateToSniper} />
+      </div>
 
       <div>
       {/* ── PARK INTELLIGENCE PANEL ── */}
