@@ -1,7 +1,8 @@
 import { ChevronDown, Mountain } from "lucide-react";
 import { PARKS, type ParkConfig } from "@/lib/parks";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useLayoutEffect } from "react";
+import { createPortal } from "react-dom";
 
 interface Props {
   activeParkId: string;
@@ -44,6 +45,8 @@ function toTitleCase(name: string): string {
 const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdownRelative = false, watchedParkIds }: Props) => {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const [menuRect, setMenuRect] = useState<{ top: number; left: number; width: number } | null>(null);
   const active = PARKS[activeParkId];
   const parkColor = active?.primaryColor ?? "var(--ranger-forest)";
 
@@ -51,11 +54,32 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      const target = e.target as Node;
+      if (ref.current?.contains(target)) return;
+      // Allow clicks inside the portaled menu (data-park-menu attribute)
+      const menuEl = (target as HTMLElement)?.closest?.('[data-park-menu="true"]');
+      if (menuEl) return;
+      setOpen(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
+
+  useLayoutEffect(() => {
+    if (!open || dropdownRelative) return;
+    const updateRect = () => {
+      if (!buttonRef.current) return;
+      const r = buttonRef.current.getBoundingClientRect();
+      setMenuRect({ top: r.bottom + 6, left: r.left, width: Math.max(r.width, 240) });
+    };
+    updateRect();
+    window.addEventListener("scroll", updateRect, true);
+    window.addEventListener("resize", updateRect);
+    return () => {
+      window.removeEventListener("scroll", updateRect, true);
+      window.removeEventListener("resize", updateRect);
+    };
+  }, [open, dropdownRelative]);
 
   // Convert hex to rgba for 0.15 opacity background
   const hexToRgba = (hex: string, alpha: number) => {
@@ -68,6 +92,7 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
   return (
     <div ref={ref} className="relative">
       <button
+        ref={buttonRef}
         onClick={() => setOpen(!open)}
         aria-expanded={open}
         aria-haspopup="listbox"
@@ -107,24 +132,35 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
           </>
         )}
       </button>
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, y: -4, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -4, scale: 0.95 }}
-            transition={{ duration: 0.15 }}
-            className={`${dropdownRelative ? 'mt-1.5' : 'absolute top-full left-0 mt-1.5'} border border-border rounded-xl overflow-hidden min-w-[210px]`}
-            style={{
-              ...(dropdownRelative ? { maxHeight: 240, overflowY: 'auto', width: '100%' } : {}),
-              zIndex: 1000,
-              position: dropdownRelative ? 'relative' : 'absolute',
-              backgroundColor: 'var(--ranger-paper, #faf7f0)',
-              backgroundImage: 'none',
-              boxShadow: '0 1px 0 rgba(255,255,255,0.6) inset, 0 12px 32px -12px rgba(20, 30, 24, 0.28), 0 4px 12px -4px rgba(20, 30, 24, 0.18)',
-              isolation: 'isolate',
-            }}
-          >
+      {(() => {
+        const menu = (
+          <AnimatePresence>
+            {open && (
+              <motion.div
+                data-park-menu="true"
+                initial={{ opacity: 0, y: -4, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -4, scale: 0.97 }}
+                transition={{ duration: 0.15 }}
+                className={`${dropdownRelative ? 'mt-1.5' : ''} border border-border rounded-xl overflow-hidden min-w-[210px]`}
+                style={{
+                  ...(dropdownRelative
+                    ? { maxHeight: 240, overflowY: 'auto', width: '100%', position: 'relative' }
+                    : {
+                        position: 'fixed',
+                        top: menuRect?.top ?? -9999,
+                        left: menuRect?.left ?? -9999,
+                        width: menuRect?.width,
+                        maxHeight: 'calc(100vh - 120px)',
+                        overflowY: 'auto',
+                      }),
+                  zIndex: 9999,
+                  backgroundColor: 'var(--ranger-paper, #faf7f0)',
+                  boxShadow:
+                    '0 1px 0 rgba(255,255,255,0.6) inset, 0 18px 48px -16px rgba(20, 30, 24, 0.35), 0 6px 16px -6px rgba(20, 30, 24, 0.22)',
+                  isolation: 'isolate',
+                }}
+              >
             {parkList.map((park) => {
               const isWatched = watchedParkIds?.has(park.id) ?? false;
               const sublabel = PARK_SUBLABELS[park.id] ?? "";
@@ -166,6 +202,11 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
           </motion.div>
         )}
       </AnimatePresence>
+        );
+        return dropdownRelative
+          ? menu
+          : (typeof document !== 'undefined' ? createPortal(menu, document.body) : null);
+      })()}
     </div>
   );
 };
