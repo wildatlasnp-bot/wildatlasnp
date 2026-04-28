@@ -913,6 +913,19 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         </div>
       </div>
 
+      {/* Cinematic in-page lightbox for the hero photo */}
+      <HeroLightbox
+        open={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+        src={hero.image}
+        alt={hero.alt}
+        eyebrow="Field Report"
+        title={parkConfig.shortName}
+        subtitle={parkConfig.heroDescription}
+        originRect={lightboxOrigin}
+        objectPosition={hero.objectPosition ?? "center 30%"}
+      />
+
       {/* ═══════════════════════ III. PARK SELECTOR STRIP ═══════════════════════
           Sticky just under the hero, on a near-black ribbon so the choice
           feels deliberate (not a header tab). */}
