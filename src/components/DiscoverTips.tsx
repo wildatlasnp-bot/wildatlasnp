@@ -799,6 +799,20 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
               eventLabel={liveAlertSnapshot.eventLabel}
               tips={data?.tips ?? null}
               seasonLabel={data?.label ?? activeSeason}
+              fallbackTips={(() => {
+                // Pull one representative tip from each *other* season of the same park,
+                // so the empty state still surfaces real, park-specific guidance.
+                if (!seasonContent) return [];
+                const out: any[] = [];
+                for (const s of seasons) {
+                  if (s === activeSeason) continue;
+                  const sd = seasonContent[s];
+                  const first = sd?.tips?.[0];
+                  if (first) out.push({ ...first, _seasonLabel: sd.label });
+                  if (out.length >= 3) break;
+                }
+                return out;
+              })()}
               expanded={liveAlertExpanded}
               onToggle={() => setLiveAlertExpanded((v) => !v)}
               onTipClick={handleTipNavigate}
@@ -1150,6 +1164,7 @@ type LiveAlertBannerProps = {
   eventLabel: string;
   tips: any[] | null;
   seasonLabel: string;
+  fallbackTips?: any[];
   expanded: boolean;
   onToggle: () => void;
   onTipClick?: (tipId: string) => void;
@@ -1161,6 +1176,7 @@ const LiveAlertBannerInner = ({
   eventLabel,
   tips,
   seasonLabel,
+  fallbackTips = [],
   expanded,
   onToggle,
   onTipClick,
@@ -1484,21 +1500,31 @@ const LiveAlertBannerInner = ({
                 ))}
               </ul>
 
-              {/* Section 2 — Linked field tips: loading / empty / ready */}
-              {panelState === 'loading' && (
-                <div style={{ marginTop: 14 }} aria-busy="true">
-                  <div className="permit-skeleton-shimmer" style={{ height: 8, width: 110, borderRadius: 2, marginBottom: 10, background: 'rgba(201,169,110,0.18)' }} />
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                    {[0, 1].map((i) => (
-                      <div
-                        key={i}
-                        className="permit-skeleton-shimmer"
-                        style={{ height: 44, width: '100%', borderRadius: 8, background: 'rgba(201,169,110,0.14)' }}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
+              {/* Section 2 — Linked field tips: loading / empty / ready
+                  Wrapped in AnimatePresence so transitions between the three
+                  states fade + slide subtly instead of snapping. */}
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={panelState}
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
+                >
+                  {panelState === 'loading' && (
+                    <div style={{ marginTop: 14 }} aria-busy="true">
+                      <div className="permit-skeleton-shimmer" style={{ height: 8, width: 110, borderRadius: 2, marginBottom: 10, background: 'rgba(201,169,110,0.18)' }} />
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                        {[0, 1].map((i) => (
+                          <div
+                            key={i}
+                            className="permit-skeleton-shimmer"
+                            style={{ height: 44, width: '100%', borderRadius: 8, background: 'rgba(201,169,110,0.14)' }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
               {panelState === 'empty' && (
                 <div style={{ marginTop: 18 }}>
@@ -1547,8 +1573,78 @@ const LiveAlertBannerInner = ({
                       margin: 0,
                       marginTop: 6,
                     }}>
-                      Check back next season — rangers add seasonal notes as conditions change.
+                      {fallbackTips.length > 0
+                        ? 'A few notes from other seasons that still apply year-round:'
+                        : 'Check back next season — rangers add seasonal notes as conditions change.'}
                     </p>
+
+                    {fallbackTips.length > 0 && (
+                      <ul style={{
+                        listStyle: 'none',
+                        padding: 0,
+                        margin: '12px 0 0',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 10,
+                      }}>
+                        {fallbackTips.map((tip: any, i: number) => (
+                          <li
+                            key={tip?.id ?? i}
+                            style={{
+                              display: 'flex',
+                              gap: 10,
+                              alignItems: 'flex-start',
+                              paddingTop: i === 0 ? 10 : 0,
+                              borderTop: i === 0 ? '1px solid rgba(201,169,110,0.18)' : 'none',
+                            }}
+                          >
+                            <span style={{
+                              width: 4,
+                              height: 4,
+                              borderRadius: '50%',
+                              background: '#C9A96E',
+                              marginTop: 7,
+                              flexShrink: 0,
+                            }} />
+                            <div style={{ minWidth: 0, flex: 1 }}>
+                              <p style={{
+                                fontFamily: "'DM Sans', sans-serif",
+                                fontSize: 12,
+                                fontWeight: 600,
+                                color: 'var(--wa-ink-primary)',
+                                margin: 0,
+                                lineHeight: 1.4,
+                              }}>
+                                {tip?.title}
+                                {tip?._seasonLabel && (
+                                  <span style={{
+                                    fontWeight: 500,
+                                    fontSize: 9,
+                                    letterSpacing: '0.14em',
+                                    textTransform: 'uppercase',
+                                    color: 'var(--wa-ink-subtle)',
+                                    marginLeft: 8,
+                                  }}>
+                                    {tip._seasonLabel}
+                                  </span>
+                                )}
+                              </p>
+                              {tip?.body && (
+                                <p style={{
+                                  fontFamily: "'DM Sans', sans-serif",
+                                  fontSize: 12,
+                                  lineHeight: 1.5,
+                                  color: 'var(--wa-ink-subtle)',
+                                  margin: '2px 0 0',
+                                }}>
+                                  {tip.body}
+                                </p>
+                              )}
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
                 </div>
               )}
@@ -1582,6 +1678,8 @@ const LiveAlertBannerInner = ({
                   </div>
                 </div>
               )}
+                </motion.div>
+              </AnimatePresence>
             </div>
           </motion.div>
         )}
