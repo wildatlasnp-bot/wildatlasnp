@@ -1000,11 +1000,11 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             </div>
             <button
               onClick={revealEmail}
-              className="rounded-md transition-colors shrink-0 flex items-center justify-center"
-              style={{ width: 32, height: 32, color: MUTED, background: 'none', border: 'none' }}
-              aria-label={emailRevealed ? "Email visible" : "Reveal email"}
+              className="hover:opacity-80 transition-opacity shrink-0"
+              style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 13, fontStyle: 'italic', color: '#2F6F4E', background: 'none', border: 'none', cursor: 'pointer', padding: '4px 4px' }}
+              aria-label={emailRevealed ? "Hide email" : "Show email"}
             >
-              {emailRevealed ? <EyeOff size={14} /> : <Eye size={14} />}
+              {emailRevealed ? "Hide" : "Show"}
             </button>
           </div>
 
