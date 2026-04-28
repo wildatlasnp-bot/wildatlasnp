@@ -1406,6 +1406,31 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               opacity: 0.18,
             }}
           />
+          {/* ── Topographic chart layer (Move 3) ──
+              Faint nautical-chart grid + contour curves drift slowly across the
+              field. ~8% opacity, GPU-only transform. Adds the "page texture"
+              that takes the screen from "designed" to "crafted." */}
+          <div aria-hidden className="poko-topo" style={{
+            position: 'absolute', inset: 0, zIndex: 1,
+            pointerEvents: 'none',
+            opacity: 0.085,
+            mixBlendMode: 'screen',
+            backgroundImage: [
+              "linear-gradient(to right, rgba(201,169,110,0.35) 0.5px, transparent 0.5px)",
+              "linear-gradient(to bottom, rgba(201,169,110,0.35) 0.5px, transparent 0.5px)",
+              "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='420' viewBox='0 0 420 420'><g fill='none' stroke='%23F0EDEA' stroke-width='0.6' opacity='0.55'><path d='M-20,180 Q60,140 140,170 T300,150 T440,180'/><path d='M-20,210 Q70,170 150,200 T310,180 T440,210'/><path d='M-20,240 Q80,200 160,230 T320,210 T440,240'/><path d='M-20,270 Q90,230 170,260 T330,240 T440,270'/><path d='M-20,300 Q100,260 180,290 T340,270 T440,300'/></g></svg>\")",
+            ].join(', '),
+            backgroundSize: '48px 48px, 48px 48px, 420px 420px',
+            backgroundPosition: '0 0, 0 0, center',
+            willChange: 'transform',
+          }} />
+          {/* Page-fold hairline — barely-visible horizontal seam */}
+          <div aria-hidden style={{
+            position: 'absolute', left: 0, right: 0, top: '52%', zIndex: 1,
+            height: 1,
+            background: 'linear-gradient(to right, transparent 0%, rgba(201,169,110,0.12) 20%, rgba(201,169,110,0.20) 50%, rgba(201,169,110,0.12) 80%, transparent 100%)',
+            pointerEvents: 'none',
+          }} />
           {/* Screen vignette — tightened for a more cinematic frame */}
           <div style={{
             position: 'absolute', inset: 0, zIndex: 3,
