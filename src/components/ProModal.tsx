@@ -374,7 +374,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           <h2
             className="font-heading"
             style={{
-              fontSize: 38,
+              fontSize: 34,
               fontWeight: 400,
               lineHeight: 1.02,
               letterSpacing: "-0.015em",
