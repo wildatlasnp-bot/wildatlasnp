@@ -1802,7 +1802,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               {!chipsHidden && !isLoading && messages[messages.length - 1]?.role === "assistant" && (
                 <div style={{
                   display: 'flex', alignItems: 'center', gap: 12,
-                  padding: '0 24px', marginTop: 14, marginBottom: 6,
+                  paddingLeft: CHAT_SPACING.screenInset,
+                  paddingRight: CHAT_SPACING.screenInset,
+                  marginTop: 14, marginBottom: 6,
                 }}>
                   <span style={{
                     fontFamily: "'DM Sans', sans-serif",
