@@ -1313,7 +1313,7 @@ const LiveAlertBannerInner = ({
         ? 'Loading field tips…'
         : panelState === 'ready'
         ? `Field tips ready. ${linked.length} linked tip${linked.length === 1 ? '' : 's'}.`
-        : 'No tips for this season.';
+        : `No tips for this season (${seasonLabel}).`;
     setTipsStatus(message);
     if (panelState !== 'loading') {
       const id = window.setTimeout(() => setTipsStatus(''), 1500);
