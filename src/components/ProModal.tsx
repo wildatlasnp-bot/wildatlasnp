@@ -478,6 +478,55 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             ))}
           </div>
 
+
+          {/* ============ LIVE PROOF — only renders when we have real data ============ */}
+          {latestFind && (() => {
+            const minsAgo = Math.max(1, Math.floor((Date.now() - new Date(latestFind.found_at).getTime()) / 60000));
+            const timeLabel =
+              minsAgo < 60 ? `${minsAgo} min ago`
+              : minsAgo < 1440 ? `${Math.floor(minsAgo / 60)}h ago`
+              : `${Math.floor(minsAgo / 1440)}d ago`;
+            const parkShort = getParkConfig(latestFind.park_id).shortName;
+            return (
+              <div
+                style={{
+                  marginTop: 22,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 10,
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 12,
+                  letterSpacing: "0.06em",
+                  color: "rgba(245,235,211,0.62)",
+                  ...revealStyle(STEP.PROOF, "up"),
+                }}
+              >
+                <span
+                  aria-hidden
+                  style={{
+                    width: 6,
+                    height: 6,
+                    borderRadius: "50%",
+                    background: "#7FB98B",
+                    boxShadow: "0 0 0 4px rgba(127,185,139,0.18), 0 0 10px rgba(127,185,139,0.55)",
+                    animation: "proPulse 2.4s ease-in-out infinite",
+                    flexShrink: 0,
+                  }}
+                />
+                <span style={{ color: "rgba(245,235,211,0.85)" }}>
+                  Caught{" "}
+                  <span style={{ color: "#C9A96E", fontWeight: 600 }}>{timeLabel}</span>
+                  <span style={{ color: "rgba(201,169,110,0.45)", margin: "0 6px" }}>·</span>
+                  <span style={{ fontStyle: "italic", color: "rgba(245,235,211,0.78)" }}>
+                    {latestFind.permit_name}
+                  </span>
+                  <span style={{ color: "rgba(245,235,211,0.45)" }}> · {parkShort}</span>
+                </span>
+              </div>
+            );
+          })()}
+
           {/* ============ PRICE — struck-metal embossed artifact ============ */}
           {(() => {
             // Split price like "$9.99" → symbol "$", whole "9", decimal ".99"
@@ -490,7 +539,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               <div
                 style={{
                   position: "relative",
-                  marginTop: 24,
+                  marginTop: latestFind ? 14 : 22,
                   borderRadius: 16,
                   padding: "20px 22px",
                   // Clip the sheen sweep to the plate's rounded rect.
