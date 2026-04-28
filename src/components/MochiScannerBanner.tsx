@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Radar, ChevronRight, Radio, BellOff } from "lucide-react";
+import { Radar, ChevronRight, Radio, BellOff, Loader, CloudOff, PauseCircle, AlertTriangle } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import type { ScannerState } from "@/lib/scanner-status";
 import { useScannerStatus } from "@/hooks/useScannerStatus";
 import { useRelativeTime } from "@/hooks/useRelativeTime";
 import { PARKS } from "@/lib/parks";
