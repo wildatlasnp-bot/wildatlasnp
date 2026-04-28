@@ -474,6 +474,36 @@ export type Database = {
           },
         ]
       }
+      park_brief_cache: {
+        Row: {
+          brief: string
+          bucket_key: string
+          created_at: string
+          expires_at: string
+          id: string
+          park_id: string
+          signals: Json
+        }
+        Insert: {
+          brief: string
+          bucket_key: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          park_id: string
+          signals?: Json
+        }
+        Update: {
+          brief?: string
+          bucket_key?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          park_id?: string
+          signals?: Json
+        }
+        Relationships: []
+      }
       park_crowd_forecasts: {
         Row: {
           building_time: string
