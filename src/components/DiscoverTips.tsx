@@ -639,22 +639,23 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: 10,
+            gap: 8,
             background: 'rgba(47,111,78,0.08)',
-            padding: '11px 20px',
+            padding: '11px 16px',
             borderBottom: '1px solid rgba(201,169,110,0.25)',
+            minWidth: 0,
           }}
         >
-          <div style={{ height: 1, width: 14, background: '#C9A96E' }} />
-          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600, letterSpacing: '0.18em', color: '#2F6F4E', textTransform: 'uppercase' }}>
+          <div style={{ height: 1, width: 12, background: '#C9A96E', flexShrink: 0 }} />
+          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 600, letterSpacing: '0.16em', color: '#2F6F4E', textTransform: 'uppercase', flexShrink: 0 }}>
             Logged
           </span>
-          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 500, color: '#2F6F4E', flex: 1 }}>
+          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 500, color: '#2F6F4E', flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {recentFinds} permit{recentFinds > 1 ? "s" : ""} found · last {timeWindow}
           </span>
           <button
             onClick={() => onNavigateToSniper?.()}
-            style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600, color: '#2F6F4E', background: 'none', border: 'none', cursor: 'pointer', padding: 0, whiteSpace: 'nowrap' }}
+            style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600, color: '#2F6F4E', background: 'none', border: 'none', cursor: 'pointer', padding: 0, whiteSpace: 'nowrap', flexShrink: 0 }}
           >
             View →
           </button>
@@ -662,12 +663,12 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({ parkId = "yose
       )}
 
       {/* ── Poko's Read (single-sentence AI brief) ── */}
-      <div className="px-5" style={{ paddingTop: 18, paddingBottom: 4 }}>
+      <div className="px-4" style={{ paddingTop: 22, paddingBottom: 4 }}>
         <PokoReadCard parkId={parkId} parkShortName={parkConfig.shortName} onAskPoko={onNavigateToMochi} />
       </div>
 
       {/* ── Field Log (live signals) ── */}
-      <div className="px-5" style={{ paddingTop: 14 }}>
+      <div className="px-4" style={{ paddingTop: 18 }}>
         <FieldLog parkId={parkId} onNavigateToSniper={onNavigateToSniper} />
       </div>
 
