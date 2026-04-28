@@ -1367,7 +1367,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
 
             <button
               onClick={() => onNavigateToMochi?.(`What should I know for my ${parkConfig.shortName} trip on ${format(arrivalDate, "MMM d")}?`)}
-              className="ranger-card--night ranger-card--night-rounded-lg hover:brightness-95 active:scale-[0.98] transition-all"
+              className="ranger-card--night ranger-card--night-rounded-lg"
               style={{
                 display: "flex", alignItems: "center", gap: 12, padding: "16px 20px",
                 width: "100%", cursor: "pointer", textAlign: "left", marginTop: 10, minHeight: 44,
