@@ -1601,6 +1601,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   0%, 100% { transform: translateY(0); }
                   50% { transform: translateY(-4px); }
                 }
+                @keyframes poko-typing-wave {
+                  0%, 100% { transform: scale(1); opacity: 0.4; }
+                  33%      { transform: scale(1.4); opacity: 1; }
+                }
                 @keyframes mochi-glow-pulse {
                   0%, 100% { opacity: 0.05; }
                   50% { opacity: 0.09; }
@@ -1608,16 +1612,20 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                 .mochi-glow-pulse {
                   animation: mochi-glow-pulse 4s ease-in-out infinite;
                 }
-                @keyframes bubbleRise {
-                  0% { opacity: 0; transform: scale(0.88) translateY(20px); }
-                  100% { opacity: 1; transform: scale(1) translateY(0px); }
+                @keyframes pokoBubbleRiseLeft {
+                  0%   { opacity: 0; transform: translateY(6px); }
+                  100% { opacity: 1; transform: translateY(0); }
+                }
+                @keyframes pokoBubbleRiseRight {
+                  0%   { opacity: 0; transform: translateY(4px); }
+                  100% { opacity: 1; transform: translateY(0); }
                 }
                 .poko-bubble-in-left {
-                  animation: bubbleRise 300ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+                  animation: pokoBubbleRiseLeft 200ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
                   transform-origin: bottom left;
                 }
                 .poko-bubble-in-right {
-                  animation: bubbleRise 300ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+                  animation: pokoBubbleRiseRight 150ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
                   transform-origin: bottom right;
                 }
                 @keyframes poko-listen-pulse {
@@ -2002,23 +2010,19 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                                     marginRight: 'auto',
                                     marginLeft: 0,
                                     background: isInitialBriefing
-                                      ? 'linear-gradient(180deg, rgba(240,237,234,0.96) 0%, rgba(232,228,220,0.94) 100%)'
-                                      : 'rgba(236,232,226,0.90)',
-                                    backdropFilter: 'blur(24px)',
-                                    WebkitBackdropFilter: 'blur(24px)',
+                                      ? 'linear-gradient(180deg, #FDFBF8 0%, #F6F1E8 100%)'
+                                      : '#FDFBF8',
                                     border: 'none',
-                                    borderLeft: isInitialBriefing ? '2px solid rgba(201,169,110,0.55)' : 'none',
-                                    borderRadius: isInitialBriefing ? '4px 14px 14px 4px' : '18px 18px 18px 4px',
-                                    padding: isInitialBriefing ? '18px 20px' : '16px 18px',
-                                    fontSize: isInitialBriefing ? 16 : 14,
+                                    borderLeft: '2px solid rgba(201,169,110,0.35)',
+                                    borderRadius: isInitialBriefing ? '4px 16px 16px 4px' : '16px 16px 16px 4px',
+                                    padding: isInitialBriefing ? '18px 20px' : '14px 18px',
+                                    fontSize: isInitialBriefing ? 16 : 15,
                                     fontWeight: 400,
                                     fontFamily: isInitialBriefing ? "'Cormorant Garamond', serif" : "'DM Sans', sans-serif",
                                     fontStyle: isInitialBriefing ? 'italic' : 'normal',
                                     color: '#1A2F1E',
-                                    lineHeight: isInitialBriefing ? 1.55 : 1.8,
-                                    boxShadow: isInitialBriefing
-                                      ? '0 1px 2px rgba(0,0,0,0.08), 0 12px 32px rgba(0,0,0,0.14)'
-                                      : '0 1px 3px rgba(0,0,0,0.10), 0 8px 20px rgba(0,0,0,0.16), 0 24px 48px rgba(0,0,0,0.10)',
+                                    lineHeight: isInitialBriefing ? 1.55 : 1.6,
+                                    boxShadow: '0 2px 8px rgba(26,47,30,0.06)',
                                   }
                                 : {
                                     width: 'fit-content',
@@ -2026,18 +2030,18 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                                     alignSelf: 'flex-end',
                                     marginLeft: 'auto',
                                     marginRight: 0,
-                                    background: 'rgba(30,70,45,0.30)',
-                                    backdropFilter: 'blur(28px)',
-                                    WebkitBackdropFilter: 'blur(28px)',
-                                    border: 'none',
+                                    background: 'rgba(47,111,78,0.18)',
+                                    backdropFilter: 'blur(20px)',
+                                    WebkitBackdropFilter: 'blur(20px)',
+                                    border: '1px solid rgba(47,111,78,0.28)',
                                     color: '#F0EDEA',
-                                    borderRadius: '18px 18px 4px 18px',
-                                    padding: '16px 18px',
-                                    fontSize: 14,
+                                    borderRadius: '16px 16px 4px 16px',
+                                    padding: '12px 16px',
+                                    fontSize: 15,
                                     fontWeight: 400,
                                     fontFamily: "'DM Sans', sans-serif",
-                                    lineHeight: 1.8,
-                                    boxShadow: '0 1px 3px rgba(0,0,0,0.10), 0 8px 20px rgba(0,0,0,0.16), 0 24px 48px rgba(0,0,0,0.10)',
+                                    lineHeight: 1.6,
+                                    boxShadow: 'none',
                                   }
                             }
                           >
@@ -2077,20 +2081,19 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                       style={{ marginTop: 12 }}
                     >
                       <div style={{
-                        background: 'rgba(232,228,220,0.88)',
-                        backdropFilter: 'blur(20px)',
-                        WebkitBackdropFilter: 'blur(20px)',
+                        background: '#FDFBF8',
                         border: 'none',
-                        borderRadius: '18px 18px 18px 4px',
+                        borderLeft: '2px solid rgba(201,169,110,0.35)',
+                        borderRadius: '16px 16px 16px 4px',
                         padding: '14px 18px',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: 4,
-                        boxShadow: '0 1px 3px rgba(0,0,0,0.10), 0 8px 20px rgba(0,0,0,0.16), 0 24px 48px rgba(0,0,0,0.10)',
+                        gap: 5,
+                        boxShadow: '0 2px 8px rgba(26,47,30,0.06)',
                       }}>
-                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(26,47,30,0.45)', display: 'inline-block', animation: 'poko-dot-bounce 400ms ease-in-out infinite', animationDelay: '0ms' }} />
-                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(26,47,30,0.45)', display: 'inline-block', animation: 'poko-dot-bounce 400ms ease-in-out infinite', animationDelay: '80ms' }} />
-                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(26,47,30,0.45)', display: 'inline-block', animation: 'poko-dot-bounce 400ms ease-in-out infinite', animationDelay: '160ms' }} />
+                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(26,47,30,0.55)', display: 'inline-block', animation: 'poko-typing-wave 900ms ease-in-out infinite', animationDelay: '0ms' }} />
+                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(26,47,30,0.55)', display: 'inline-block', animation: 'poko-typing-wave 900ms ease-in-out infinite', animationDelay: '300ms' }} />
+                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(26,47,30,0.55)', display: 'inline-block', animation: 'poko-typing-wave 900ms ease-in-out infinite', animationDelay: '600ms' }} />
                       </div>
                     </motion.div>
                   )}
