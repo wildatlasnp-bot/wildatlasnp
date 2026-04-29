@@ -83,6 +83,9 @@ export default function SaveToLogButton({ bubbleRef, text, parkId }: SaveToLogBu
         background: saved ? "rgba(201,169,110,0.22)" : "rgba(11,43,27,0.55)",
         border: `1px solid ${saved ? "rgba(201,169,110,0.7)" : "rgba(240,237,234,0.18)"}`,
         color: saved ? "#C9A96E" : "rgba(240,237,234,0.85)",
+        opacity: saved ? 1 : 0.78,
+        backdropFilter: "blur(4px)",
+        WebkitBackdropFilter: "blur(4px)",
         cursor: saved ? "default" : "pointer",
         transition:
           "opacity 200ms cubic-bezier(0.4, 0, 0.2, 1), background 200ms cubic-bezier(0.4, 0, 0.2, 1), border-color 200ms cubic-bezier(0.4, 0, 0.2, 1), color 200ms cubic-bezier(0.4, 0, 0.2, 1), transform 200ms cubic-bezier(0.4, 0, 0.2, 1)",
