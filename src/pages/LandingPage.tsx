@@ -299,6 +299,75 @@ const LandingPage = () => {
   }, []);
   const heroNotifAgeLabel = heroNotifAge === 0 ? "now" : `${heroNotifAge} min ago`;
 
+  // ───── "Watch a real catch" demo loop ─────
+  // Cycles through a small set of scripted, park-anchored catches above the
+  // fold so signed-out visitors immediately see *what an alert looks like*.
+  // Strictly visual: no real data, no network. Honest framing — labeled as
+  // a demo replay, not a live event. Pauses on reduced-motion.
+  type DemoCatch = {
+    park: string;       // e.g. "Yosemite"
+    permit: string;     // e.g. "Half Dome cables"
+    date: string;       // e.g. "Jul 14"
+    spots: number;      // 1–4
+    closesIn: string;   // "~4 min"
+    caughtAt: string;   // "2:14 AM"
+    accent: string;     // park dot color
+    deepLink: string;   // sample rec.gov path
+  };
+  const demoCatches = useRef<DemoCatch[]>([
+    {
+      park: "Yosemite",
+      permit: "Half Dome cables",
+      date: "Jul 14",
+      spots: 2,
+      closesIn: "~4 min",
+      caughtAt: "2:14 AM",
+      accent: "#A8BDAC",
+      deepLink: "rec.gov/r/permitYOSE",
+    },
+    {
+      park: "Glacier",
+      permit: "Gunsight Pass",
+      date: "Aug 03",
+      spots: 1,
+      closesIn: "~6 min",
+      caughtAt: "5:41 AM",
+      accent: "#B8C9D6",
+      deepLink: "rec.gov/r/permitGLAC",
+    },
+    {
+      park: "Grand Canyon",
+      permit: "Bright Angel · Indian Garden",
+      date: "Oct 22",
+      spots: 3,
+      closesIn: "~9 min",
+      caughtAt: "11:02 PM",
+      accent: "#D4A574",
+      deepLink: "rec.gov/r/permitGRCA",
+    },
+  ]).current;
+  const [demoIdx, setDemoIdx] = useState(0);
+  const [demoPhase, setDemoPhase] = useState<"shown" | "scanning">("shown");
+  useEffect(() => {
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+    let scanT: ReturnType<typeof setTimeout>;
+    let nextT: ReturnType<typeof setTimeout>;
+    // Show current catch for 6s, then 1.2s scanning beat, then advance.
+    scanT = setTimeout(() => setDemoPhase("scanning"), 6000);
+    nextT = setTimeout(() => {
+      setDemoIdx((i) => (i + 1) % demoCatches.length);
+      setDemoPhase("shown");
+    }, 7200);
+    return () => {
+      clearTimeout(scanT);
+      clearTimeout(nextT);
+    };
+  }, [demoIdx, demoCatches.length]);
+  const currentCatch = demoCatches[demoIdx];
+
   // Live ticker for the fleet log. Every 30s we bump a "now" reference so the
   // Recently alerted / Standing by counts and relative timestamps recompute
   // without a page reload (e.g. a park crossing the 7-day boundary, or a
@@ -980,83 +1049,115 @@ const LandingPage = () => {
                   className="flex items-center justify-between"
                   style={{ marginBottom: 12 }}
                 >
-                  <span
+                  <div className="flex items-center" style={{ gap: 8 }}>
+                    <span
+                      aria-hidden="true"
+                      style={{
+                        width: 6,
+                        height: 6,
+                        borderRadius: "50%",
+                        background: currentCatch.accent,
+                        boxShadow: `0 0 10px ${currentCatch.accent}`,
+                        transition: "background 480ms ease, box-shadow 480ms ease",
+                      }}
+                    />
+                    <span
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 11,
+                        letterSpacing: "0.18em",
+                        textTransform: "uppercase",
+                        color: "rgba(240, 237, 234, 0.62)",
+                      }}
+                    >
+                      Demo replay · {currentCatch.park}
+                    </span>
+                  </div>
+                  <div
+                    className="flex items-center"
+                    style={{ gap: 5 }}
+                    aria-hidden="true"
+                  >
+                    {demoCatches.map((_, i) => (
+                      <span
+                        key={i}
+                        style={{
+                          width: 14,
+                          height: 2,
+                          borderRadius: 1,
+                          background:
+                            i === demoIdx
+                              ? "rgba(240, 237, 234, 0.9)"
+                              : "rgba(240, 237, 234, 0.22)",
+                          transition: "background 360ms ease",
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <div
+                  aria-live="polite"
+                  style={{
+                    opacity: demoPhase === "scanning" ? 0.35 : 1,
+                    transition: "opacity 420ms cubic-bezier(0.4, 0, 0.2, 1)",
+                    minHeight: 132,
+                  }}
+                >
+                  <p
                     style={{
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 12,
-                      letterSpacing: "0.16em",
-                      textTransform: "uppercase",
-                      color: "rgba(240, 237, 234, 0.55)",
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontWeight: 500,
+                      fontSize: 22,
+                      lineHeight: 1.2,
+                      color: "#F0EDEA",
+                      margin: 0,
                     }}
                   >
-                    WildAtlas · 2:14 AM
-                  </span>
-                  <span
-                    aria-live="off"
+                    {currentCatch.permit}
+                  </p>
+                  <p
                     style={{
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 12,
-                      color: "rgba(240, 237, 234, 0.55)",
-                      fontVariantNumeric: "tabular-nums",
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontStyle: "italic",
+                      fontSize: 17,
+                      lineHeight: 1.3,
+                      color: "#E6D9B8",
+                      margin: 0,
+                      marginTop: 4,
                     }}
                   >
-                    {heroNotifAgeLabel}
+                    {currentCatch.date} · {currentCatch.spots} spot
+                    {currentCatch.spots === 1 ? "" : "s"} opened
+                  </p>
+                  <p
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 13,
+                      lineHeight: 1.4,
+                      color: "#A8BDAC",
+                      margin: 0,
+                      marginTop: 10,
+                    }}
+                  >
+                    {demoPhase === "scanning"
+                      ? "Scanning next park…"
+                      : `Caught at ${currentCatch.caughtAt} · window closes in ${currentCatch.closesIn}`}
+                  </p>
+                  <span
+                    style={{
+                      display: "inline-block",
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 12,
+                      color: "rgba(168, 189, 172, 0.85)",
+                      textDecoration: "underline",
+                      textUnderlineOffset: 3,
+                      margin: 0,
+                      marginTop: 8,
+                    }}
+                  >
+                    {currentCatch.deepLink} →
                   </span>
                 </div>
-                <p
-                  style={{
-                    fontFamily: "'Cormorant Garamond', serif",
-                    fontWeight: 500,
-                    fontSize: 22,
-                    lineHeight: 1.2,
-                    color: "#F0EDEA",
-                    margin: 0,
-                  }}
-                >
-                  Half Dome cables
-                </p>
-                <p
-                  style={{
-                    fontFamily: "'Cormorant Garamond', serif",
-                    fontStyle: "italic",
-                    fontSize: 17,
-                    lineHeight: 1.3,
-                    color: "#E6D9B8",
-                    margin: 0,
-                    marginTop: 4,
-                  }}
-                >
-                  Jul 14 · 2 spots opened
-                </p>
-                <p
-                  style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 13,
-                    lineHeight: 1.4,
-                    color: "#A8BDAC",
-                    margin: 0,
-                    marginTop: 10,
-                  }}
-                >
-                  Window closes in ~4 min
-                </p>
-                <a
-                  href="https://www.recreation.gov/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    display: "inline-block",
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 12,
-                    color: "#A8BDAC",
-                    textDecoration: "underline",
-                    textUnderlineOffset: 3,
-                    margin: 0,
-                    marginTop: 8,
-                  }}
-                >
-                  rec.gov/r/permitYOSE →
-                </a>
               </div>
 
               {/* CTA column */}
