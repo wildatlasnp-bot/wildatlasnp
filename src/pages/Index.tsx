@@ -175,6 +175,17 @@ const Index = () => {
     localStorage.setItem("wildatlas_active_park", id);
   }, []);
 
+  // ── Park accent atmosphere ──
+  // Push the active park's --park-accent / --park-accent-rgb onto :root
+  // for surfaces that consume the accent (Poko coordinate stamp, Discover
+  // FIELD REPORT eyebrow + crowd pill, Field Dispatch rule, Settings
+  // membership tint). Multi-park screens (Alerts, Settings) revert to the
+  // brand-amber default so the accent never implies a single park there.
+  useEffect(() => {
+    const isSinglePark = activeTab === "mochi" || activeTab === "discover";
+    applyParkAccent(isSinglePark ? parkId : null);
+  }, [activeTab, parkId]);
+
   const handleTabChange = useCallback((tab: Tab) => {
     const currentTab = activeTabRef.current;
     if (tab === currentTab) return;
