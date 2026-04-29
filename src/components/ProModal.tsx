@@ -607,60 +607,48 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             }}
           >
             <motion.button
-              whileTap={{ scale: 0.985 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 600, damping: 22 }}
               onClick={handleCheckout}
               disabled={loading || isPro}
               className="cta-shimmer relative overflow-hidden"
               style={{
                 width: "100%",
-                padding: "18px 20px",
-                borderRadius: 14,
-                background:
-                  "linear-gradient(180deg, #357B57 0%, #245A3D 55%, #143524 100%)",
-                color: "#FBF3DC",
+                height: 56,
+                padding: "0 20px",
+                borderRadius: 12,
+                background: "#2F6F4E",
+                color: "#FFFFFF",
                 fontFamily: "'DM Sans', sans-serif",
                 fontSize: 16,
-                fontWeight: 700,
-                letterSpacing: "0.02em",
+                fontWeight: 600,
+                letterSpacing: "0.01em",
                 cursor: loading || isPro ? "default" : "pointer",
-                border: "1px solid rgba(140,111,58,0.55)",
+                border: "none",
                 boxShadow: [
-                  "inset 0 1px 0 rgba(245,235,211,0.22)",
-                  "inset 0 -1px 0 rgba(0,0,0,0.40)",
-                  "0 18px 36px -14px rgba(26,47,30,0.45)",
-                  "0 0 0 1px rgba(201,169,110,0.14)",
+                  "inset 0 1px 0 rgba(255,255,255,0.10)",
+                  "0 8px 24px -10px rgba(47,111,78,0.55)",
                 ].join(", "),
-                display: "grid",
-                gridTemplateColumns: "1fr auto 1fr",
+                display: "inline-flex",
                 alignItems: "center",
+                justifyContent: "center",
                 gap: 10,
               }}
             >
               {loading ? (
                 <>
-                  <span />
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-                    <Loader2 size={16} className="animate-spin" />
-                    Opening checkout…
-                  </span>
-                  <span />
+                  <Loader2 size={16} className="animate-spin" />
+                  <span>Opening checkout…</span>
                 </>
               ) : isPro ? (
                 <>
-                  <span />
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-                    <Crown size={15} />
-                    You're already Pro
-                  </span>
-                  <span />
+                  <Crown size={15} />
+                  <span>You're already Pro</span>
                 </>
               ) : (
                 <>
-                  <span />
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
-                    Claim your Field Pass
-                  </span>
-                  <ArrowRight size={16} style={{ justifySelf: "end", opacity: 0.9 }} />
+                  <span>Claim your Field Pass</span>
+                  <ArrowRight size={16} style={{ opacity: 0.95 }} />
                 </>
               )}
             </motion.button>
