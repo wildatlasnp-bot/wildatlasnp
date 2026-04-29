@@ -17,6 +17,7 @@ import OnboardingFlow from "@/components/OnboardingFlow";
 import SettingsPage from "@/pages/SettingsPage";
 import { Loader2 } from "lucide-react";
 import { DEFAULT_PARK_ID } from "@/lib/parks";
+import { applyParkAccent } from "@/lib/park-accent";
 import posthog from "@/lib/posthog";
 import { startTabSwitch } from "@/lib/perf-telemetry";
 
