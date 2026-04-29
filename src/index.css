@@ -713,6 +713,14 @@
   to   { clip-path: inset(0 0 0 0); opacity: 1; }
 }
 
+.crowd-gradient-band {
+  animation: barGrow 700ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crowd-gradient-band { animation: none !important; clip-path: none !important; opacity: 1 !important; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .crowd-segment,
   [style*="labelFadeUp"] {
