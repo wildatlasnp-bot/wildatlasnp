@@ -465,43 +465,33 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
 
   const makeGreeting = (): Message => {
     const firstName = displayName?.trim().split(/\s+/)[0] || "";
-    const { label: timeLabel, casual: timeCasual } = getTimePeriod();
-    const parkName = PARKS[selectedParkId]?.shortName || "the parks";
 
     // ── First-session welcome (one-time after onboarding) ──
     if (firstSession && firstSession.permitName) {
       const fs = firstSession;
-      const phoneMasked = fs.phone ? maskPhone(fs.phone) : null;
-      const alertLine = phoneMasked
-        ? `If one becomes available, I'll text you at ${phoneMasked}.`
-        : "If one becomes available, I'll alert you immediately.";
-
       const content = `Watching ${fs.parkName} permits. Ask me anything about your trip.`;
-
       sessionStorage.setItem(SESSION_KEY, "true");
       return { id: 1, role: "assistant", content };
     }
 
-    // ── Standard greeting ──
+    // ── Time-aware dispatch (watched parks → most recent) ──
+    let parkName: string | null = null;
     if (trackedPermits.length > 0) {
-      // Use most recently created watcher
       const sorted = [...trackedPermits].sort((a, b) => {
         const ta = a.created_at ? new Date(a.created_at).getTime() : 0;
         const tb = b.created_at ? new Date(b.created_at).getTime() : 0;
         return tb - ta;
       });
-      const latest = sorted[0];
-      const latestParkName = PARKS[latest.park_id]?.shortName || "your park";
-      const body = `Watching ${latestParkName} permits. Ask me anything about your trip.`;
-      sessionStorage.setItem(SESSION_KEY, "true");
-      return { id: 1, role: "assistant", content: body };
+      parkName = PARKS[sorted[0].park_id]?.shortName || "your park";
     }
 
-    const greeting = firstName
-      ? `Hey ${firstName} — I'm Poko, your park ranger. What park are you planning to visit?`
-      : "Hey — I'm Poko, your park ranger. What park are you planning to visit?";
+    const dispatch = getDispatchWindow(parkName);
     sessionStorage.setItem(SESSION_KEY, "true");
-    return { id: 1, role: "assistant", content: greeting };
+    return {
+      id: 1,
+      role: "assistant",
+      content: `${dispatch.title} ${dispatch.body}`,
+    };
   };
 
   const [messages, setMessages] = useState<Message[]>(() => [makeGreeting()]);
