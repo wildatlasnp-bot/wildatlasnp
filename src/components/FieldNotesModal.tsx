@@ -44,6 +44,24 @@ export default function FieldNotesModal({ open, onClose }: Props) {
     }
   }, [open, mounted, reduceMotion]);
 
+  // Dim the app behind the modal to 20% opacity (per spec). Apply to #root
+  // so the modal portal (mounted on document.body) stays at full opacity.
+  useEffect(() => {
+    if (!mounted) return;
+    const root = document.getElementById("root");
+    if (!root) return;
+    const prevTransition = root.style.transition;
+    const prevOpacity = root.style.opacity;
+    root.style.transition = reduceMotion
+      ? "none"
+      : `opacity ${visible ? 500 : 200}ms cubic-bezier(0.4, 0, 0.2, 1)`;
+    root.style.opacity = visible ? "0.2" : "1";
+    return () => {
+      root.style.transition = prevTransition;
+      root.style.opacity = prevOpacity;
+    };
+  }, [mounted, visible, reduceMotion]);
+
   if (!mounted) return null;
 
   const transitionMs = reduceMotion ? 0 : visible ? 500 : 300;
