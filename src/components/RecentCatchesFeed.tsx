@@ -109,6 +109,15 @@ const RecentCatchesFeed = () => {
           from { opacity: 0; transform: translateY(8px); }
           to { opacity: 1; transform: translateY(0); }
         }
+        @keyframes catchRowEnter {
+          from { opacity: 0; transform: translateY(8px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes catchDotPulse {
+          0%   { box-shadow: 0 0 0 rgba(201, 169, 110, 0); }
+          25%  { box-shadow: 0 0 12px rgba(201, 169, 110, 0.95); }
+          100% { box-shadow: 0 0 0 rgba(201, 169, 110, 0); }
+        }
       `}</style>
 
       <p
