@@ -201,6 +201,8 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
                 top: 0,
                 left: 0,
                 transform: `translateX(${labelTranslatePx}px)`,
+                transition: "transform 240ms cubic-bezier(0.4, 0, 0.2, 1)",
+                willChange: "transform",
                 fontSize: 12,
                 fontWeight: 700,
                 letterSpacing: "0.1em",
@@ -238,17 +240,26 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
           </div>
         )}
 
-        {/* Hour axis */}
+        {/* Hour axis — first/last labels anchor to edges so they never clip */}
         <div className="relative h-5 mt-2">
-          {HOUR_TICKS.map((t) => (
-            <span
-              key={t.label}
-              className="absolute -translate-x-1/2"
-              style={{ left: `${pct(t.mins)}%`, color: "#8A9E8A", fontSize: 12, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap" }}
-            >
-              {t.label}
-            </span>
-          ))}
+          {HOUR_TICKS.map((t, i) => {
+            const isFirst = i === 0;
+            const isLast = i === HOUR_TICKS.length - 1;
+            const transform = isFirst
+              ? "translateX(0)"
+              : isLast
+                ? "translateX(-100%)"
+                : "translateX(-50%)";
+            return (
+              <span
+                key={t.label}
+                className="absolute"
+                style={{ left: `${pct(t.mins)}%`, transform, color: "#8A9E8A", fontSize: 12, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap" }}
+              >
+                {t.label}
+              </span>
+            );
+          })}
         </div>
       </div>
 
