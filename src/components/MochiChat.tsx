@@ -369,6 +369,62 @@ const VisitWindowCard = () => {
   );
 };
 
+/* ── POKO PERSONALITY LAYER ─────────────────────────────────────────
+   Idle dispatch rotation: after 3 minutes of dwelling on the Poko tab
+   without sending, the briefing prose cycles through these one-liners.
+   Cycle is non-repeating until exhausted, then reshuffles. Stored on
+   sessionStorage so it survives tab switches within a session.
+   Copy is FINAL — do not paraphrase per spec. */
+const IDLE_MESSAGES = [
+  "Still here. Still watching.",
+  "Quiet out there. Good time to plan.",
+  "Poko hasn't blinked.",
+  "Permits move fast. So does Poko.",
+  "No news is Poko working.",
+  "The trail is patient. So is Poko.",
+  "Watching. Always watching.",
+  "Every scan is another chance.",
+];
+
+/* Returning-user greetings — shown for 4s when last_seen_at > 24h ago,
+   then crossfade to the standard time-aware dispatch. Selected at random;
+   spec is final copy. */
+const RETURNING_MESSAGES = [
+  "Welcome back. Poko kept watch.",
+  "You were gone. Poko wasn't.",
+  "Back on the trail.",
+  "Poko's been busy while you were away.",
+];
+
+/* Seasonal subtitle — appears as a quiet 12px italic line beneath the
+   standard time-aware greeting. Hidden during idle / returning / first-
+   session states so it never competes with personality moments. */
+const getSeasonalSubtitle = (now: Date = new Date()): string => {
+  const m = now.getMonth(); // 0-11
+  const d = now.getDate();
+  // Spring: Mar 20 – Jun 20
+  if ((m === 2 && d >= 20) || m === 3 || m === 4 || (m === 5 && d <= 20)) {
+    return "Spring permits move fast. Peak season is weeks away.";
+  }
+  // Summer: Jun 21 – Sep 22
+  if ((m === 5 && d >= 21) || m === 6 || m === 7 || (m === 8 && d <= 22)) {
+    return "Peak season. Every cancellation matters.";
+  }
+  // Fall: Sep 23 – Dec 20
+  if ((m === 8 && d >= 23) || m === 9 || m === 10 || (m === 11 && d <= 20)) {
+    return "Fall shoulder season. Hidden gems opening up.";
+  }
+  // Winter: Dec 21 – Mar 19
+  return "Off-season. Plan now, beat the spring rush.";
+};
+
+/* Marker prefix used in the briefing message content so the renderer
+   knows to suppress the seasonal subtitle and treat the body as a
+   personality moment (idle / returning). The marker is stripped before
+   display. Using a non-printable sentinel keeps it invisible to AI. */
+const PERSONALITY_MARKER = "\u200BPOKO_PERSONALITY\u200B";
+
+
 /** Strip table elements from markdown — render their text content as inline spans */
 const MARKDOWN_NO_TABLES = {
   table: ({ children }: any) => <span style={{ display: 'block' }}>{children}</span>,
