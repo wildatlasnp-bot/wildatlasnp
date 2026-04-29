@@ -98,11 +98,11 @@
     --wa-surface-green-tint: #EAF3DE;
 
     /* ── Crowd chart palette ── */
-    --wa-crowd-quiet: #4A7C59;
-    --wa-crowd-building: #C8A84B;
-    --wa-crowd-busy: #C4703A;
-    --wa-crowd-packed: #B85450;
-    --wa-crowd-needle: #2F6B4F;
+    --wa-crowd-quiet: #2F6F4E;
+    --wa-crowd-building: #C9A96E;
+    --wa-crowd-busy: #E8935A;
+    --wa-crowd-packed: #C0392B;
+    --wa-crowd-needle: #1A2F1E;
 
     /* ─────────────────────────────────────────────────────────────
        MODERN RANGER — canonical Discover token set.
