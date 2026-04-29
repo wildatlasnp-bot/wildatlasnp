@@ -588,7 +588,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                           fontStyle: "italic",
                           fontSize: 14,
                           fontWeight: 500,
-                          color: "#F5EBD3",
+                          color: "#1A2F1E",
                           letterSpacing: "-0.005em",
                           lineHeight: 1.1,
                         }}
@@ -600,7 +600,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                           marginTop: 3,
                           fontFamily: "'DM Sans', sans-serif",
                           fontSize: 12,
-                          color: "rgba(245,235,211,0.55)",
+                          color: "rgba(44,44,44,0.62)",
                           letterSpacing: "0.04em",
                         }}
                       >
