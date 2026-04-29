@@ -148,6 +148,7 @@ const InlinePhoneInput = ({ userId, watchId, onPhoneSaved }: InlinePhoneInputPro
                   placeholder="(555) 123-4567"
                   value={phoneInput}
                   onChange={(e) => setPhoneInput(e.target.value.replace(/[^\d+\-() ]/g, ""))}
+                  aria-label="Phone number"
                   className="w-full pl-9 pr-3 py-2.5 rounded-lg border border-border bg-background text-foreground text-[13px] placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary/40 transition-all"
                   maxLength={20}
                 />
@@ -179,6 +180,7 @@ const InlinePhoneInput = ({ userId, watchId, onPhoneSaved }: InlinePhoneInputPro
                 placeholder="000000"
                 value={otpCode}
                 onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                aria-label="Verification code"
                 className="flex-1 px-3 py-2.5 rounded-lg border border-border bg-background text-foreground text-[13px] text-center tracking-[0.3em] placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary/40 transition-all"
                 maxLength={6}
                 autoFocus

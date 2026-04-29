@@ -133,6 +133,7 @@ const CrowdReportForm = React.memo(({ parkId }: CrowdReportFormProps) => {
             placeholder={`Area name in ${parkName}`}
             value={areaName}
             onChange={(e) => setAreaName(e.target.value)}
+            aria-label={`Area name in ${parkName}`}
             className="w-full text-[12px] px-3 py-2.5 rounded-lg bg-muted/30 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary"
           />
         </div>
@@ -168,6 +169,7 @@ const CrowdReportForm = React.memo(({ parkId }: CrowdReportFormProps) => {
           placeholder="Wait time at trailhead (minutes)"
           value={waitTime}
           onChange={(e) => setWaitTime(e.target.value)}
+          aria-label="Wait time at trailhead in minutes"
           className="w-full text-[12px] px-3 py-2.5 rounded-lg bg-muted/30 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary"
         />
         <p className="text-[12px] text-muted-foreground/60 mt-1 ml-0.5 font-medium">Optional — helps other hikers plan their visit.</p>

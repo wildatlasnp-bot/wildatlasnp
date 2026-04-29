@@ -48,14 +48,14 @@ function CalendarPicker({ selected, onSelect }: { selected: Date | null; onSelec
     <div style={{ userSelect: "none" }}>
       {/* Month nav */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-        <button type="button" onClick={prevMonth} style={{ background: "none", border: "none", padding: 6, cursor: "pointer", lineHeight: 0 }}>
-          <ChevronLeft size={18} color="#2F6F4E" />
+        <button type="button" onClick={prevMonth} aria-label="Previous month" style={{ background: "none", border: "none", padding: 6, cursor: "pointer", lineHeight: 0 }}>
+          <ChevronLeft size={18} color="#2F6F4E" aria-hidden="true" />
         </button>
         <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontWeight: 400, color: "var(--color-text-primary, #1C1C1A)" }}>
           {monthLabel}
         </span>
-        <button type="button" onClick={nextMonth} style={{ background: "none", border: "none", padding: 6, cursor: "pointer", lineHeight: 0 }}>
-          <ChevronRight size={18} color="#2F6F4E" />
+        <button type="button" onClick={nextMonth} aria-label="Next month" style={{ background: "none", border: "none", padding: 6, cursor: "pointer", lineHeight: 0 }}>
+          <ChevronRight size={18} color="#2F6F4E" aria-hidden="true" />
         </button>
       </div>
 
