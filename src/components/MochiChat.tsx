@@ -369,6 +369,62 @@ const VisitWindowCard = () => {
   );
 };
 
+/* ── POKO PERSONALITY LAYER ─────────────────────────────────────────
+   Idle dispatch rotation: after 3 minutes of dwelling on the Poko tab
+   without sending, the briefing prose cycles through these one-liners.
+   Cycle is non-repeating until exhausted, then reshuffles. Stored on
+   sessionStorage so it survives tab switches within a session.
+   Copy is FINAL — do not paraphrase per spec. */
+const IDLE_MESSAGES = [
+  "Still here. Still watching.",
+  "Quiet out there. Good time to plan.",
+  "Poko hasn't blinked.",
+  "Permits move fast. So does Poko.",
+  "No news is Poko working.",
+  "The trail is patient. So is Poko.",
+  "Watching. Always watching.",
+  "Every scan is another chance.",
+];
+
+/* Returning-user greetings — shown for 4s when last_seen_at > 24h ago,
+   then crossfade to the standard time-aware dispatch. Selected at random;
+   spec is final copy. */
+const RETURNING_MESSAGES = [
+  "Welcome back. Poko kept watch.",
+  "You were gone. Poko wasn't.",
+  "Back on the trail.",
+  "Poko's been busy while you were away.",
+];
+
+/* Seasonal subtitle — appears as a quiet 12px italic line beneath the
+   standard time-aware greeting. Hidden during idle / returning / first-
+   session states so it never competes with personality moments. */
+const getSeasonalSubtitle = (now: Date = new Date()): string => {
+  const m = now.getMonth(); // 0-11
+  const d = now.getDate();
+  // Spring: Mar 20 – Jun 20
+  if ((m === 2 && d >= 20) || m === 3 || m === 4 || (m === 5 && d <= 20)) {
+    return "Spring permits move fast. Peak season is weeks away.";
+  }
+  // Summer: Jun 21 – Sep 22
+  if ((m === 5 && d >= 21) || m === 6 || m === 7 || (m === 8 && d <= 22)) {
+    return "Peak season. Every cancellation matters.";
+  }
+  // Fall: Sep 23 – Dec 20
+  if ((m === 8 && d >= 23) || m === 9 || m === 10 || (m === 11 && d <= 20)) {
+    return "Fall shoulder season. Hidden gems opening up.";
+  }
+  // Winter: Dec 21 – Mar 19
+  return "Off-season. Plan now, beat the spring rush.";
+};
+
+/* Marker prefix used in the briefing message content so the renderer
+   knows to suppress the seasonal subtitle and treat the body as a
+   personality moment (idle / returning). The marker is stripped before
+   display. Using a non-printable sentinel keeps it invisible to AI. */
+const PERSONALITY_MARKER = "\u200BPOKO_PERSONALITY\u200B";
+
+
 /** Strip table elements from markdown — render their text content as inline spans */
 const MARKDOWN_NO_TABLES = {
   table: ({ children }: any) => <span style={{ display: 'block' }}>{children}</span>,
@@ -736,6 +792,164 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [firstSession, trackedPermits]);
 
+  // ─── POKO PERSONALITY: idle dispatch rotation ───────────────────
+  // After 3 minutes of dwelling on the Poko tab without sending a message,
+  // the briefing prose subtly cycles to the next idle one-liner. Cycle is
+  // non-repeating (sessionStorage-backed) and resets on send / tab switch
+  // (the visibility handler clears the timer).
+  // Skipped during firstSession and conversation modes.
+  const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const IDLE_CYCLE_KEY = "poko_idle_cycle";
+  const IDLE_INTERVAL_MS = 3 * 60 * 1000;
+
+  const popNextIdleMessage = useCallback((): string => {
+    let raw = sessionStorage.getItem(IDLE_CYCLE_KEY);
+    let used: number[] = [];
+    try { used = raw ? JSON.parse(raw) : []; } catch { used = []; }
+    if (used.length >= IDLE_MESSAGES.length) used = [];
+    const remaining = IDLE_MESSAGES.map((_, i) => i).filter((i) => !used.includes(i));
+    const next = remaining[Math.floor(Math.random() * remaining.length)] ?? 0;
+    used.push(next);
+    sessionStorage.setItem(IDLE_CYCLE_KEY, JSON.stringify(used));
+    return IDLE_MESSAGES[next];
+  }, []);
+
+  const scheduleIdleRotation = useCallback(() => {
+    if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+    idleTimerRef.current = setTimeout(() => {
+      // Re-check briefing state at fire-time; abort if the user has since
+      // sent a message or a SCANNING / catch event has taken priority.
+      if (isLoading) { scheduleIdleRotation(); return; }
+      setMessages((prev) => {
+        const isBriefing = prev.length <= 2 && prev[0]?.id === 1;
+        if (!isBriefing) return prev;
+        const text = popNextIdleMessage();
+        return [{ id: 1, role: "assistant", content: `${PERSONALITY_MARKER}${text}` }];
+      });
+      scheduleIdleRotation();
+    }, IDLE_INTERVAL_MS);
+  }, [isLoading, popNextIdleMessage]);
+
+  useEffect(() => {
+    if (firstSession) return;
+    scheduleIdleRotation();
+    const onHide = () => {
+      // Spec: timer resets on tab switch — clear & rearm fresh on return.
+      if (document.visibilityState === "hidden" && idleTimerRef.current) {
+        clearTimeout(idleTimerRef.current);
+        idleTimerRef.current = null;
+      } else if (document.visibilityState === "visible") {
+        scheduleIdleRotation();
+      }
+    };
+    document.addEventListener("visibilitychange", onHide);
+    return () => {
+      if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+      document.removeEventListener("visibilitychange", onHide);
+    };
+  }, [firstSession, scheduleIdleRotation]);
+
+  // ─── POKO PERSONALITY: returning-user greeting ──────────────────
+  // On Poko mount, read profile.last_seen_at. If >24h since last visit,
+  // show a returning one-liner for 4s, then crossfade to the standard
+  // time-aware dispatch. Always update last_seen_at to now afterward.
+  const returningChecked = useRef(false);
+  useEffect(() => {
+    if (!user || returningChecked.current || firstSession) return;
+    returningChecked.current = true;
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("last_seen_at")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (cancelled) return;
+      const last = (data as any)?.last_seen_at ? new Date((data as any).last_seen_at).getTime() : 0;
+      const hoursAway = last > 0 ? (Date.now() - last) / (1000 * 60 * 60) : Infinity;
+      // Stamp last_seen_at to now (fire-and-forget). Triggers no UI.
+      supabase
+        .from("profiles")
+        .update({ last_seen_at: new Date().toISOString() } as any)
+        .eq("user_id", user.id)
+        .then(() => {});
+      // First-ever visit (no prior stamp) doesn't qualify as "returning".
+      if (!isFinite(hoursAway) || hoursAway < 24) return;
+      setMessages((prev) => {
+        const isBriefing = prev.length <= 2 && prev[0]?.id === 1;
+        if (!isBriefing) return prev;
+        const msg = RETURNING_MESSAGES[Math.floor(Math.random() * RETURNING_MESSAGES.length)];
+        return [{ id: 1, role: "assistant", content: `${PERSONALITY_MARKER}${msg}` }];
+      });
+      // Crossfade to standard time-aware greeting after 4s.
+      setTimeout(() => {
+        if (cancelled) return;
+        setMessages((prev) => {
+          const isBriefing = prev.length <= 2 && prev[0]?.id === 1;
+          if (!isBriefing) return prev;
+          const parkName = trackedPermits.length > 0
+            ? (PARKS[[...trackedPermits].sort((a, b) => {
+                const ta = a.created_at ? new Date(a.created_at).getTime() : 0;
+                const tb = b.created_at ? new Date(b.created_at).getTime() : 0;
+                return tb - ta;
+              })[0].park_id]?.shortName || "your park")
+            : null;
+          const dispatch = getDispatchWindow(parkName);
+          return [{ id: 1, role: "assistant", content: `${dispatch.title} ${dispatch.body}` }];
+        });
+      }, 4000);
+    })();
+    return () => { cancelled = true; };
+    // trackedPermits intentionally omitted — sampled inside the closure at
+    // fire-time via setMessages; trigger is mount + auth ready.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, firstSession]);
+
+  // ─── POKO PERSONALITY: new-alert compass moment ─────────────────
+  // Polls park_alerts every 90s for the user's tracked parks. When a row
+  // appears whose `last_updated` is newer than the baseline captured on
+  // mount, the compass bezel does a single 15° clockwise rotation (800ms
+  // out / 400ms back) and the status dot pulses once with --park-accent.
+  // Polling > realtime here because park_alerts is server-managed and may
+  // not be in the realtime publication; 90s is plenty for a personality
+  // moment and avoids any connection cost.
+  const [compassNudge, setCompassNudge] = useState(0);
+  const [parkPulse, setParkPulse] = useState(0);
+  const alertBaselineRef = useRef<string | null>(null);
+  useEffect(() => {
+    const trackedIds = Array.from(new Set(trackedPermits.map((p) => p.park_id))).filter(Boolean);
+    if (trackedIds.length === 0) return;
+    let cancelled = false;
+    let intervalId: number | null = null;
+
+    const check = async () => {
+      const { data, error } = await supabase
+        .from("park_alerts")
+        .select("last_updated, park_id")
+        .in("park_id", trackedIds)
+        .order("last_updated", { ascending: false })
+        .limit(1);
+      if (cancelled || error || !data?.[0]) return;
+      const latest = data[0].last_updated as string;
+      if (alertBaselineRef.current === null) {
+        // Seed the baseline on first read — never fires on initial mount.
+        alertBaselineRef.current = latest;
+        return;
+      }
+      if (latest > alertBaselineRef.current) {
+        alertBaselineRef.current = latest;
+        setCompassNudge((n) => n + 1);
+        setParkPulse((n) => n + 1);
+      }
+    };
+    check();
+    intervalId = window.setInterval(check, 90_000);
+    return () => {
+      cancelled = true;
+      if (intervalId !== null) window.clearInterval(intervalId);
+    };
+  }, [trackedPermits]);
+
 
   useEffect(() => {
     if (initialMountRef.current) { initialMountRef.current = false; return; }
@@ -784,6 +998,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
       return;
     }
     sendTimestamps.current.push(now);
+    // Personality: any send resets the 3-min idle dispatch rotation timer.
+    if (idleTimerRef.current) { clearTimeout(idleTimerRef.current); idleTimerRef.current = null; }
 
     posthog.capture("mochi_message_sent");
     if (!isPro) setQuestionsUsed((prev) => prev + 1);
@@ -1006,13 +1222,19 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
       >
         <span aria-hidden="true" className={(pokoStatus.key === 'ready' || pokoStatus.key === 'standing-by') ? 'poko-ready-heartbeat' : undefined} style={{
           width: 5, height: 5, borderRadius: '50%',
-          background: pokoStatus.dot,
+          // Park-accent override on new-alert moments — single pulse, replays
+          // each time `parkPulse` ticks via the `key` remount.
+          background: parkPulse > 0 ? 'var(--park-accent, #C9A96E)' : pokoStatus.dot,
           boxShadow: pokoStatus.pulse ? `0 0 0 0 ${pokoStatus.dot}` : 'none',
           // Ripple pulse for active states (scanning/listening); breathing
           // heartbeat for ready/standing-by — Poko ambient-loops exception.
           animation: pokoStatus.pulse ? 'poko-status-pulse 1.6s ease-in-out infinite' : undefined,
           transition: 'background 220ms cubic-bezier(0.4, 0, 0.2, 1)',
-        }} />
+        }}
+        // The key remount makes the park-accent flash replay on each new alert
+        // (purely cosmetic — does not affect the underlying status state).
+        key={`dot-${parkPulse}`}
+        />
         <span>{pokoStatus.label}</span>
         <span aria-hidden="true" style={{
           flex: '0 0 28px', height: 1, marginLeft: 4,
@@ -1668,6 +1890,15 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               100% { transform: rotate(-0.5deg); }
             }
             .poko-rose-drift { transform-origin: 66px 66px; animation: poko-rose-drift 16s ease-in-out infinite; }
+            /* Personality nudge: single 15° clockwise sweep over 800ms then
+               return over 400ms. Applied via key-remount so each new alert
+               replays the moment. Composes with the ambient drift loop. */
+            @keyframes poko-bezel-nudge {
+              0%   { transform: rotate(0deg); }
+              66%  { transform: rotate(15deg); }
+              100% { transform: rotate(0deg); }
+            }
+            .poko-bezel-nudge { animation: poko-rose-drift 16s ease-in-out infinite, poko-bezel-nudge 1200ms cubic-bezier(0.4, 0, 0.2, 1) 1; }
             /* READY status heartbeat — 2s scale + opacity breath. Signals presence. */
             @keyframes poko-ready-heartbeat {
               0%, 100% { transform: scale(1);   opacity: 1;   }
@@ -1945,7 +2176,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                         Drifts ±0.5° / 16s (8s each way) ease-in-out infinite.
                         Per ambient-loops exception: Poko-only loop. The needle
                         below stays semantically locked to the live bearing. */}
-                    <g className="poko-rose-drift">
+                    <g
+                      key={`bezel-${compassNudge}`}
+                      className={`poko-rose-drift${compassNudge > 0 ? ' poko-bezel-nudge' : ''}`}
+                    >
                       {/* Cardinal letters — N E S W */}
                       {[
                         { l: 'N', x: 66, y: 18 },
@@ -2213,25 +2447,42 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                                   }
                             }
                           >
-                            {msg.role === "assistant" ? (
-                              <div
-                                /* Briefing crossfades on window change by remounting via content key */
-                                key={isInitialBriefing ? `briefing-${msg.content}` : undefined}
-                                className={`mochi-prose ${isInitialBriefing ? "poko-dispatch-fade" : ""}`}
-                              >
-                                {parseTrailBlocks(msg.content).map((block, bi) =>
-                                  block.type === "trails" ? (
-                                    <div key={bi} className="space-y-2 -mx-1">
-                                      {block.value.map((trail, ti) => (
-                                        <MochiTrailCard key={ti} trail={trail} />
-                                      ))}
-                                    </div>
-                                  ) : (
-                                    <div key={bi}><ReactMarkdown components={MARKDOWN_NO_TABLES}>{formatInlineBullets(stripMarkdownTables(block.value))}</ReactMarkdown></div>
-                                  )
-                                )}
-                              </div>
-                            ) : (
+                            {msg.role === "assistant" ? (() => {
+                              // Strip personality marker (idle/returning) so it
+                              // never reaches the renderer. When stripped, the
+                              // seasonal subtitle is also suppressed.
+                              const isPersonality = isInitialBriefing && msg.content.startsWith(PERSONALITY_MARKER);
+                              const cleaned = isPersonality ? msg.content.slice(PERSONALITY_MARKER.length) : msg.content;
+                              return (
+                                <div
+                                  /* Briefing crossfades on window change by remounting via content key */
+                                  key={isInitialBriefing ? `briefing-${cleaned}` : undefined}
+                                  className={`mochi-prose ${isInitialBriefing ? "poko-dispatch-fade" : ""}`}
+                                >
+                                  {parseTrailBlocks(cleaned).map((block, bi) =>
+                                    block.type === "trails" ? (
+                                      <div key={bi} className="space-y-2 -mx-1">
+                                        {block.value.map((trail, ti) => (
+                                          <MochiTrailCard key={ti} trail={trail} />
+                                        ))}
+                                      </div>
+                                    ) : (
+                                      <div key={bi}><ReactMarkdown components={MARKDOWN_NO_TABLES}>{formatInlineBullets(stripMarkdownTables(block.value))}</ReactMarkdown></div>
+                                    )
+                                  )}
+                                  {/* Seasonal subtitle — only on standard time-aware
+                                      greetings (skip during idle/returning/first session). */}
+                                  {isInitialBriefing && !isPersonality && !firstSession && (
+                                    <p style={{
+                                      marginTop: 8, marginBottom: 0,
+                                      fontFamily: "'DM Sans', sans-serif",
+                                      fontSize: 12, fontStyle: 'italic',
+                                      color: '#8A9E8A', lineHeight: 1.5,
+                                    }}>{getSeasonalSubtitle()}</p>
+                                  )}
+                                </div>
+                              );
+                            })() : (
                               msg.content
                             )}
                           </div>
