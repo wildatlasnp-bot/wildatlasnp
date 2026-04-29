@@ -126,6 +126,7 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
           >
             <div
               className="wa-bottom-nav-icon"
+              data-nav-target={tab.id}
               style={{
                 position: "relative",
                 width: 44,
