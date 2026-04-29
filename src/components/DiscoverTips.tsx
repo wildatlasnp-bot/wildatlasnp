@@ -1576,7 +1576,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
       </RevealSection>
 
       {/* ═══════════════════════ XI. LOCAL KNOWLEDGE — paired plates ═══════════════════════ */}
-      <RevealSection style={{ padding: "36px 20px 4px" }} delay={60}>
+      <RevealSection style={{ padding: "36px 20px 4px" }} delay={360} resetKey={parkId}>
         <SectionPlate
           numeral="VII"
           eyebrow="Local knowledge"
