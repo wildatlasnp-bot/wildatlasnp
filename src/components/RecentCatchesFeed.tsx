@@ -125,8 +125,93 @@ const RecentCatchesFeed = () => {
     return () => window.clearTimeout(t);
   }, [finds]);
 
-  // Don't render while loading or if empty
-  if (finds === null || finds.length === 0) return null;
+  // Don't render while loading
+  if (finds === null) return null;
+
+  // Empty state — user has watchers but no catches yet
+  if (finds.length === 0) {
+    if (!user) return null;
+    return (
+      <div
+        style={{
+          padding: "48px 24px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          textAlign: "center",
+        }}
+      >
+        <style>{`
+          @keyframes catchScannerDot {
+            0%, 100% { opacity: 0.45; transform: scale(1); }
+            50%      { opacity: 1;    transform: scale(1.25); }
+          }
+          @media (prefers-reduced-motion: reduce) {
+            .catch-scanner-dot { animation: none !important; }
+          }
+        `}</style>
+        <div
+          style={{
+            width: 40,
+            height: 1,
+            background: "#C9A96E",
+            marginBottom: 20,
+          }}
+        />
+        <p
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: 22,
+            fontWeight: 400,
+            color: "#1A2F1E",
+            lineHeight: 1.2,
+            marginBottom: 8,
+          }}
+        >
+          Poko is watching.
+        </p>
+        <p
+          style={{
+            fontFamily: DM_SANS,
+            fontSize: 13,
+            color: "#8A9E8A",
+            lineHeight: 1.55,
+            maxWidth: 260,
+            marginBottom: 24,
+            textWrap: "balance" as const,
+          }}
+        >
+          Cancellations appear without warning. When one surfaces, you'll know within minutes.
+        </p>
+        <div
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 8,
+            fontFamily: DM_SANS,
+            fontSize: 12,
+            fontWeight: 500,
+            letterSpacing: "0.18em",
+            textTransform: "uppercase" as const,
+            color: "#C9A96E",
+          }}
+        >
+          <span
+            className="catch-scanner-dot"
+            style={{
+              width: 6,
+              height: 6,
+              borderRadius: "50%",
+              background: "#2F6F4E",
+              display: "inline-block",
+              animation: "catchScannerDot 1600ms cubic-bezier(0.4, 0, 0.2, 1) infinite",
+            }}
+          />
+          Scanner active · 2 min intervals
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

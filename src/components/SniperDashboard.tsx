@@ -420,7 +420,7 @@ const SniperDashboard = () => {
           </div>
         )}
 
-        {/* Empty state — inside dark zone */}
+        {/* Empty state — editorial cream surface, full-bleed inside dark zone */}
         <AnimatePresence mode="wait">
           {s.watches.length === 0 && s.user && (
             s.initialLoading ? (
@@ -431,56 +431,70 @@ const SniperDashboard = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0, transition: { duration: 0.15, ease: "easeIn" } }}
-                className="flex flex-col items-center justify-center flex-1"
-                style={{ padding: "40px 24px 48px", minHeight: 320 }}
+                className="flex flex-col items-center justify-center"
+                style={{
+                  background: "#F0EDEA",
+                  padding: "48px 24px",
+                  marginTop: 24,
+                }}
               >
-                <div style={{ height: 140 }}>
-                  <img
-                    src="/mochi-wave.png"
-                    alt="Poko mascot waving hello"
-                    style={{ width: "auto", height: 140, objectFit: "contain" }}
-                  />
-                </div>
+                <img
+                  src="/mochi-wave.png"
+                  alt="Poko bear cub mascot"
+                  style={{ width: "auto", height: 80, objectFit: "contain" }}
+                />
                 <p style={{
                   fontFamily: CORMORANT,
-                  fontSize: 30,
+                  fontStyle: "italic",
+                  fontSize: 28,
                   fontWeight: 400,
-                  color: "#F0EDEA",
+                  color: "#1A2F1E",
                   textAlign: "center",
                   marginTop: 16,
+                  lineHeight: 1.2,
                 }}>
-                  Nothing to watch yet.
+                  Nothing's slipping past unnoticed.
                 </p>
                 <p style={{
                   fontFamily: DM_SANS,
                   fontSize: 14,
-                  color: "#A8A89A",
+                  color: "#8A9E8A",
                   textAlign: "center",
-                  maxWidth: 260,
+                  maxWidth: 280,
                   marginTop: 8,
-                  lineHeight: 1.6,
+                  lineHeight: 1.55,
                   textWrap: "balance",
                 }}>
-                  Add a permit and Poko starts scanning Recreation.gov every 5 minutes.
+                  Add a park and Poko starts watching immediately. Permits surface and vanish in minutes.
                 </p>
                 <button
                   onClick={() => setAddModalOpen(true)}
                   style={{
                     fontFamily: DM_SANS,
-                    fontSize: 14,
+                    fontSize: 15,
                     fontWeight: 500,
-                    color: "#F0EDEA",
+                    color: "#FFFFFF",
                     background: "#2F6F4E",
-                    height: 48,
-                    padding: "0 28px",
+                    height: 56,
+                    width: "100%",
+                    maxWidth: 360,
                     borderRadius: 12,
                     border: "none",
                     cursor: "pointer",
-                    marginTop: 20,
+                    marginTop: 32,
                   }}
                 >
-                  Watch your first permit
+                  + Watch a permit
                 </button>
+                <p style={{
+                  fontFamily: DM_SANS,
+                  fontSize: 12,
+                  color: "#8A9E8A",
+                  textAlign: "center",
+                  marginTop: 16,
+                }}>
+                  Free plan includes 1 park · 5-min scans
+                </p>
               </motion.div>
             )
           )}
