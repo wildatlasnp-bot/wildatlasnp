@@ -110,15 +110,17 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
             <span className="font-display-italic" style={{
               fontSize: 12,
               letterSpacing: '0.12em',
-              color: 'var(--ranger-paper-soft)',
+              color: 'rgba(245, 235, 211, 0.95)',
               lineHeight: 1,
+              textShadow: '0 1px 2px rgba(0,0,0,0.45)',
             }}>
               {(active?.shortName ?? "PARK").toUpperCase()} — {PARK_COORDS[activeParkId] ?? ""}
             </span>
             <span style={{
               fontSize: 12, fontWeight: 600,
-              letterSpacing: "0.22em", color: "var(--ranger-parchment-mute)",
+              letterSpacing: "0.22em", color: "rgba(245, 235, 211, 0.78)",
               textTransform: "uppercase",
+              textShadow: '0 1px 2px rgba(0,0,0,0.45)',
               display: "inline-flex", alignItems: "center", gap: 4,
             }}>
               Change park <ChevronDown size={12} strokeWidth={1.5} className={`transition-transform ${open ? "rotate-180" : ""}`} />
