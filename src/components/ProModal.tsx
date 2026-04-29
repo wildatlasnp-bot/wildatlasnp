@@ -63,14 +63,14 @@ const STEP = {
   CORNER_LEFT:  0,
   CORNER_RIGHT: 1,
   TITLE:        2,
-  SUBDECK:      3,
-  RULE:         4,
-  PILLAR_0:     5,
-  PILLAR_1:     6,
-  PILLAR_2:     7,
-  PROOF:        8,
-  PRICE:        9,
-  CTA:         10,
+  PRICE:        3,
+  CTA:          4,
+  SUBDECK:      5,
+  RULE:         6,
+  PILLAR_0:     7,
+  PILLAR_1:     8,
+  PILLAR_2:     9,
+  PROOF:       10,
   ARL:         11,
   DIVIDER:     12,
   TRUST:       13,
@@ -398,6 +398,160 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
 
         {/* ============ BODY ============ */}
         <div style={{ padding: "16px 26px 24px" }}>
+          {/* ============ PRICE — magazine pull-quote (headline position) ============ */}
+          {(() => {
+            const raw = displayPrice ?? "";
+            const m = raw.match(/^([^\d]*)(\d+(?:[.,]\d+)?)$/);
+            const sym = m?.[1] ?? "$";
+            const num = m?.[2] ?? "";
+            return (
+              <div
+                style={{
+                  marginTop: 4,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  ...revealStyle(STEP.PRICE, "up"),
+                }}
+              >
+                {displayPrice === null ? (
+                  <span className="inline-block w-32 h-16 bg-[rgba(240,237,234,0.06)] animate-pulse rounded" />
+                ) : (
+                  <>
+                    <div style={{ display: "inline-flex", alignItems: "flex-start", lineHeight: 1 }}>
+                      <span
+                        className="font-heading"
+                        style={{
+                          fontSize: 20,
+                          fontWeight: 400,
+                          color: "#C9A96E",
+                          marginTop: 6,
+                          marginRight: 4,
+                          lineHeight: 1,
+                        }}
+                      >
+                        {sym}
+                      </span>
+                      <span
+                        className="font-heading"
+                        style={{
+                          fontFamily: "'Cormorant Garamond', Georgia, serif",
+                          fontSize: 72,
+                          fontWeight: 300,
+                          fontStyle: "normal",
+                          letterSpacing: "-0.03em",
+                          lineHeight: 0.95,
+                          color: "#F0EDEA",
+                        }}
+                      >
+                        {num}
+                      </span>
+                    </div>
+                    <span
+                      style={{
+                        marginTop: 6,
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 13,
+                        color: "#8A9E8A",
+                        letterSpacing: "0.02em",
+                      }}
+                    >
+                      /mo · cancel anytime
+                    </span>
+                  </>
+                )}
+              </div>
+            );
+          })()}
+
+          {/* ============ CTA BLOCK — primary + reassurance row (above the fold) ============ */}
+          <div
+            style={{
+              marginTop: 18,
+              ...revealStyle(STEP.CTA, "up"),
+            }}
+          >
+            <motion.button
+              whileTap={{ scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 600, damping: 22 }}
+              onClick={handleCheckout}
+              disabled={loading || isPro}
+              className="cta-shimmer relative overflow-hidden"
+              style={{
+                width: "100%",
+                height: 56,
+                padding: "0 20px",
+                borderRadius: 12,
+                background: "#2F6F4E",
+                color: "#FFFFFF",
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 16,
+                fontWeight: 600,
+                letterSpacing: "0.01em",
+                cursor: loading || isPro ? "default" : "pointer",
+                border: "none",
+                boxShadow: [
+                  "inset 0 1px 0 rgba(255,255,255,0.10)",
+                  "0 8px 24px -10px rgba(47,111,78,0.55)",
+                ].join(", "),
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 10,
+              }}
+            >
+              {loading ? (
+                <>
+                  <Loader2 size={16} className="animate-spin" />
+                  <span>Opening checkout…</span>
+                </>
+              ) : isPro ? (
+                <>
+                  <Crown size={15} />
+                  <span>You're already Pro</span>
+                </>
+              ) : (
+                <>
+                  <span>Claim your Field Pass</span>
+                  <ArrowRight size={16} style={{ opacity: 0.95 }} />
+                </>
+              )}
+            </motion.button>
+
+            {!isPro && !loading && (
+              <div
+                style={{
+                  marginTop: 12,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 8,
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 12,
+                  color: "#8A9E8A",
+                  letterSpacing: "0.02em",
+                }}
+              >
+                <Lock size={12} style={{ color: "#8A9E8A" }} strokeWidth={2.2} />
+                <span>Secure</span>
+                <span style={{ color: "rgba(138,158,138,0.45)" }}>·</span>
+                <span>Cancel anytime</span>
+                <span style={{ color: "rgba(138,158,138,0.45)" }}>·</span>
+                <span>7-day refund</span>
+              </div>
+            )}
+          </div>
+
+          {/* Hairline — separates the offer from supporting evidence */}
+          <div
+            style={{
+              marginTop: 22,
+              height: 1,
+              background:
+                "linear-gradient(90deg, rgba(201,169,110,0) 0%, rgba(201,169,110,0.45) 50%, rgba(201,169,110,0) 100%)",
+            }}
+          />
+
           {/* Sub-deck — drop-cap-ish lead */}
           <p
             style={{
@@ -406,7 +560,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               fontWeight: 400,
               color: "rgba(240,237,234,0.62)",
               lineHeight: 1.6,
-              marginTop: 4,
+              marginTop: 18,
               ...revealStyle(STEP.SUBDECK, "up"),
             }}
           >
@@ -533,154 +687,6 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               </div>
             );
           })()}
-
-          {/* ============ PRICE — magazine pull-quote ============ */}
-          {(() => {
-            const raw = displayPrice ?? "";
-            const m = raw.match(/^([^\d]*)(\d+(?:[.,]\d+)?)$/);
-            const sym = m?.[1] ?? "$";
-            const num = m?.[2] ?? "";
-            return (
-              <div
-                style={{
-                  marginTop: latestFind ? 22 : 28,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  ...revealStyle(STEP.PRICE, "up"),
-                }}
-              >
-                {displayPrice === null ? (
-                  <span className="inline-block w-32 h-16 bg-[rgba(240,237,234,0.06)] animate-pulse rounded" />
-                ) : (
-                  <>
-                    {/* $ 9.99 — symbol top-aligned, numeral as the pull quote */}
-                    <div style={{ display: "inline-flex", alignItems: "flex-start", lineHeight: 1 }}>
-                      <span
-                        className="font-heading"
-                        style={{
-                          fontSize: 20,
-                          fontWeight: 400,
-                          color: "#C9A96E",
-                          marginTop: 6,
-                          marginRight: 4,
-                          lineHeight: 1,
-                        }}
-                      >
-                        {sym}
-                      </span>
-                      <span
-                        className="font-heading"
-                        style={{
-                          fontFamily: "'Cormorant Garamond', Georgia, serif",
-                          fontSize: 72,
-                          fontWeight: 300,
-                          fontStyle: "normal",
-                          letterSpacing: "-0.03em",
-                          lineHeight: 0.95,
-                          color: "#F0EDEA",
-                        }}
-                      >
-                        {num}
-                      </span>
-                    </div>
-                    {/* /mo — DM Sans 13, baseline-aligned below numeral */}
-                    <span
-                      style={{
-                        marginTop: 6,
-                        fontFamily: "'DM Sans', sans-serif",
-                        fontSize: 13,
-                        color: "#8A9E8A",
-                        letterSpacing: "0.02em",
-                      }}
-                    >
-                      /mo
-                    </span>
-                  </>
-                )}
-              </div>
-            );
-          })()}
-
-          {/* ============ CTA BLOCK — primary + reassurance row ============ */}
-          <div
-            style={{
-              marginTop: 18,
-              ...revealStyle(STEP.CTA, "up"),
-            }}
-          >
-            <motion.button
-              whileTap={{ scale: 0.97 }}
-              transition={{ type: "spring", stiffness: 600, damping: 22 }}
-              onClick={handleCheckout}
-              disabled={loading || isPro}
-              className="cta-shimmer relative overflow-hidden"
-              style={{
-                width: "100%",
-                height: 56,
-                padding: "0 20px",
-                borderRadius: 12,
-                background: "#2F6F4E",
-                color: "#FFFFFF",
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 16,
-                fontWeight: 600,
-                letterSpacing: "0.01em",
-                cursor: loading || isPro ? "default" : "pointer",
-                border: "none",
-                boxShadow: [
-                  "inset 0 1px 0 rgba(255,255,255,0.10)",
-                  "0 8px 24px -10px rgba(47,111,78,0.55)",
-                ].join(", "),
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 10,
-              }}
-            >
-              {loading ? (
-                <>
-                  <Loader2 size={16} className="animate-spin" />
-                  <span>Opening checkout…</span>
-                </>
-              ) : isPro ? (
-                <>
-                  <Crown size={15} />
-                  <span>You're already Pro</span>
-                </>
-              ) : (
-                <>
-                  <span>Claim your Field Pass</span>
-                  <ArrowRight size={16} style={{ opacity: 0.95 }} />
-                </>
-              )}
-            </motion.button>
-
-            {/* Trust row — single line, lock-only icon */}
-            {!isPro && !loading && (
-              <div
-                style={{
-                  marginTop: 12,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 8,
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 12,
-                  color: "#8A9E8A",
-                  letterSpacing: "0.02em",
-                }}
-              >
-                <Lock size={12} style={{ color: "#8A9E8A" }} strokeWidth={2.2} />
-                <span>Secure</span>
-                <span style={{ color: "rgba(138,158,138,0.45)" }}>·</span>
-                <span>Cancel anytime</span>
-                <span style={{ color: "rgba(138,158,138,0.45)" }}>·</span>
-                <span>7-day refund</span>
-              </div>
-            )}
-          </div>
-
           {/* ARL disclosure */}
           <p
             style={{
