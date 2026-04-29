@@ -1601,6 +1601,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   0%, 100% { transform: translateY(0); }
                   50% { transform: translateY(-4px); }
                 }
+                @keyframes poko-typing-wave {
+                  0%, 100% { transform: scale(1); opacity: 0.4; }
+                  33%      { transform: scale(1.4); opacity: 1; }
+                }
                 @keyframes mochi-glow-pulse {
                   0%, 100% { opacity: 0.05; }
                   50% { opacity: 0.09; }
@@ -1608,16 +1612,20 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                 .mochi-glow-pulse {
                   animation: mochi-glow-pulse 4s ease-in-out infinite;
                 }
-                @keyframes bubbleRise {
-                  0% { opacity: 0; transform: scale(0.88) translateY(20px); }
-                  100% { opacity: 1; transform: scale(1) translateY(0px); }
+                @keyframes pokoBubbleRiseLeft {
+                  0%   { opacity: 0; transform: translateY(6px); }
+                  100% { opacity: 1; transform: translateY(0); }
+                }
+                @keyframes pokoBubbleRiseRight {
+                  0%   { opacity: 0; transform: translateY(4px); }
+                  100% { opacity: 1; transform: translateY(0); }
                 }
                 .poko-bubble-in-left {
-                  animation: bubbleRise 300ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+                  animation: pokoBubbleRiseLeft 200ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
                   transform-origin: bottom left;
                 }
                 .poko-bubble-in-right {
-                  animation: bubbleRise 300ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+                  animation: pokoBubbleRiseRight 150ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
                   transform-origin: bottom right;
                 }
                 @keyframes poko-listen-pulse {
