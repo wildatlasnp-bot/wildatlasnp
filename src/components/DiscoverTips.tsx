@@ -20,6 +20,7 @@ import {
 import PokoReadCard from "@/components/discover/PokoReadCard";
 import FieldLog from "@/components/discover/FieldLog";
 import HeroLightbox from "@/components/discover/HeroLightbox";
+import SavedSignalsSection from "@/components/discover/SavedSignalsSection";
 import ParkSelector from "@/components/ParkSelector";
 import { seasons, getCurrentSeason, parkSeasons, type Season } from "@/lib/park-seasons";
 import TodayParkAdvice from "@/components/TodayParkAdvice";
@@ -1348,7 +1349,11 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         </motion.div>
       </RevealSection>
 
-      {/* ═══════════════════════ VII. TODAY IN PARK (dark plate) ═══════════════════════ */}
+      {/* ═══════════════════════ USER INTEL — saved signals from Poko chat ═══════════════════════
+          Renders only when the user has captured at least one chat snippet
+          for this park. Captures fly in from the Poko tab. */}
+      <SavedSignalsSection parkId={parkId} />
+
       <RevealSection
         className="ranger-card--strip-gradient"
         style={{
