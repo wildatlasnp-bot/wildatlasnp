@@ -1472,10 +1472,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             <button
               onClick={() => setTripModalOpen(true)}
               style={{
-                display: "inline-flex", alignItems: "center", background: "var(--ranger-night)",
-                color: "var(--ranger-parchment)", fontSize: 12, fontWeight: 600, letterSpacing: "0.12em",
+                display: "inline-flex", alignItems: "center", background: "#2F6F4E",
+                color: "#FFFFFF", fontSize: 12, fontWeight: 600, letterSpacing: "0.12em",
                 textTransform: "uppercase", padding: "12px 22px",
-                borderRadius: 999, border: "1px solid var(--ranger-rule-strong)",
+                borderRadius: 999, border: "1px solid #2F6F4E",
                 cursor: "pointer", minHeight: 44,
               }}
             >
