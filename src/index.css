@@ -2470,14 +2470,14 @@ button.wa-cluster-head-toggle:hover .wa-cluster-chevron {
   border: 1px solid var(--ranger-rule);
   border-left: 3px solid var(--ranger-night);
   border-radius: var(--ranger-r-lg);
-  box-shadow: none;
+  box-shadow: var(--elev-featured);
   padding: 26px 24px 22px;
 }
 .ranger-card--quiet {
   background: var(--ranger-paper);
   border: 1px solid var(--ranger-rule-night);
   border-radius: 14px;
-  box-shadow: none;
+  box-shadow: var(--elev-card);
   padding: 26px 20px;
   text-align: center;
 }
@@ -2485,7 +2485,7 @@ button.wa-cluster-head-toggle:hover .wa-cluster-chevron {
   background: var(--ranger-paper);
   border: 1px solid var(--ranger-rule-bone);
   border-radius: var(--ranger-r-md);              /* 8px */
-  box-shadow: none;
+  box-shadow: var(--elev-card);
   padding: 10px 12px;
 }
 
@@ -2497,7 +2497,7 @@ button.wa-cluster-head-toggle:hover .wa-cluster-chevron {
   background: var(--ranger-night);
   border: 1px solid var(--ranger-rule-strong);
   border-radius: var(--ranger-r-lg);
-  box-shadow: none;
+  box-shadow: var(--elev-featured);
   padding: var(--ranger-space-card);
   color: var(--ranger-parchment);
 }
