@@ -177,10 +177,36 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
                 "linear-gradient(to bottom, transparent 0%, rgba(26,47,30,0.4) 60%, rgba(26,47,30,0.85) 100%)",
             }}
           />
-          {/* Park name badge — frosted forest pill */}
+          {/* Scan badge — frosted pill, top-left */}
+          <div
+            style={{
+              position: "absolute", top: 16, left: 16, zIndex: 10,
+              display: "inline-flex", alignItems: "center", gap: 6,
+              background: "rgba(255,255,255,0.15)",
+              backdropFilter: "blur(8px)",
+              WebkitBackdropFilter: "blur(8px)",
+              border: "1px solid rgba(255,255,255,0.2)",
+              borderRadius: 99,
+              padding: "5px 10px 5px 9px",
+              lineHeight: 1,
+            }}
+          >
+            <span
+              aria-hidden
+              style={{
+                width: 6, height: 6, borderRadius: "50%",
+                background: "#4ADE80",
+                boxShadow: "0 0 6px rgba(74,222,128,0.6)",
+              }}
+            />
+            <span style={{ fontFamily: INTER, fontSize: 11, fontWeight: 500, color: "#FFFFFF", letterSpacing: "0.01em" }}>
+              Scanned 2 min ago
+            </span>
+          </div>
+          {/* Park name badge — frosted forest pill, top-right */}
           <span
             style={{
-              position: "absolute", top: 14, left: 16, zIndex: 10,
+              position: "absolute", top: 16, right: 16, zIndex: 10,
               fontFamily: INTER, fontSize: 10, fontWeight: 600,
               letterSpacing: "0.15em", textTransform: "uppercase",
               color: "#FFFFFF",
