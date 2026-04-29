@@ -770,7 +770,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                   gap: 8,
                   fontFamily: "'DM Sans', sans-serif",
                   fontSize: 12,
-                  color: "rgba(245,235,211,0.62)",
+                  color: "rgba(44,44,44,0.62)",
                   letterSpacing: "0.04em",
                 }}
               >
