@@ -176,6 +176,7 @@ const AddPermitSearchModal = ({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Half Dome, Yosemite, Narrows…"
+              aria-label="Search permits and parks"
               className="w-full text-foreground placeholder:[color:rgba(26,47,30,0.35)] focus:outline-none transition-all"
               style={{
                 background: "#F2F1ED",
