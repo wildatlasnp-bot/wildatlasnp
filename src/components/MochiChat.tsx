@@ -862,11 +862,13 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
           willChange: 'opacity, transform',
         }}
       >
-        <span aria-hidden="true" style={{
+        <span aria-hidden="true" className={(pokoStatus.key === 'ready' || pokoStatus.key === 'standing-by') ? 'poko-ready-heartbeat' : undefined} style={{
           width: 5, height: 5, borderRadius: '50%',
           background: pokoStatus.dot,
           boxShadow: pokoStatus.pulse ? `0 0 0 0 ${pokoStatus.dot}` : 'none',
-          animation: pokoStatus.pulse ? 'poko-status-pulse 1.6s ease-in-out infinite' : 'none',
+          // Ripple pulse for active states (scanning/listening); breathing
+          // heartbeat for ready/standing-by — Poko ambient-loops exception.
+          animation: pokoStatus.pulse ? 'poko-status-pulse 1.6s ease-in-out infinite' : undefined,
           transition: 'background 220ms cubic-bezier(0.4, 0, 0.2, 1)',
         }} />
         <span>{pokoStatus.label}</span>
@@ -1453,15 +1455,15 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               />
             )}
           </div>
-          {/* Film grain — kills the plastic-gradient look at almost zero cost. */}
+          {/* Heavy-paper noise — 180px tile at ~3% opacity, no blend mode.
+              Gives the dark surface a tactile quality. */}
           <div
             aria-hidden
             className="poko-grain"
             style={{
               position: 'absolute', inset: 0, zIndex: 2,
               pointerEvents: 'none',
-              mixBlendMode: 'overlay',
-              opacity: 0.18,
+              opacity: 0.03,
             }}
           />
           {/* ── Topographic chart layer (Move 3) ──
@@ -1511,9 +1513,25 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
             }
             .poko-drift { animation: poko-drift 60s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
             .poko-grain {
-              background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-              background-size: 160px 160px;
+              background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+              background-size: 180px 180px;
             }
+            /* Compass rose decoration drift — ±0.5° / 8s ease-in-out, infinite.
+               Applies to spokes + cardinals only. The needle stays semantically
+               locked to the live park bearing (per cartographer-masthead memory).
+               Per ambient-loops exception: Poko is the only screen with loops. */
+            @keyframes poko-rose-drift {
+              0%   { transform: rotate(-0.5deg); }
+              50%  { transform: rotate(0.5deg); }
+              100% { transform: rotate(-0.5deg); }
+            }
+            .poko-rose-drift { transform-origin: 66px 66px; animation: poko-rose-drift 16s ease-in-out infinite; }
+            /* READY status heartbeat — 2s scale + opacity breath. Signals presence. */
+            @keyframes poko-ready-heartbeat {
+              0%, 100% { transform: scale(1);   opacity: 1;   }
+              50%      { transform: scale(1.4); opacity: 0.6; }
+            }
+            .poko-ready-heartbeat { animation: poko-ready-heartbeat 2s ease-in-out infinite; transform-origin: center; }
             @keyframes poko-aurora-burst {
               0%   { opacity: 0;    transform: scale(0.985); }
               35%  { opacity: 1;    transform: scale(1.012); }
@@ -1530,6 +1548,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               .poko-drift { animation: none; }
               .poko-aurora-burst { animation: none; opacity: 0.6; }
               .poko-topo { animation: none; }
+              .poko-rose-drift { animation: none; transform: none; }
+              .poko-ready-heartbeat { animation: none; }
             }
           `}</style>
           {/* Sticky header: coordinate label */}
@@ -1673,7 +1693,18 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   position: 'relative', width: 96, height: 96, flexShrink: 0,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}>
-                  {/* Soft gold parchment glow */}
+                  {/* Static 200px amber wash — barely-visible warmth centered
+                      on the compass. Per spec: rgba(201,169,110,0.06). Static. */}
+                  <div aria-hidden="true" style={{
+                    position: 'absolute',
+                    width: 200, height: 200,
+                    top: '50%', left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    background: 'radial-gradient(circle at center, rgba(201,169,110,0.06) 0%, rgba(201,169,110,0.03) 45%, transparent 70%)',
+                    pointerEvents: 'none',
+                    zIndex: 0,
+                  }} />
+                  {/* Soft gold parchment glow (existing layered warmth) */}
                   <div className="mochi-glow-pulse" aria-hidden="true" style={{
                     position: 'absolute', inset: -16,
                     background: 'radial-gradient(ellipse at center, rgba(201,169,110,0.16) 0%, rgba(201,169,110,0.04) 50%, transparent 75%)',
@@ -1751,31 +1782,30 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                       })}
                     </g>
 
-                    {/* Cardinal letters — N E S W */}
-                    {[
-                      { l: 'N', x: 66, y: 18 },
-                      { l: 'E', x: 116, y: 70 },
-                      { l: 'S', x: 66, y: 120 },
-                      { l: 'W', x: 16, y: 70 },
-                    ].map((c) => (
-                      <text
-                        key={c.l}
-                        x={c.x} y={c.y}
-                        textAnchor="middle"
-                        fontFamily="'Cormorant Garamond', serif"
-                        fontSize="9"
-                        fontStyle="italic"
-                        fill="rgba(201,169,110,0.85)"
-                        letterSpacing="0.12em"
-                      >{c.l}</text>
-                    ))}
-
-                    {/* Compass rose — needle rotates toward tracked park */}
-                    <g
-                      className="poko-needle-living"
-                      style={{ transform: `rotate(${needleBearing}deg)` }}
-                    >
-                      {/* Diagonal spokes — static, faint guides */}
+                    {/* Rose decoration — cardinal letters + diagonal spokes.
+                        Drifts ±0.5° / 16s (8s each way) ease-in-out infinite.
+                        Per ambient-loops exception: Poko-only loop. The needle
+                        below stays semantically locked to the live bearing. */}
+                    <g className="poko-rose-drift">
+                      {/* Cardinal letters — N E S W */}
+                      {[
+                        { l: 'N', x: 66, y: 18 },
+                        { l: 'E', x: 116, y: 70 },
+                        { l: 'S', x: 66, y: 120 },
+                        { l: 'W', x: 16, y: 70 },
+                      ].map((c) => (
+                        <text
+                          key={c.l}
+                          x={c.x} y={c.y}
+                          textAnchor="middle"
+                          fontFamily="'Cormorant Garamond', serif"
+                          fontSize="9"
+                          fontStyle="italic"
+                          fill="rgba(201,169,110,0.85)"
+                          letterSpacing="0.12em"
+                        >{c.l}</text>
+                      ))}
+                      {/* Diagonal spokes — static, faint guides (drift with rose) */}
                       {[45, 135, 225, 315].map((deg) => (
                         <polygon
                           key={deg}
@@ -1786,6 +1816,14 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                           transform={`rotate(${deg} 66 66)`}
                         />
                       ))}
+                    </g>
+
+                    {/* Compass needle — rotates toward tracked park (live bearing).
+                        Stays outside the rose drift so its angle remains truthful. */}
+                    <g
+                      className="poko-needle-living"
+                      style={{ transform: `rotate(${needleBearing}deg)` }}
+                    >
                       {/* Main pointing needle (gold half = "toward park") */}
                       <polygon
                         points="66,22 70,66 66,110 62,66"
