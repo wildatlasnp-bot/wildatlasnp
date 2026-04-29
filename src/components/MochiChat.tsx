@@ -12,6 +12,7 @@ import ProModal from "@/components/ProModal";
 import ParkSelector from "@/components/ParkSelector";
 import ScanningLedger from "@/components/poko/ScanningLedger";
 import SaveToLogButton from "@/components/poko/SaveToLogButton";
+import AssistantBubbleShell from "@/components/poko/AssistantBubbleShell";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
 import { supabase } from "@/integrations/supabase/client";
