@@ -1005,15 +1005,16 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           <span className="wa-rule-solid" style={{ width: 36, marginBottom: 12, background: "var(--ranger-parchment)", ["--d" as any]: "560ms" }} />
           {(() => {
             const heroText = parkConfig.shortName;
-            // Generous scale for solo park names; clamp gracefully.
-            const heroFontSize = heroText.length <= 12 ? 56 : heroText.length <= 18 ? 46 : heroText.length <= 24 ? 38 : 30;
+            // Editorial scale — bold contrast for short names, graceful clamp for long ones.
+            const heroFontSize = heroText.length <= 12 ? 64 : heroText.length <= 18 ? 52 : heroText.length <= 24 ? 42 : 34;
             return (
               <h1 className="font-display-italic" style={{
                 fontSize: heroFontSize, fontStyle: "italic",
                 fontWeight: 400, letterSpacing: "-0.025em",
-                color: "var(--ranger-paper)", lineHeight: 0.98,
+                color: "var(--ranger-paper)", lineHeight: 0.96,
                 textShadow: "var(--ranger-text-shadow-2)",
                 margin: "8px 0 0", wordBreak: "break-word",
+                overflow: "visible",
               }}>
                 {heroText}
               </h1>
