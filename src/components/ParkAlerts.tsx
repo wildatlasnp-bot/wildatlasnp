@@ -531,12 +531,12 @@ function FieldDispatchHero({
 
       {/* Headline */}
       <h1 style={{
-        fontFamily: CG, fontSize: 56, fontWeight: 300, lineHeight: 0.92,
+        fontFamily: CG, fontWeight: 300,
         margin: "16px 0 0", color: "#F4F0E8", letterSpacing: "-0.02em",
         position: "relative", zIndex: 2,
       }}>
-        <span style={{ display: "block" }}>Park</span>
-        <span style={{ display: "block", fontStyle: "italic", color: "rgba(244,240,232,0.62)", letterSpacing: "-0.04em" }}>
+        <span style={{ display: "block", fontSize: 56, lineHeight: 1 }}>Park</span>
+        <span style={{ display: "block", fontSize: 72, lineHeight: 1, marginTop: 4, fontStyle: "italic", color: "rgba(244,240,232,0.62)", letterSpacing: "-0.04em" }}>
           alerts.
         </span>
       </h1>
