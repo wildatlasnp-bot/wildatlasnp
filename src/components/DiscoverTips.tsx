@@ -1321,6 +1321,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         style={{
           marginTop: 32,
         }}
+        delay={120}
+        resetKey={parkId}
       >
         <SectionPlate
           numeral="III"
