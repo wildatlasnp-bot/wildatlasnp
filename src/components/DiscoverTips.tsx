@@ -1282,7 +1282,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           numeral="III"
           eyebrow={`Today · ${localTime.weekday}`}
           italic="What the patterns say about right now"
-          dark
           delay={0}
           focusKey={focusKey}
         />
@@ -1293,7 +1292,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           transition={{ duration: 0.5, delay: 0.16, ease: [0.4, 0, 0.2, 1] }}
         >
           <TypicalPatternsHeader />
-          <TodayParkAdvice parkId={parkId} darkMode />
+          <TodayParkAdvice parkId={parkId} />
         </motion.div>
       </RevealSection>
 
