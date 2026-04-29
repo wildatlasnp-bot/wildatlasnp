@@ -225,24 +225,31 @@ const SeasonalBlurb = ({ body }: { body: string }) => {
 };
 
 /* ── Scroll-driven reveal wrapper for editorial sections ──
-   Wraps a section so it fades + rises into view as the user scrolls
-   through Discover. Stagger via `delay` (ms). Honors prefers-reduced-motion. */
+   Wraps a section so it fades + rises (12px → 0, opacity 0 → 1, 180ms ease-out)
+   as the user scrolls through Discover. Stagger via `delay` (ms).
+   Pass `resetKey` (e.g. parkId) to fully reset to the hidden state and
+   re-reveal when the user switches parks. Honors prefers-reduced-motion via CSS. */
 const RevealSection = ({
   children,
   className = "",
   style,
   delay = 0,
+  resetKey,
   as: As = "section" as any,
 }: {
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
   delay?: number;
+  resetKey?: string | number;
   as?: any;
 }) => {
+  // Remount on resetKey change so the IntersectionObserver re-runs from scratch
+  // and the element returns to its hidden default state for a fresh stagger.
   const { ref, visible } = useScrollReveal<HTMLElement>();
   return (
     <As
+      key={resetKey}
       ref={ref as any}
       className={`wa-scroll-reveal ${visible ? "is-visible" : ""} ${className}`}
       style={{ ...(style || {}), ["--d" as any]: `${delay}ms` }}
