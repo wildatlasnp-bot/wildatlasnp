@@ -379,7 +379,15 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               lineHeight: 1.02,
               letterSpacing: "-0.015em",
               color: "#F5EBD3",
-              textShadow: "0 2px 22px rgba(0,0,0,0.55)",
+              // Layered halo: tight contact shadow for edge definition,
+              // mid ink shadow for body separation, wide soft halo to suppress
+              // bright photo highlights (sky, aurora wash) under the title.
+              textShadow: [
+                "0 1px 0 rgba(0,0,0,0.55)",
+                "0 2px 6px rgba(0,0,0,0.65)",
+                "0 6px 18px rgba(0,0,0,0.55)",
+                "0 0 28px rgba(14,26,20,0.45)",
+              ].join(", "),
             }}
           >
             The window{" "}
