@@ -201,6 +201,8 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
                 top: 0,
                 left: 0,
                 transform: `translateX(${labelTranslatePx}px)`,
+                transition: "transform 240ms cubic-bezier(0.4, 0, 0.2, 1)",
+                willChange: "transform",
                 fontSize: 12,
                 fontWeight: 700,
                 letterSpacing: "0.1em",
