@@ -1024,7 +1024,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             </button>
           </div>
 
-          <div className="w-full h-px" style={{ backgroundColor: IVORY_BORDER }} />
+          <div className="w-full h-px" style={{ backgroundColor: ROW_DIVIDER }} />
 
           {/* Name row */}
           <div className="flex items-center gap-3" style={{ padding: '14px 16px' }}>
@@ -1075,7 +1075,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             )}
           </div>
 
-          <div className="w-full h-px" style={{ backgroundColor: IVORY_BORDER }} />
+          <div className="w-full h-px" style={{ backgroundColor: ROW_DIVIDER }} />
 
           {/* Phone row */}
           {!phoneEditing ? (
@@ -1336,7 +1336,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           </div>
         </div>
 
-        <div className="w-full h-px" style={{ backgroundColor: IVORY_BORDER }} />
+        <div className="w-full h-px" style={{ backgroundColor: ROW_DIVIDER }} />
 
         {/* Email row */}
         <div className="px-4" style={{ paddingTop: 14, paddingBottom: 14 }}>
@@ -1371,7 +1371,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           </div>
         </div>
 
-        <div className="w-full h-px" style={{ backgroundColor: IVORY_BORDER }} />
+        <div className="w-full h-px" style={{ backgroundColor: ROW_DIVIDER }} />
 
         {/* Push row */}
         {(() => {
@@ -1442,7 +1442,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           </div>
           <ChevronRight size={14} style={{ color: MUTED }} className="shrink-0" aria-hidden="true" />
         </button>
-        <div className="w-full h-px" style={{ backgroundColor: IVORY_BORDER }} />
+        <div className="w-full h-px" style={{ backgroundColor: ROW_DIVIDER }} />
         <a
           href="https://tally.so/r/XxGJXP"
           target="_blank"
@@ -1459,7 +1459,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           </div>
           <ChevronRight size={14} style={{ color: MUTED }} className="shrink-0" aria-hidden="true" />
         </a>
-        <div className="w-full h-px" style={{ backgroundColor: IVORY_BORDER }} />
+        <div className="w-full h-px" style={{ backgroundColor: ROW_DIVIDER }} />
         <div className="flex items-center gap-3" style={{ padding: '14px 16px' }}>
           <IconChip><Info size={13} /></IconChip>
           <div className="flex-1">
