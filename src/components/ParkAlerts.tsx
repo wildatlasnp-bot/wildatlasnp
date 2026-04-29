@@ -909,6 +909,7 @@ function RailChip({
   label, count, active, accent, dot, onClick,
 }: {
   label: string; count?: number; active: boolean;
+  /** Color for the count number (typically severity ink). Underline is always amber gold. */
   accent?: string; dot?: string;
   onClick: () => void;
 }) {
@@ -920,8 +921,9 @@ function RailChip({
         background: "transparent", border: "none", padding: "10px 12px 12px",
         display: "inline-flex", alignItems: "center", gap: 6,
         fontFamily: DM, fontSize: 12.5,
-        fontWeight: active ? 600 : 500,
-        color: active ? "var(--ranger-ink)" : "var(--ranger-ink-muted)",
+        fontWeight: active ? 500 : 400,
+        // Active: dark ink. Inactive: muted sage. No background pill ever.
+        color: active ? "#1A2F1E" : "#8A9E8A",
         cursor: "pointer", whiteSpace: "nowrap",
         minHeight: 44,
         transition: "color 200ms cubic-bezier(0.4,0,0.2,1)",
@@ -937,8 +939,10 @@ function RailChip({
       <span>{label}</span>
       {count != null && (
         <span style={{
-          fontFamily: "'JetBrains Mono', monospace", fontSize: 12,
-          opacity: 0.55, fontVariantNumeric: "tabular-nums",
+          // 12px floor (spec asked 11px). Severity-tinted count.
+          fontFamily: DM, fontSize: 12, fontWeight: 500,
+          color: accent ?? "#8A9E8A",
+          fontVariantNumeric: "tabular-nums",
         }}>
           {count}
         </span>
@@ -948,8 +952,9 @@ function RailChip({
           layoutId="rail-indicator"
           transition={{ type: "spring", stiffness: 480, damping: 36 }}
           style={{
+            // 2px amber underline — uniform across all tabs (spec).
             position: "absolute", left: 8, right: 8, bottom: 4, height: 2,
-            background: accent ?? "var(--ranger-gold)",
+            background: "#C9A96E",
             borderRadius: 2,
           }}
         />
