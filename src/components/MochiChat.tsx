@@ -17,6 +17,12 @@ import { PARKS } from "@/lib/parks";
 import posthog from "@/lib/posthog";
 import { useScannerStatus } from "@/hooks/useScannerStatus";
 import { useStatusRowOpacity } from "@/hooks/useStatusRowOpacity";
+import {
+  pokoBubbleStyle,
+  userBubbleStyle,
+  typingBubbleStyle,
+  typingDotStyle,
+} from "@/components/poko/bubbleTokens";
 
 
 
@@ -2038,44 +2044,33 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                             style={
                               msg.role === "assistant"
                                 ? {
+                                    // Layout / typography (variant-specific)
                                     maxWidth: isInitialBriefing ? '100%' : '85%',
                                     width: isInitialBriefing ? '100%' : 'auto',
                                     alignSelf: 'flex-start',
                                     marginRight: 'auto',
                                     marginLeft: 0,
-                                    background: isInitialBriefing
-                                      ? 'linear-gradient(180deg, #FDFBF8 0%, #F6F1E8 100%)'
-                                      : '#FDFBF8',
-                                    border: 'none',
-                                    borderLeft: '2px solid rgba(201,169,110,0.35)',
-                                    borderRadius: isInitialBriefing ? '4px 16px 16px 4px' : '16px 16px 16px 4px',
-                                    padding: isInitialBriefing ? '18px 20px' : '14px 18px',
                                     fontSize: isInitialBriefing ? 16 : 15,
                                     fontWeight: 400,
                                     fontFamily: isInitialBriefing ? "'Cormorant Garamond', serif" : "'DM Sans', sans-serif",
                                     fontStyle: isInitialBriefing ? 'italic' : 'normal',
-                                    color: '#1A2F1E',
+                                    // Themed surface tokens
+                                    ...pokoBubbleStyle(isInitialBriefing ? 'briefing' : 'default'),
+                                    // Briefing tweaks line-height slightly tighter
                                     lineHeight: isInitialBriefing ? 1.55 : 1.6,
-                                    boxShadow: '0 2px 8px rgba(26,47,30,0.06)',
                                   }
                                 : {
+                                    // Layout
                                     width: 'fit-content',
                                     maxWidth: '72%',
                                     alignSelf: 'flex-end',
                                     marginLeft: 'auto',
                                     marginRight: 0,
-                                    background: 'rgba(47,111,78,0.18)',
-                                    backdropFilter: 'blur(20px)',
-                                    WebkitBackdropFilter: 'blur(20px)',
-                                    border: '1px solid rgba(47,111,78,0.28)',
-                                    color: '#F0EDEA',
-                                    borderRadius: '16px 16px 4px 16px',
-                                    padding: '12px 16px',
                                     fontSize: 15,
                                     fontWeight: 400,
                                     fontFamily: "'DM Sans', sans-serif",
-                                    lineHeight: 1.6,
-                                    boxShadow: 'none',
+                                    // Themed surface tokens
+                                    ...userBubbleStyle,
                                   }
                             }
                           >
@@ -2114,20 +2109,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                       className="flex justify-start poko-bubble-in-left"
                       style={{ marginTop: 12 }}
                     >
-                      <div style={{
-                        background: '#FDFBF8',
-                        border: 'none',
-                        borderLeft: '2px solid rgba(201,169,110,0.35)',
-                        borderRadius: '16px 16px 16px 4px',
-                        padding: '14px 18px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 5,
-                        boxShadow: '0 2px 8px rgba(26,47,30,0.06)',
-                      }}>
-                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(26,47,30,0.55)', display: 'inline-block', animation: 'poko-typing-wave 900ms ease-in-out infinite', animationDelay: '0ms' }} />
-                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(26,47,30,0.55)', display: 'inline-block', animation: 'poko-typing-wave 900ms ease-in-out infinite', animationDelay: '300ms' }} />
-                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(26,47,30,0.55)', display: 'inline-block', animation: 'poko-typing-wave 900ms ease-in-out infinite', animationDelay: '600ms' }} />
+                      <div style={typingBubbleStyle}>
+                        <span style={typingDotStyle(0)} />
+                        <span style={typingDotStyle(1)} />
+                        <span style={typingDotStyle(2)} />
                       </div>
                     </motion.div>
                   )}
