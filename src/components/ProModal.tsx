@@ -803,7 +803,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               href="https://wildatlas.app/terms"
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: "#C9A96E", textDecoration: "underline", textUnderlineOffset: 2 }}
+              style={{ color: "#8C6F3A", textDecoration: "underline", textUnderlineOffset: 2 }}
             >
               Full terms
             </a>
