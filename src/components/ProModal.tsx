@@ -455,7 +455,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                       fontWeight: 500,
                       lineHeight: 1.2,
                       letterSpacing: "-0.005em",
-                      color: "#F5EBD3",
+                      color: "#1A2F1E",
                     }}
                   >
                     {p.title}
@@ -466,7 +466,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                       fontFamily: "'DM Sans', sans-serif",
                       fontSize: 13,
                       lineHeight: 1.55,
-                      color: "rgba(245,235,211,0.62)",
+                      color: "rgba(44,44,44,0.68)",
                     }}
                   >
                     {p.body}
