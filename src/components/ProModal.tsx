@@ -25,13 +25,15 @@ const EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
 const EASE_AMBIENT = "cubic-bezier(0.4, 0, 0.2, 1)";
 
 /**
- * Premium Field Pass — dark editorial direction.
+ * Premium Field Pass — cream paper editorial direction.
  * Palette:
- *   Ink (paper):  #0E1A14  deep forest near-black
- *   Vellum:       #F5EBD3  warm cream highlight
- *   Champagne:    #C9A96E  gold leaf
+ *   Paper:        #F0EDEA  warm cream surface
+ *   Paper warm:   #F5EFE7  highlight tint
+ *   Ink:          #1A2F1E  deep forest text
+ *   Ink soft:     #2C2C2C  body text
+ *   Champagne:    #C9A96E  gold leaf accent
  *   Gold deep:    #8C6F3A
- *   Moss:         #5C7A5E  hairlines
+ *   Forest CTA:   #2F6F4E  primary action
  */
 
 // Pillars — what Pro actually buys you. Asymmetric, editorial — no table.
