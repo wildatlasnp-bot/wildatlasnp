@@ -254,24 +254,28 @@ const DownloadDataButton = ({ user }: { user: any }) => {
     <button
       onClick={handleDownload}
       disabled={loading}
-      className="w-full flex items-center justify-start gap-2 transition-opacity hover:opacity-70 disabled:opacity-50"
+      className="w-full flex items-center justify-between transition-opacity hover:opacity-70 disabled:opacity-50"
       style={{
-        minHeight: 36,
-        marginBottom: 12,
+        minHeight: 44,
         background: 'none',
         border: 'none',
         fontFamily: "'DM Sans', sans-serif",
-        fontSize: 14,
+        fontSize: 15,
         fontWeight: 400,
-        color: '#9CA3A0',
+        color: '#1A2F1E',
         cursor: loading ? 'default' : 'pointer',
+        padding: '10px 0',
+        textAlign: 'left',
       }}
     >
-      {loading ? (
-        <><Loader2 size={14} className="animate-spin" /> Exporting…</>
-      ) : (
-        <><Download size={14} /> Download my data</>
-      )}
+      <span className="flex items-center gap-2">
+        {loading ? (
+          <><Loader2 size={14} className="animate-spin" /> Exporting…</>
+        ) : (
+          <>Download my data</>
+        )}
+      </span>
+      {!loading && <ArrowRight size={14} style={{ color: '#8A9E8A' }} aria-hidden="true" />}
     </button>
   );
 };
