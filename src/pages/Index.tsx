@@ -17,6 +17,7 @@ import OnboardingFlow from "@/components/OnboardingFlow";
 import SettingsPage from "@/pages/SettingsPage";
 import { Loader2 } from "lucide-react";
 import { DEFAULT_PARK_ID } from "@/lib/parks";
+import { applyParkAccent } from "@/lib/park-accent";
 import posthog from "@/lib/posthog";
 import { startTabSwitch } from "@/lib/perf-telemetry";
 
@@ -173,6 +174,17 @@ const Index = () => {
     setParkId(id);
     localStorage.setItem("wildatlas_active_park", id);
   }, []);
+
+  // ── Park accent atmosphere ──
+  // Push the active park's --park-accent / --park-accent-rgb onto :root
+  // for surfaces that consume the accent (Poko coordinate stamp, Discover
+  // FIELD REPORT eyebrow + crowd pill, Field Dispatch rule, Settings
+  // membership tint). Multi-park screens (Alerts, Settings) revert to the
+  // brand-amber default so the accent never implies a single park there.
+  useEffect(() => {
+    const isSinglePark = activeTab === "mochi" || activeTab === "discover";
+    applyParkAccent(isSinglePark ? parkId : null);
+  }, [activeTab, parkId]);
 
   const handleTabChange = useCallback((tab: Tab) => {
     const currentTab = activeTabRef.current;

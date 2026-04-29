@@ -760,7 +760,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       <div className="mb-2">
         {isPro ? (
           /* Pro — quiet confirmation card */
-          <div style={CARD_SURFACE}>
+          <div style={{ ...CARD_SURFACE, borderColor: "rgba(var(--park-accent-rgb), 0.18)", background: "linear-gradient(180deg, rgba(var(--park-accent-rgb), 0.03) 0%, #FFFFFF 60%)", transition: "border-color 300ms ease-out, background 300ms ease-out" }}>
             <div className="px-5 pt-5 pb-4 flex flex-col items-center text-center">
               <span
                 aria-hidden

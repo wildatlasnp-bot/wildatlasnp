@@ -133,6 +133,15 @@
     --ranger-gold-deep:  #8A6B2E;   /* high-contrast on light */
     --ranger-forest:     #2F6F4E;   /* primary green action */
     --ranger-forest-soft:#7A9B7A;   /* secondary italic accents */
+
+    /* Park accent fingerprints — atmospheric, set on :root by app code when
+       a park becomes active. Distinct from PARK_COLORS (src/lib/parks.ts),
+       which are bolder identity colors used for badges, hero gradients,
+       and alert dots. The accent is a quieter "whisper of place" that
+       coexists in parallel with the identity palette. Defaults to brand
+       amber when no park is active or on multi-park screens. */
+    --park-accent:       #C9A96E;
+    --park-accent-rgb:   201, 169, 110;
     /* Dark "field" surfaces — for the live-alert / hero strip */
     --ranger-night:      #1A2E1F;   /* primary dark surface */
     --ranger-night-warm: #1A2F1E;   /* alt dark surface */

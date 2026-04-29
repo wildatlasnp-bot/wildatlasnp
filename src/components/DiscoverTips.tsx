@@ -1028,9 +1028,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             <span style={{ height: 1, width: 22, background: "var(--ranger-parchment)", flexShrink: 0 }} />
             <span style={{
               fontSize: 12, fontWeight: 600,
-              letterSpacing: "0.22em", color: "var(--ranger-on-image)",
+              letterSpacing: "0.22em", color: "var(--park-accent)",
               textTransform: "uppercase", textShadow: "var(--ranger-text-shadow-1)",
               overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+              transition: "color 300ms ease-out",
             }}>
               Field Report
             </span>
@@ -1073,12 +1074,12 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           {heroForecast ? (
             <div ref={heroPillRef} style={{
               display: "inline-flex", alignItems: "center", gap: 7, maxWidth: "100%",
-              background: badgeBg(parkConfig.primaryColor),
+              background: "rgba(var(--park-accent-rgb), 0.12)",
               backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
-              border: "0.5px solid var(--ranger-on-image-faint)",
+              border: "1px solid var(--park-accent)",
               borderRadius: 999, padding: "5px 13px", marginTop: 14,
               willChange: "opacity, transform",
-              transition: "none",
+              transition: "background-color 300ms ease-out, border-color 300ms ease-out",
             }}>
               <span style={{
                 width: 6, height: 6, borderRadius: "50%", flexShrink: 0,
