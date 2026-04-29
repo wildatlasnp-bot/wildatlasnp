@@ -17,6 +17,12 @@ import { PARKS } from "@/lib/parks";
 import posthog from "@/lib/posthog";
 import { useScannerStatus } from "@/hooks/useScannerStatus";
 import { useStatusRowOpacity } from "@/hooks/useStatusRowOpacity";
+import {
+  pokoBubbleStyle,
+  userBubbleStyle,
+  typingBubbleStyle,
+  typingDotStyle,
+} from "@/components/poko/bubbleTokens";
 
 
 
