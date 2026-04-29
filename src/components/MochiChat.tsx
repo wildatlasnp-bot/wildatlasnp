@@ -6,6 +6,7 @@ import { getSuggestedChips, type UserWatch } from "@/components/mochi/ChatInterf
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import MochiTrailCard, { parseTrailBlocks } from "@/components/MochiTrailCard";
+import PokoMapCard, { parseMapBlocks } from "@/components/poko/PokoMapCard";
 import MochiScannerBanner from "@/components/MochiScannerBanner";
 import MochiStatusCard from "@/components/MochiStatusCard";
 import ProModal from "@/components/ProModal";
@@ -2465,7 +2466,19 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                                           ))}
                                         </div>
                                       ) : (
-                                        <div key={bi}><ReactMarkdown components={MARKDOWN_NO_TABLES}>{formatInlineBullets(stripMarkdownTables(block.value))}</ReactMarkdown></div>
+                                        <div key={bi}>
+                                          {parseMapBlocks(block.value).map((sub, si) =>
+                                            sub.type === "map" ? (
+                                              <div key={si} style={{ margin: "10px 0" }}>
+                                                <PokoMapCard map={sub.value} />
+                                              </div>
+                                            ) : (
+                                              <ReactMarkdown key={si} components={MARKDOWN_NO_TABLES}>
+                                                {formatInlineBullets(stripMarkdownTables(sub.value))}
+                                              </ReactMarkdown>
+                                            ),
+                                          )}
+                                        </div>
                                       )
                                     )}
                                     {isInitialBriefing && !isPersonality && !firstSession && (
@@ -2844,7 +2857,19 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                                   ))}
                                 </div>
                               ) : (
-                                <div key={bi}><ReactMarkdown components={MARKDOWN_NO_TABLES}>{formatInlineBullets(stripMarkdownTables(block.value))}</ReactMarkdown></div>
+                                <div key={bi}>
+                                  {parseMapBlocks(block.value).map((sub, si) =>
+                                    sub.type === "map" ? (
+                                      <div key={si} style={{ margin: "10px 0" }}>
+                                        <PokoMapCard map={sub.value} />
+                                      </div>
+                                    ) : (
+                                      <ReactMarkdown key={si} components={MARKDOWN_NO_TABLES}>
+                                        {formatInlineBullets(stripMarkdownTables(sub.value))}
+                                      </ReactMarkdown>
+                                    ),
+                                  )}
+                                </div>
                               )
                             )}
                           </div>
