@@ -123,88 +123,119 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
 
   const NEEDLE_COLOR = "#1A2F1E";
 
-  // Plateau gradient — each color holds for a stretch, then fades to the next.
-  // Uses fixed stops aligned to typical day rhythm to prevent muddy blending.
+  // Distinct color zones with only 2% soft edges between states
   const gradientCss = `linear-gradient(to right,
     #2F6F4E 0%,
-    #2F6F4E 15%,
-    #C9A96E 28%,
-    #C9A96E 32%,
-    #C0392B 42%,
-    #C0392B 52%,
-    #E8935A 62%,
+    #2F6F4E 18%,
+    #C9A96E 20%,
+    #C9A96E 30%,
+    #C0392B 32%,
+    #C0392B 55%,
+    #E8935A 57%,
     #E8935A 72%,
-    #2F6F4E 85%,
+    #2F6F4E 74%,
     #2F6F4E 100%
   )`;
+
+  const BAND_HEIGHT = 40;
+  const BAND_RADIUS = 20;
+  const DOT_SIZE = 10;
 
   return (
     <div>
       {/* Location name */}
       <h3 className="font-semibold text-[13px] text-foreground/70 mb-2">{f.location_name}</h3>
 
-      {/* Gradient timeline with NOW marker */}
-      <div className="relative" style={{ paddingTop: nowPct !== null ? "26px" : "0", overflow: 'visible' }}>
-        {/* NOW marker — white knife with dot, layered above the band */}
-        {nowPct !== null && (
-          <div className="absolute pointer-events-none" style={{ left: `${nowPct}%`, top: 0, bottom: 0, overflow: 'visible', zIndex: 10 }}>
-            {/* NOW label */}
-            <span
-              className="absolute uppercase whitespace-nowrap"
-              style={{
-                top: "0px",
-                fontSize: "12px",
-                fontWeight: 700,
-                letterSpacing: "0.08em",
-                fontFamily: "'DM Sans', sans-serif",
-                color: NEEDLE_COLOR,
-                ...(nowPct > 80
-                  ? { right: '50%', transform: 'translateX(6px)' }
-                  : { left: '50%', transform: 'translateX(-50%)' }
-                ),
-              }}
-            >
-              NOW
-            </span>
-            {/* 10px white filled dot at top edge */}
+      {/* Gradient timeline */}
+      <div className="relative" style={{ paddingTop: nowPct !== null ? "10px" : "0", overflow: 'visible' }}>
+        {/* Band wrapper — clips the white knife line so it never escapes the right cap */}
+        <div
+          style={{
+            position: "relative",
+            height: BAND_HEIGHT,
+            borderRadius: BAND_RADIUS,
+            overflow: "hidden",
+          }}
+        >
+          {/* The gradient band */}
+          <div
+            key={animationKey}
+            className="crowd-gradient-band"
+            style={{
+              position: "absolute",
+              inset: 0,
+              borderRadius: BAND_RADIUS,
+              background: gradientCss,
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.08)",
+            }}
+          />
+          {/* White knife line — clipped to band */}
+          {nowPct !== null && (
             <div
-              className="absolute left-1/2 -translate-x-1/2"
+              className="pointer-events-none"
               style={{
-                top: "16px",
-                width: "10px",
-                height: "10px",
-                borderRadius: "50%",
-                backgroundColor: "#FFFFFF",
-                boxShadow: "0 0 8px rgba(0,0,0,0.4)",
-                zIndex: 11,
-              }}
-            />
-            {/* 2px white knife line through gradient band */}
-            <div
-              className="absolute left-1/2 -translate-x-1/2"
-              style={{
-                top: "26px",
-                height: "40px",
-                width: "2px",
+                position: "absolute",
+                top: 0,
+                bottom: 0,
+                left: `${nowPct}%`,
+                width: 2,
+                marginLeft: -1,
                 backgroundColor: "#FFFFFF",
                 boxShadow: "0 0 6px rgba(0,0,0,0.35)",
                 zIndex: 10,
               }}
             />
+          )}
+        </div>
+
+        {/* Dot + inline NOW label — outside the clip so dot can sit half-out of the band top */}
+        {nowPct !== null && (
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              left: `${nowPct}%`,
+              top: 10,
+              height: BAND_HEIGHT,
+              zIndex: 11,
+            }}
+          >
+            {/* Dot — anchored to the knife line, half-out of the band top */}
+            <div
+              style={{
+                position: "absolute",
+                left: 0,
+                top: -DOT_SIZE / 2,
+                transform: "translateX(-50%)",
+                width: DOT_SIZE,
+                height: DOT_SIZE,
+                borderRadius: "50%",
+                backgroundColor: "#FFFFFF",
+                boxShadow: "0 0 8px rgba(0,0,0,0.4)",
+              }}
+            />
+            {/* Inline NOW label — sits inside the band beside the line; flips left near right edge */}
+            <span
+              className="uppercase whitespace-nowrap"
+              style={{
+                position: "absolute",
+                top: BAND_HEIGHT / 2,
+                transform: "translateY(-50%)",
+                fontSize: 12,
+                fontWeight: 700,
+                letterSpacing: "0.1em",
+                fontFamily: "'DM Sans', sans-serif",
+                color: "#FFFFFF",
+                textShadow: "0 1px 2px rgba(0,0,0,0.45)",
+                ...(nowPct > 75
+                  ? { right: 8 }
+                  : { left: 8 }
+                ),
+              }}
+            >
+              NOW
+            </span>
           </div>
         )}
-
-        {/* Continuous gradient band */}
-        <div
-          key={animationKey}
-          className="relative crowd-gradient-band"
-          style={{
-            height: "40px",
-            borderRadius: "20px",
-            background: gradientCss,
-            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.08)",
-          }}
-        />
 
         {/* Hour axis */}
         <div className="relative h-5 mt-2">
