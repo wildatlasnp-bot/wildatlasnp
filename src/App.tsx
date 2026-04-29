@@ -7,7 +7,7 @@ import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-route
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { ProStatusProvider } from "@/contexts/ProStatusContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import { Loader2 } from "lucide-react";
+import WildAtlasSplash from "@/components/WildAtlasSplash";
 import { useToast } from "@/hooks/use-toast";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 
@@ -47,11 +47,7 @@ const AuthRedirectErrorHandler = () => {
 const AuthGate = ({ children }: { children: React.ReactNode }) => {
   const { ready } = useAuth();
   if (!ready) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="animate-spin text-primary" size={28} />
-      </div>
-    );
+    return <WildAtlasSplash />;
   }
   return <>{children}</>;
 };

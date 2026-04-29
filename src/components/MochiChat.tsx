@@ -1862,6 +1862,13 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                     background: 'radial-gradient(ellipse at center, rgba(201,169,110,0.16) 0%, rgba(201,169,110,0.04) 50%, transparent 75%)',
                     pointerEvents: 'none',
                   }} />
+                  {/* Radar sweep arm — Prompt 5. Only spins while Poko is
+                      working. Compass rose itself stays static; arm rotates
+                      1.5s/360° with a 120° trailing fade (conic-gradient).
+                      Sits above the SVG (z-index) so the leading edge reads. */}
+                  {isLoading && (
+                    <div aria-hidden="true" className="wa-radar-arm" style={{ zIndex: 2 }} />
+                  )}
                   <svg
                     viewBox="0 0 132 132"
                     width="96" height="96"

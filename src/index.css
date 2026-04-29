@@ -2901,3 +2901,125 @@ a.ranger-card--night:active,
 @media (prefers-reduced-motion: reduce) {
   .poko-dispatch-fade { animation: none !important; opacity: 1 !important; }
 }
+
+/* ═══════════════════════ WildAtlas Loading System ═══════════════════════
+   Prompt 5 — signature loading states:
+   • Poko radar sweep (rotating arm with trailing fade over the compass)
+   • Discover amber horizon sweep (single 800ms left→right hairline)
+   • App-load splash (wordmark + amber hairline draw-in, 400–1000ms)
+   All easing follows the global motion token cubic-bezier(0.4,0,0.2,1).
+   ─────────────────────────────────────────────────────────────────── */
+
+/* Radar sweep arm — rendered inside the Poko compass SVG.
+   Uses a conic-gradient mask to produce the trailing fade (full opacity at
+   leading edge, 0 opacity ~120° behind). 1.5s/rotation, infinite.
+   The compass rose itself stays static; only this arm rotates. */
+@keyframes wa-radar-sweep {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes wa-radar-fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+.wa-radar-arm {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80px;        /* 2 × the 40px arm length */
+  height: 80px;
+  margin: -40px 0 0 -40px;
+  border-radius: 50%;
+  pointer-events: none;
+  /* Conic gradient: leading edge at 0° full amber, trailing 120° fades out.
+     Mask clips to a thin (2px) ring + only the rightward half so the visible
+     element looks like a single 40px arm sweeping from center. */
+  background: conic-gradient(
+    from 270deg,
+    rgba(201, 169, 110, 0.6) 0deg,
+    rgba(201, 169, 110, 0.4) 30deg,
+    rgba(201, 169, 110, 0.2) 70deg,
+    rgba(201, 169, 110, 0)   120deg,
+    rgba(201, 169, 110, 0)   360deg
+  );
+  -webkit-mask: linear-gradient(to right, transparent 50%, black 50%);
+          mask: linear-gradient(to right, transparent 50%, black 50%);
+  animation: wa-radar-sweep 1.5s linear infinite;
+  transform-origin: center;
+  will-change: transform;
+}
+.wa-radar-arm-exit {
+  animation: wa-radar-sweep 1.5s linear infinite, wa-radar-fade-out 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Amber horizon sweep — Discover park-switch / initial load.
+   1px amber line travels left→right across viewport width at ~40% from top
+   over 800ms ease-in-out, single pass. Re-mounts on key change to replay. */
+@keyframes wa-horizon-sweep {
+  0%   { transform: translateX(-100%); opacity: 0;   }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateX(100%);  opacity: 0;   }
+}
+.wa-horizon-sweep {
+  position: fixed;
+  top: 40%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #C9A96E;
+  box-shadow: 0 0 6px rgba(201, 169, 110, 0.55);
+  z-index: 60;
+  pointer-events: none;
+  animation: wa-horizon-sweep 800ms cubic-bezier(0.4, 0, 0.2, 1) both;
+  will-change: transform, opacity;
+}
+
+/* App-load splash — dark forest field, wordmark, amber hairline draw-in.
+   Hairline draws over 600ms; whole splash fades over 400ms.
+   The component enforces a 400ms minimum and 1000ms maximum. */
+@keyframes wa-splash-hairline-draw {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+@keyframes wa-splash-fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+.wa-splash {
+  position: fixed;
+  inset: 0;
+  background: #1A2F1E;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+.wa-splash--exit {
+  animation: wa-splash-fade-out 400ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+.wa-splash__wordmark {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: #FFFFFF;
+  margin: 0;
+}
+.wa-splash__hairline {
+  width: 32px;
+  height: 1px;
+  background: #C9A96E;
+  transform-origin: left center;
+  animation: wa-splash-hairline-draw 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wa-radar-arm,
+  .wa-radar-arm-exit { animation: none !important; opacity: 0.4 !important; }
+  .wa-horizon-sweep { animation: none !important; opacity: 0 !important; }
+  .wa-splash--exit { animation: none !important; opacity: 0 !important; }
+  .wa-splash__hairline { animation: none !important; transform: scaleX(1) !important; }
+}

@@ -866,6 +866,17 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         background: "var(--ranger-paper-cream)",
       }}
     >
+      {/* Amber horizon sweep — Prompt 5. A single 1px amber line travels
+          left→right across the viewport at 40% from top, 800ms ease, single
+          pass. Re-mounts on park switch so the sweep replays each time the
+          field report context changes. Reduced-motion users see nothing. */}
+      {cardsSettling && (
+        <div
+          key={`horizon-${parkId}`}
+          aria-hidden="true"
+          className="wa-horizon-sweep"
+        />
+      )}
       {/* ═══════════════════════ I. MASTHEAD ═══════════════════════
           Editorial wordmark + live local time. Sits above the hero
           to set the "field journal" register before the imagery hits. */}
