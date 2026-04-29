@@ -9,9 +9,9 @@ interface BottomNavProps {
   hasUnreadAlerts?: boolean;
 }
 
-const INACTIVE = "rgba(255, 255, 255, 0.55)";
-const INACTIVE_LABEL = "rgba(255, 255, 255, 0.50)";
-const ACTIVE = "#FFFFFF";
+const INACTIVE = "rgba(26, 47, 30, 0.55)";
+const INACTIVE_LABEL = "rgba(26, 47, 30, 0.55)";
+const ACTIVE = "#1A2F1E";
 
 const ACTIVE_COLOR: Record<Tab, string> = {
   mochi: ACTIVE,
