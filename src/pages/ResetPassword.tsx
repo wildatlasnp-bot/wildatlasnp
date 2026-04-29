@@ -273,6 +273,7 @@ const ResetPassword = () => {
                 value={resendEmail}
                 onChange={(e) => setResendEmail(e.target.value)}
                 placeholder="Your email address"
+                aria-label="Email address"
                 style={{ ...inputStyle, paddingLeft: 16, fontSize: 13, padding: "10px 14px" }}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
