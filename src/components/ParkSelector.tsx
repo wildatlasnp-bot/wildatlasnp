@@ -116,14 +116,28 @@ const ParkSelector = ({ activeParkId, onParkChange, variant = "default", dropdow
             }}>
               {(active?.shortName ?? "PARK").toUpperCase()} — {PARK_COORDS[activeParkId] ?? ""}
             </span>
-            <span style={{
-              fontSize: 12, fontWeight: 600,
-              letterSpacing: "0.22em", color: "rgba(245, 235, 211, 0.78)",
-              textTransform: "uppercase",
-              textShadow: '0 1px 2px rgba(0,0,0,0.45)',
-              display: "inline-flex", alignItems: "center", gap: 4,
-            }}>
-              Change park <ChevronDown size={12} strokeWidth={1.5} className={`transition-transform ${open ? "rotate-180" : ""}`} />
+            <span
+              style={{
+                fontSize: 11,
+                fontWeight: 600,
+                letterSpacing: "0.18em",
+                color: "rgba(245, 235, 211, 0.96)",
+                textTransform: "uppercase",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                padding: "6px 10px 6px 12px",
+                borderRadius: 999,
+                background: "rgba(245, 235, 211, 0.12)",
+                border: "1px solid rgba(245, 235, 211, 0.32)",
+                backdropFilter: "blur(8px)",
+                WebkitBackdropFilter: "blur(8px)",
+                boxShadow: "0 1px 2px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.08)",
+                transition: "background 200ms cubic-bezier(0.4, 0, 0.2, 1), border-color 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+                lineHeight: 1,
+              }}
+            >
+              Change <ChevronDown size={12} strokeWidth={2} className={`transition-transform ${open ? "rotate-180" : ""}`} />
             </span>
           </>
         ) : (
