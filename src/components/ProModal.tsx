@@ -496,7 +496,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                   fontFamily: "'DM Sans', sans-serif",
                   fontSize: 12,
                   letterSpacing: "0.06em",
-                  color: "rgba(245,235,211,0.62)",
+                  color: "rgba(44,44,44,0.62)",
                   ...revealStyle(STEP.PROOF, "up"),
                 }}
               >
@@ -506,20 +506,20 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                     width: 6,
                     height: 6,
                     borderRadius: "50%",
-                    background: "#7FB98B",
-                    boxShadow: "0 0 0 4px rgba(127,185,139,0.18), 0 0 10px rgba(127,185,139,0.55)",
+                    background: "#2F6F4E",
+                    boxShadow: "0 0 0 4px rgba(47,111,78,0.18), 0 0 10px rgba(47,111,78,0.45)",
                     animation: "proPulse 2.4s ease-in-out infinite",
                     flexShrink: 0,
                   }}
                 />
-                <span style={{ color: "rgba(245,235,211,0.85)" }}>
+                <span style={{ color: "rgba(26,47,30,0.85)" }}>
                   Caught{" "}
-                  <span style={{ color: "#C9A96E", fontWeight: 600 }}>{timeLabel}</span>
-                  <span style={{ color: "rgba(201,169,110,0.45)", margin: "0 6px" }}>·</span>
-                  <span style={{ fontStyle: "italic", color: "rgba(245,235,211,0.78)" }}>
+                  <span style={{ color: "#8C6F3A", fontWeight: 600 }}>{timeLabel}</span>
+                  <span style={{ color: "rgba(140,111,58,0.45)", margin: "0 6px" }}>·</span>
+                  <span style={{ fontStyle: "italic", color: "rgba(44,44,44,0.78)" }}>
                     {latestFind.permit_name}
                   </span>
-                  <span style={{ color: "rgba(245,235,211,0.45)" }}> · {parkShort}</span>
+                  <span style={{ color: "rgba(44,44,44,0.55)" }}> · {parkShort}</span>
                 </span>
               </div>
             );
