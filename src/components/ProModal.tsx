@@ -403,7 +403,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               fontFamily: "'DM Sans', sans-serif",
               fontSize: 14,
               fontWeight: 400,
-              color: "rgba(44,44,44,0.78)",
+              color: "rgba(240,237,234,0.62)",
               lineHeight: 1.6,
               marginTop: 4,
               ...revealStyle(STEP.SUBDECK, "up"),
