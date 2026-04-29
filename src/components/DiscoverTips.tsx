@@ -1383,7 +1383,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             </div>
           </CrowdWindows>
         </motion.div>
-      </section>
+      </RevealSection>
 
       {/* ═══════════════════════ IX. PLAN YOUR VISIT ═══════════════════════ */}
       <section style={{ padding: "32px 20px 4px" }}>
