@@ -743,6 +743,8 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
         [data-settings-root] [role="switch"][data-state="unchecked"] { background-color: #E5E1DD !important; }
         [data-settings-root] [role="switch"][data-state="checked"] { background-color: #2F6F4E !important; }
       `}</style>
+      {/* Header */}
+      <div style={{ marginTop: 36 }} ref={headerFadeRef}>
         <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 52, fontWeight: 300, letterSpacing: '-0.02em', color: FOREST, lineHeight: 1.05, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>Settings</h1>
         {displayName && (
            <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontStyle: 'italic', fontWeight: 400, color: SAGE_ITALIC, marginTop: 8, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
