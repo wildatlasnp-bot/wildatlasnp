@@ -257,15 +257,17 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               backfaceVisibility: "hidden",
             }}
           />
-          {/* Tonal gradient — vignette top, dissolve to deep ink at bottom.
-              Top scrim is slightly heavier than before to compensate for dropping
-              the image-level saturate/contrast filter (mobile perf win). */}
+          {/* Tonal gradient — vignette top, deepen toward bottom so the
+              overlapping cream title (marginTop: -28) always sits on a dark
+              anchor band. Below the hero the body is cream — the title's own
+              textShadow + the dark hero footer guarantee legibility through
+              ken-burns drift, aurora wash, and reveal phases. */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
               background: [
                 "radial-gradient(120% 80% at 50% 0%, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0) 55%)",
-                "linear-gradient(180deg, rgba(14,26,20,0.18) 0%, rgba(14,26,20,0.55) 60%, rgba(240,237,234,0.85) 92%, #F0EDEA 100%)",
+                "linear-gradient(180deg, rgba(14,26,20,0.18) 0%, rgba(14,26,20,0.55) 55%, rgba(14,26,20,0.82) 82%, #0E1A14 100%)",
               ].join(", "),
             }}
           />
