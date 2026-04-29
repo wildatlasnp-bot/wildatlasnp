@@ -1343,7 +1343,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
       </RevealSection>
 
       {/* ═══════════════════════ VIII. PLAN AHEAD — CROWD WINDOWS ═══════════════════════ */}
-      <section style={{ padding: "32px 20px 4px" }}>
+      <RevealSection style={{ padding: "32px 20px 4px" }} delay={180} resetKey={parkId}>
         <SectionPlate
           numeral="IV"
           eyebrow="Plan ahead"
