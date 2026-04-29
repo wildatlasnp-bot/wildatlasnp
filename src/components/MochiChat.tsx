@@ -1222,13 +1222,19 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
       >
         <span aria-hidden="true" className={(pokoStatus.key === 'ready' || pokoStatus.key === 'standing-by') ? 'poko-ready-heartbeat' : undefined} style={{
           width: 5, height: 5, borderRadius: '50%',
-          background: pokoStatus.dot,
+          // Park-accent override on new-alert moments — single pulse, replays
+          // each time `parkPulse` ticks via the `key` remount.
+          background: parkPulse > 0 ? 'var(--park-accent, #C9A96E)' : pokoStatus.dot,
           boxShadow: pokoStatus.pulse ? `0 0 0 0 ${pokoStatus.dot}` : 'none',
           // Ripple pulse for active states (scanning/listening); breathing
           // heartbeat for ready/standing-by — Poko ambient-loops exception.
           animation: pokoStatus.pulse ? 'poko-status-pulse 1.6s ease-in-out infinite' : undefined,
           transition: 'background 220ms cubic-bezier(0.4, 0, 0.2, 1)',
-        }} />
+        }}
+        // The key remount makes the park-accent flash replay on each new alert
+        // (purely cosmetic — does not affect the underlying status state).
+        key={`dot-${parkPulse}`}
+        />
         <span>{pokoStatus.label}</span>
         <span aria-hidden="true" style={{
           flex: '0 0 28px', height: 1, marginLeft: 4,
@@ -2161,7 +2167,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                         Drifts ±0.5° / 16s (8s each way) ease-in-out infinite.
                         Per ambient-loops exception: Poko-only loop. The needle
                         below stays semantically locked to the live bearing. */}
-                    <g className="poko-rose-drift">
+                    <g
+                      key={`bezel-${compassNudge}`}
+                      className={`poko-rose-drift${compassNudge > 0 ? ' poko-bezel-nudge' : ''}`}
+                    >
                       {/* Cardinal letters — N E S W */}
                       {[
                         { l: 'N', x: 66, y: 18 },
