@@ -168,12 +168,12 @@ const ResetPassword = () => {
 
           <form onSubmit={handleReset} style={{ display: "flex", flexDirection: "column", gap: 10, textAlign: "left" }}>
             <div style={{ position: "relative" }}>
-              <Lock size={15} style={fieldIconStyle} />
-              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="New password" required minLength={6} style={inputStyle} onFocus={handleFocus} onBlur={handleBlur} />
+              <Lock size={15} style={fieldIconStyle} aria-hidden="true" />
+              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="New password" aria-label="New password" required minLength={6} style={inputStyle} onFocus={handleFocus} onBlur={handleBlur} />
             </div>
             <div style={{ position: "relative" }}>
-              <Lock size={15} style={fieldIconStyle} />
-              <input type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} placeholder="Confirm new password" required minLength={6} style={inputStyle} onFocus={handleFocus} onBlur={handleBlur} />
+              <Lock size={15} style={fieldIconStyle} aria-hidden="true" />
+              <input type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} placeholder="Confirm new password" aria-label="Confirm new password" required minLength={6} style={inputStyle} onFocus={handleFocus} onBlur={handleBlur} />
             </div>
             <button
               type="submit"
