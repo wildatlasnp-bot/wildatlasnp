@@ -657,6 +657,77 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [displayName, trackedPermits, selectedParkId, firstSession, makeGreeting]);
 
+  // ── Time-aware dispatch refresh ──
+  // Re-evaluates the dispatch window (a) when the user re-focuses the tab and
+  // (b) automatically at the next window boundary while the tab is open.
+  // Only swaps the briefing message — never touches an active conversation.
+  // Crossfade is handled at render time (briefing prose container is keyed
+  // off message content, with a 400ms opacity transition).
+  const dispatchWindowRef = useRef<DispatchWindow | null>(null);
+  useEffect(() => {
+    if (firstSession) return; // first-session welcome is immutable
+
+    const computeParkName = (): string | null => {
+      if (trackedPermits.length === 0) return null;
+      const sorted = [...trackedPermits].sort((a, b) => {
+        const ta = a.created_at ? new Date(a.created_at).getTime() : 0;
+        const tb = b.created_at ? new Date(b.created_at).getTime() : 0;
+        return tb - ta;
+      });
+      return PARKS[sorted[0].park_id]?.shortName || "your park";
+    };
+
+    // Seed the ref the first time so we don't needlessly swap on first focus.
+    if (dispatchWindowRef.current === null) {
+      dispatchWindowRef.current = getDispatchWindow(computeParkName()).key;
+    }
+
+    const evaluate = () => {
+      const isBriefingState = messages.length <= 2 && messages[0]?.id === 1;
+      if (!isBriefingState) return;
+      const dispatch = getDispatchWindow(computeParkName());
+      if (dispatchWindowRef.current === dispatch.key) return;
+      dispatchWindowRef.current = dispatch.key;
+      setMessages([{ id: 1, role: "assistant", content: `${dispatch.title} ${dispatch.body}` }]);
+    };
+
+    // Boundaries: 5, 9, 12, 17, 21 local. After 21 → next 5am tomorrow.
+    const msToNextBoundary = (): number => {
+      const now = new Date();
+      const boundaries = [5, 9, 12, 17, 21];
+      const cur = now.getHours();
+      let nextHour = boundaries.find((h) => h > cur);
+      const next = new Date(now);
+      if (nextHour === undefined) {
+        next.setDate(next.getDate() + 1);
+        nextHour = 5;
+      }
+      next.setHours(nextHour, 0, 0, 50); // tiny slack so getHours() has rolled
+      return Math.max(1000, next.getTime() - now.getTime());
+    };
+
+    let timer = window.setTimeout(function tick() {
+      evaluate();
+      timer = window.setTimeout(tick, msToNextBoundary());
+    }, msToNextBoundary());
+
+    const onVisible = () => {
+      if (document.visibilityState === "visible") evaluate();
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    window.addEventListener("focus", evaluate);
+
+    return () => {
+      window.clearTimeout(timer);
+      document.removeEventListener("visibilitychange", onVisible);
+      window.removeEventListener("focus", evaluate);
+    };
+    // `messages` is intentionally omitted — we read it inside evaluate but
+    // only as a gate; the trigger is the boundary timer or focus event.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [firstSession, trackedPermits]);
+
+
   useEffect(() => {
     if (initialMountRef.current) { initialMountRef.current = false; return; }
     if (!activeScrollEl) return;
