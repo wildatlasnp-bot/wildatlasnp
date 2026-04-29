@@ -2046,16 +2046,16 @@
    (slight rise + scale settle) so sections feel composed rather than popped in. */
 .wa-scroll-reveal {
   opacity: 0;
-  transform: translate3d(0, 28px, 0) scale(0.985);
+  transform: translate3d(0, 12px, 0);
   transition:
-    opacity 900ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 180ms ease-out,
+    transform 180ms ease-out;
   transition-delay: var(--d, 0ms);
   will-change: opacity, transform;
 }
 .wa-scroll-reveal.is-visible {
   opacity: 1;
-  transform: translate3d(0, 0, 0) scale(1);
+  transform: translate3d(0, 0, 0);
 }
 /* Children stagger — child indexes 0..7 cascade after parent reveals. */
 .wa-scroll-reveal.is-visible > .wa-stagger-child {

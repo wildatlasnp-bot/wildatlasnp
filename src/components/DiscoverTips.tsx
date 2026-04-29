@@ -225,24 +225,31 @@ const SeasonalBlurb = ({ body }: { body: string }) => {
 };
 
 /* ── Scroll-driven reveal wrapper for editorial sections ──
-   Wraps a section so it fades + rises into view as the user scrolls
-   through Discover. Stagger via `delay` (ms). Honors prefers-reduced-motion. */
+   Wraps a section so it fades + rises (12px → 0, opacity 0 → 1, 180ms ease-out)
+   as the user scrolls through Discover. Stagger via `delay` (ms).
+   Pass `resetKey` (e.g. parkId) to fully reset to the hidden state and
+   re-reveal when the user switches parks. Honors prefers-reduced-motion via CSS. */
 const RevealSection = ({
   children,
   className = "",
   style,
   delay = 0,
+  resetKey,
   as: As = "section" as any,
 }: {
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
   delay?: number;
+  resetKey?: string | number;
   as?: any;
 }) => {
+  // Remount on resetKey change so the IntersectionObserver re-runs from scratch
+  // and the element returns to its hidden default state for a fresh stagger.
   const { ref, visible } = useScrollReveal<HTMLElement>();
   return (
     <As
+      key={resetKey}
       ref={ref as any}
       className={`wa-scroll-reveal ${visible ? "is-visible" : ""} ${className}`}
       style={{ ...(style || {}), ["--d" as any]: `${delay}ms` }}
@@ -1265,7 +1272,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           Pure data still flows from PokoReadCard child (preserves caching,
           streaming animation, edge-function call). We frame it with a plate. */}
       <div ref={todaysReadAnchorRef} aria-hidden="true" style={{ scrollMarginTop: 96 }} />
-      <RevealSection style={{ padding: "32px 20px 4px" }}>
+      <RevealSection style={{ padding: "32px 20px 4px" }} delay={0} resetKey={parkId}>
         <SectionPlate
           numeral="I"
           eyebrow="Today's read"
@@ -1289,7 +1296,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
       </RevealSection>
 
       {/* ═══════════════════════ VI. FIELD LOG (live signals) ═══════════════════════ */}
-      <RevealSection style={{ padding: "30px 20px 4px" }} delay={60}>
+      <RevealSection style={{ padding: "30px 20px 4px" }} delay={60} resetKey={parkId}>
         <SectionPlate
           numeral="II"
           eyebrow="Field log"
@@ -1314,6 +1321,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         style={{
           marginTop: 32,
         }}
+        delay={120}
+        resetKey={parkId}
       >
         <SectionPlate
           numeral="III"
@@ -1334,7 +1343,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
       </RevealSection>
 
       {/* ═══════════════════════ VIII. PLAN AHEAD — CROWD WINDOWS ═══════════════════════ */}
-      <section style={{ padding: "32px 20px 4px" }}>
+      <RevealSection style={{ padding: "32px 20px 4px" }} delay={180} resetKey={parkId}>
         <SectionPlate
           numeral="IV"
           eyebrow="Plan ahead"
@@ -1374,10 +1383,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             </div>
           </CrowdWindows>
         </motion.div>
-      </section>
+      </RevealSection>
 
       {/* ═══════════════════════ IX. PLAN YOUR VISIT ═══════════════════════ */}
-      <section style={{ padding: "32px 20px 4px" }}>
+      <RevealSection style={{ padding: "32px 20px 4px" }} delay={240} resetKey={parkId}>
         <SectionPlate
           numeral="V"
           eyebrow="Your trip"
@@ -1520,10 +1529,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             </button>
           </div>
         )}
-      </section>
+      </RevealSection>
 
       {/* ═══════════════════════ X. SEASONAL INSIGHT — gallery plate ═══════════════════════ */}
-      <RevealSection style={{ padding: "36px 20px 4px" }}>
+      <RevealSection style={{ padding: "36px 20px 4px" }} delay={300} resetKey={parkId}>
         <SectionPlate
           numeral="VI"
           eyebrow={`${data.label} · in residence`}
@@ -1567,7 +1576,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
       </RevealSection>
 
       {/* ═══════════════════════ XI. LOCAL KNOWLEDGE — paired plates ═══════════════════════ */}
-      <RevealSection style={{ padding: "36px 20px 4px" }} delay={60}>
+      <RevealSection style={{ padding: "36px 20px 4px" }} delay={360} resetKey={parkId}>
         <SectionPlate
           numeral="VII"
           eyebrow="Local knowledge"
@@ -1665,7 +1674,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
       </RevealSection>
 
       {/* ═══════════════════════ XII. RANGER NOTES — clustered chronicle ═══════════════════════ */}
-      <RevealSection style={{ padding: "36px 20px 4px" }}>
+      <RevealSection style={{ padding: "36px 20px 4px" }} delay={420} resetKey={parkId}>
         <SectionPlate
           numeral="VIII"
           eyebrow={`Ranger notes · ${data.label}`}
