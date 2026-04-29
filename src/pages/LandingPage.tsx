@@ -973,6 +973,25 @@ const LandingPage = () => {
                 >
                   You sleep. Poko keeps the watch.
                 </p>
+
+                {/* Mobile/narrow: Quiet Hours timeline rendered inline
+                    under the deck so the horology language survives even
+                    when the right-rail panel collapses. */}
+                {(isMobile || isNarrow) && (
+                  <div
+                    data-hero-fade
+                    style={{
+                      marginTop: 28,
+                      paddingTop: 20,
+                      borderTop: "1px solid rgba(240, 237, 234, 0.18)",
+                      animation:
+                        "heroFadeUp 1100ms cubic-bezier(0.16, 1, 0.3, 1) both",
+                      animationDelay: "900ms",
+                    }}
+                  >
+                    <QuietHoursTimeline tone="dark" compact />
+                  </div>
+                )}
               </div>
 
               {/* Quiet Watchman panel — desktop only.
