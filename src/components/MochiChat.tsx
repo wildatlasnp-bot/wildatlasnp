@@ -1890,6 +1890,15 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               100% { transform: rotate(-0.5deg); }
             }
             .poko-rose-drift { transform-origin: 66px 66px; animation: poko-rose-drift 16s ease-in-out infinite; }
+            /* Personality nudge: single 15° clockwise sweep over 800ms then
+               return over 400ms. Applied via key-remount so each new alert
+               replays the moment. Composes with the ambient drift loop. */
+            @keyframes poko-bezel-nudge {
+              0%   { transform: rotate(0deg); }
+              66%  { transform: rotate(15deg); }
+              100% { transform: rotate(0deg); }
+            }
+            .poko-bezel-nudge { animation: poko-rose-drift 16s ease-in-out infinite, poko-bezel-nudge 1200ms cubic-bezier(0.4, 0, 0.2, 1) 1; }
             /* READY status heartbeat — 2s scale + opacity breath. Signals presence. */
             @keyframes poko-ready-heartbeat {
               0%, 100% { transform: scale(1);   opacity: 1;   }
@@ -2438,25 +2447,42 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                                   }
                             }
                           >
-                            {msg.role === "assistant" ? (
-                              <div
-                                /* Briefing crossfades on window change by remounting via content key */
-                                key={isInitialBriefing ? `briefing-${msg.content}` : undefined}
-                                className={`mochi-prose ${isInitialBriefing ? "poko-dispatch-fade" : ""}`}
-                              >
-                                {parseTrailBlocks(msg.content).map((block, bi) =>
-                                  block.type === "trails" ? (
-                                    <div key={bi} className="space-y-2 -mx-1">
-                                      {block.value.map((trail, ti) => (
-                                        <MochiTrailCard key={ti} trail={trail} />
-                                      ))}
-                                    </div>
-                                  ) : (
-                                    <div key={bi}><ReactMarkdown components={MARKDOWN_NO_TABLES}>{formatInlineBullets(stripMarkdownTables(block.value))}</ReactMarkdown></div>
-                                  )
-                                )}
-                              </div>
-                            ) : (
+                            {msg.role === "assistant" ? (() => {
+                              // Strip personality marker (idle/returning) so it
+                              // never reaches the renderer. When stripped, the
+                              // seasonal subtitle is also suppressed.
+                              const isPersonality = isInitialBriefing && msg.content.startsWith(PERSONALITY_MARKER);
+                              const cleaned = isPersonality ? msg.content.slice(PERSONALITY_MARKER.length) : msg.content;
+                              return (
+                                <div
+                                  /* Briefing crossfades on window change by remounting via content key */
+                                  key={isInitialBriefing ? `briefing-${cleaned}` : undefined}
+                                  className={`mochi-prose ${isInitialBriefing ? "poko-dispatch-fade" : ""}`}
+                                >
+                                  {parseTrailBlocks(cleaned).map((block, bi) =>
+                                    block.type === "trails" ? (
+                                      <div key={bi} className="space-y-2 -mx-1">
+                                        {block.value.map((trail, ti) => (
+                                          <MochiTrailCard key={ti} trail={trail} />
+                                        ))}
+                                      </div>
+                                    ) : (
+                                      <div key={bi}><ReactMarkdown components={MARKDOWN_NO_TABLES}>{formatInlineBullets(stripMarkdownTables(block.value))}</ReactMarkdown></div>
+                                    )
+                                  )}
+                                  {/* Seasonal subtitle — only on standard time-aware
+                                      greetings (skip during idle/returning/first session). */}
+                                  {isInitialBriefing && !isPersonality && !firstSession && (
+                                    <p style={{
+                                      marginTop: 8, marginBottom: 0,
+                                      fontFamily: "'DM Sans', sans-serif",
+                                      fontSize: 12, fontStyle: 'italic',
+                                      color: '#8A9E8A', lineHeight: 1.5,
+                                    }}>{getSeasonalSubtitle()}</p>
+                                  )}
+                                </div>
+                              );
+                            })() : (
                               msg.content
                             )}
                           </div>
