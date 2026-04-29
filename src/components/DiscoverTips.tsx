@@ -316,13 +316,13 @@ function TypicalPatternsHeader() {
     <div ref={ref} style={{ position: "relative", marginBottom: 14 }}>
       <p
         className="text-[12px] font-semibold uppercase tracking-widest"
-        style={{ color: "var(--ranger-parchment-soft)", margin: 0, display: "flex", alignItems: "center", gap: 6 }}
+        style={{ color: "rgba(26,47,30,0.65)", margin: 0, display: "flex", alignItems: "center", gap: 6 }}
       >
         Typical patterns
         <button
           onClick={() => setOpen((o) => !o)}
           aria-label="About typical patterns data"
-          style={{ background: "none", border: "none", padding: 0, cursor: "pointer", color: "var(--ranger-parchment-soft)", fontSize: 12, lineHeight: 1 }}
+          style={{ background: "none", border: "none", padding: 0, cursor: "pointer", color: "rgba(26,47,30,0.65)", fontSize: 12, lineHeight: 1 }}
         >
           ⓘ
         </button>
