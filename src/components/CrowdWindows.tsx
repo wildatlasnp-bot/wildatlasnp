@@ -158,13 +158,18 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
             >
               NOW
             </span>
-            {/* 6px filled circle dot at top with white glow */}
+            {/* 6px filled circle dot at top */}
             <div
               className="absolute left-1/2 -translate-x-1/2"
               style={{
                 top: "20px",
                 width: "6px",
                 height: "6px",
+                borderRadius: "50%",
+                backgroundColor: NEEDLE_COLOR,
+                zIndex: 3,
+              }}
+            />
                 borderRadius: "50%",
                 backgroundColor: NEEDLE_COLOR,
                 boxShadow: "0 0 6px rgba(255,255,255,0.6)",
