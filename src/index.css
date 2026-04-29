@@ -2237,13 +2237,14 @@
   .wa-tip-card:hover::before { transform: scaleY(1); }
 }
 
-/* Hero parallax — driven from JS via --wa-parallax (px) on the hero image */
+/* Hero parallax + scroll-depth scale — driven from JS via --wa-parallax (px) and --wa-hero-scale */
 .wa-hero-img {
-  transform: translate3d(0, var(--wa-parallax, 0px), 0) scale(1.06);
+  transform: translate3d(0, var(--wa-parallax, 0px), 0) scale(var(--wa-hero-scale, 1.04));
+  will-change: transform;
 }
 @keyframes waHeroInParallax {
   from { opacity: 0; transform: translate3d(0, 0, 0) scale(1.14); filter: brightness(0.55) saturate(0.85); }
-  to   { opacity: 1; transform: translate3d(0, var(--wa-parallax, 0px), 0) scale(1.06); filter: brightness(1) saturate(1); }
+  to   { opacity: 1; transform: translate3d(0, var(--wa-parallax, 0px), 0) scale(var(--wa-hero-scale, 1.04)); filter: brightness(1) saturate(1); }
 }
 /* Override the previous waHeroIn animation so parallax composites cleanly */
 .wa-hero-img {
