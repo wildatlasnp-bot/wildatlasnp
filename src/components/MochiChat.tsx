@@ -2109,20 +2109,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                       className="flex justify-start poko-bubble-in-left"
                       style={{ marginTop: 12 }}
                     >
-                      <div style={{
-                        background: '#FDFBF8',
-                        border: 'none',
-                        borderLeft: '2px solid rgba(201,169,110,0.35)',
-                        borderRadius: '16px 16px 16px 4px',
-                        padding: '14px 18px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 5,
-                        boxShadow: '0 2px 8px rgba(26,47,30,0.06)',
-                      }}>
-                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(26,47,30,0.55)', display: 'inline-block', animation: 'poko-typing-wave 900ms ease-in-out infinite', animationDelay: '0ms' }} />
-                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(26,47,30,0.55)', display: 'inline-block', animation: 'poko-typing-wave 900ms ease-in-out infinite', animationDelay: '300ms' }} />
-                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(26,47,30,0.55)', display: 'inline-block', animation: 'poko-typing-wave 900ms ease-in-out infinite', animationDelay: '600ms' }} />
+                      <div style={typingBubbleStyle}>
+                        <span style={typingDotStyle(0)} />
+                        <span style={typingDotStyle(1)} />
+                        <span style={typingDotStyle(2)} />
                       </div>
                     </motion.div>
                   )}
