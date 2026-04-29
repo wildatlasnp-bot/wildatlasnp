@@ -1674,7 +1674,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
       </RevealSection>
 
       {/* ═══════════════════════ XII. RANGER NOTES — clustered chronicle ═══════════════════════ */}
-      <RevealSection style={{ padding: "36px 20px 4px" }}>
+      <RevealSection style={{ padding: "36px 20px 4px" }} delay={420} resetKey={parkId}>
         <SectionPlate
           numeral="VIII"
           eyebrow={`Ranger notes · ${data.label}`}
