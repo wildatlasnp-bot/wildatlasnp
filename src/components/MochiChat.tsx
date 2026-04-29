@@ -1453,15 +1453,15 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               />
             )}
           </div>
-          {/* Film grain — kills the plastic-gradient look at almost zero cost. */}
+          {/* Heavy-paper noise — 180px tile at ~3% opacity, no blend mode.
+              Gives the dark surface a tactile quality. */}
           <div
             aria-hidden
             className="poko-grain"
             style={{
               position: 'absolute', inset: 0, zIndex: 2,
               pointerEvents: 'none',
-              mixBlendMode: 'overlay',
-              opacity: 0.18,
+              opacity: 0.03,
             }}
           />
           {/* ── Topographic chart layer (Move 3) ──
