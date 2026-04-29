@@ -717,11 +717,11 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                 fontWeight: 700,
                 letterSpacing: "0.02em",
                 cursor: loading || isPro ? "default" : "pointer",
-                border: "1px solid rgba(201,169,110,0.55)",
+                border: "1px solid rgba(140,111,58,0.55)",
                 boxShadow: [
                   "inset 0 1px 0 rgba(245,235,211,0.22)",
                   "inset 0 -1px 0 rgba(0,0,0,0.40)",
-                  "0 22px 44px -12px rgba(0,0,0,0.65)",
+                  "0 18px 36px -14px rgba(26,47,30,0.45)",
                   "0 0 0 1px rgba(201,169,110,0.14)",
                 ].join(", "),
                 display: "grid",
