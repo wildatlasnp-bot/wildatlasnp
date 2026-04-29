@@ -1546,6 +1546,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               .poko-drift { animation: none; }
               .poko-aurora-burst { animation: none; opacity: 0.6; }
               .poko-topo { animation: none; }
+              .poko-rose-drift { animation: none; transform: none; }
+              .poko-ready-heartbeat { animation: none; }
             }
           `}</style>
           {/* Sticky header: coordinate label */}
