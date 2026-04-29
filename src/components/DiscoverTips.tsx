@@ -1529,7 +1529,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             </button>
           </div>
         )}
-      </section>
+      </RevealSection>
 
       {/* ═══════════════════════ X. SEASONAL INSIGHT — gallery plate ═══════════════════════ */}
       <RevealSection style={{ padding: "36px 20px 4px" }}>
