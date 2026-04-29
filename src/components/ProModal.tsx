@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, CSSProperties } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { motion } from "framer-motion";
-import { Crown, ArrowRight, Loader2, Lock, RefreshCw, ShieldCheck } from "lucide-react";
+import { Crown, ArrowRight, Loader2, Lock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
@@ -217,15 +217,15 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
         style={{
           maxWidth: "min(404px, calc(100vw - 24px))",
           borderRadius: 20,
-          background: "#F0EDEA",
-          color: "#1A2F1E",
+          background: "#0F1610",
+          color: "#F0EDEA",
           zIndex: 1000,
-          // Soft cream paper — gentle ambient + warm rim highlight.
+          // Near-black portal — deep ambient, warm gold rim hint.
           boxShadow: [
-            "0 50px 120px -24px rgba(26,47,30,0.32)",
-            "0 22px 50px -16px rgba(26,47,30,0.22)",
-            "inset 0 1px 0 rgba(255,255,255,0.6)",
-            "inset 0 0 0 1px rgba(201,169,110,0.28)",
+            "0 50px 120px -24px rgba(0,0,0,0.65)",
+            "0 22px 50px -16px rgba(0,0,0,0.45)",
+            "inset 0 1px 0 rgba(255,255,255,0.04)",
+            "inset 0 0 0 1px rgba(201,169,110,0.18)",
           ].join(", "),
           animation: `proModalIn 720ms ${EASE} both`,
           contain: "paint layout style",
@@ -374,26 +374,24 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           <h2
             className="font-heading"
             style={{
-              fontSize: 34,
+              fontStyle: "italic",
+              fontSize: 28,
               fontWeight: 400,
-              lineHeight: 1.02,
-              letterSpacing: "-0.015em",
+              lineHeight: 1.1,
+              letterSpacing: "-0.01em",
               color: "#F5EBD3",
-              // Layered halo: tight contact shadow for edge definition,
-              // mid ink shadow for body separation, wide soft halo to suppress
-              // bright photo highlights (sky, aurora wash) under the title.
               textShadow: [
                 "0 1px 0 rgba(0,0,0,0.55)",
                 "0 2px 6px rgba(0,0,0,0.65)",
                 "0 6px 18px rgba(0,0,0,0.55)",
                 "0 0 28px rgba(14,26,20,0.45)",
               ].join(", "),
+              margin: 0,
             }}
           >
-            The window{" "}
-            <em style={{ fontStyle: "italic", color: "#C9A96E" }}>opens.</em>
-            <br />
-            You're already there.
+            Permits open.<br />
+            Then vanish.<br />
+            <span style={{ color: "#C9A96E" }}>Be first.</span>
           </h2>
         </div>
 
@@ -405,7 +403,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               fontFamily: "'DM Sans', sans-serif",
               fontSize: 14,
               fontWeight: 400,
-              color: "rgba(44,44,44,0.78)",
+              color: "rgba(240,237,234,0.62)",
               lineHeight: 1.6,
               marginTop: 4,
               ...revealStyle(STEP.SUBDECK, "up"),
@@ -433,14 +431,14 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                 key={p.kicker}
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "28px 1fr",
+                  gridTemplateColumns: "24px 1fr",
                   columnGap: 14,
                   paddingTop: i === 0 ? 0 : 14,
                   paddingBottom: 14,
                   borderBottom:
                     i === PILLARS.length - 1
                       ? "none"
-                      : "1px solid rgba(140,111,58,0.18)",
+                      : "1px solid rgba(229,225,221,0.10)",
                   ...revealStyle(STEP.PILLAR_0 + i, "up"),
                 }}
               >
@@ -448,24 +446,24 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                   className="font-heading"
                   style={{
                     fontStyle: "italic",
-                    fontSize: 18,
+                    fontSize: 13,
                     fontWeight: 400,
                     color: "#C9A96E",
                     lineHeight: 1.2,
-                    paddingTop: 2,
+                    paddingTop: 3,
                   }}
                 >
                   {p.kicker}
                 </span>
                 <div>
                   <div
-                    className="font-heading"
                     style={{
-                      fontSize: 19,
-                      fontWeight: 500,
-                      lineHeight: 1.2,
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 15,
+                      fontWeight: 600,
+                      lineHeight: 1.25,
                       letterSpacing: "-0.005em",
-                      color: "#1A2F1E",
+                      color: "#F0EDEA",
                     }}
                   >
                     {p.title}
@@ -475,8 +473,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                       marginTop: 4,
                       fontFamily: "'DM Sans', sans-serif",
                       fontSize: 13,
-                      lineHeight: 1.55,
-                      color: "rgba(44,44,44,0.68)",
+                      lineHeight: 1.5,
+                      color: "#8A9E8A",
                     }}
                   >
                     {p.body}
@@ -505,8 +503,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                   gap: 10,
                   fontFamily: "'DM Sans', sans-serif",
                   fontSize: 12,
-                  letterSpacing: "0.06em",
-                  color: "rgba(44,44,44,0.62)",
+                  letterSpacing: "0.04em",
+                  color: "rgba(240,237,234,0.72)",
                   ...revealStyle(STEP.PROOF, "up"),
                 }}
               >
@@ -517,188 +515,86 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                     height: 6,
                     borderRadius: "50%",
                     background: "#2F6F4E",
-                    boxShadow: "0 0 0 4px rgba(47,111,78,0.18), 0 0 10px rgba(47,111,78,0.45)",
-                    animation: "proPulse 2.4s ease-in-out infinite",
+                    boxShadow: "0 0 0 0 rgba(47,111,78,0.55)",
+                    animation: "proProofPulse 1.2s cubic-bezier(0.4, 0, 0.2, 1) 600ms 1 both",
                     flexShrink: 0,
                   }}
                 />
-                <span style={{ color: "rgba(26,47,30,0.85)" }}>
+                <span style={{ color: "rgba(240,237,234,0.78)" }}>
                   Caught{" "}
-                  <span style={{ color: "#8C6F3A", fontWeight: 600 }}>{timeLabel}</span>
-                  <span style={{ color: "rgba(140,111,58,0.45)", margin: "0 6px" }}>·</span>
-                  <span style={{ fontStyle: "italic", color: "rgba(44,44,44,0.78)" }}>
+                  <span style={{ color: "#2F6F4E", fontWeight: 700 }}>{timeLabel}</span>
+                  <span style={{ color: "rgba(201,169,110,0.45)", margin: "0 6px" }}>·</span>
+                  <span className="font-heading" style={{ fontStyle: "italic", fontSize: 13, color: "#F0EDEA" }}>
                     {latestFind.permit_name}
                   </span>
-                  <span style={{ color: "rgba(44,44,44,0.55)" }}> · {parkShort}</span>
+                  <span style={{ color: "rgba(240,237,234,0.50)" }}> · {parkShort}</span>
                 </span>
               </div>
             );
           })()}
 
-          {/* ============ PRICE — struck-metal embossed artifact ============ */}
+          {/* ============ PRICE — magazine pull-quote ============ */}
           {(() => {
-            // Split price like "$9.99" → symbol "$", whole "9", decimal ".99"
             const raw = displayPrice ?? "";
-            const m = raw.match(/^([^\d]*)(\d+)([.,]\d+)?$/);
+            const m = raw.match(/^([^\d]*)(\d+(?:[.,]\d+)?)$/);
             const sym = m?.[1] ?? "$";
-            const whole = m?.[2] ?? "";
-            const dec = m?.[3] ?? "";
+            const num = m?.[2] ?? "";
             return (
               <div
                 style={{
-                  position: "relative",
-                  marginTop: latestFind ? 14 : 22,
-                  borderRadius: 16,
-                  padding: "20px 22px",
-                  overflow: "hidden",
-                  background:
-                    "linear-gradient(180deg, #FFFFFF 0%, #F7F2EA 55%, #EFE7DA 100%)",
-                  border: "1px solid rgba(201,169,110,0.42)",
-                  // Embossed cream plate
-                  boxShadow: [
-                    "inset 0 1px 0 rgba(255,255,255,0.85)",
-                    "inset 0 -1px 0 rgba(140,111,58,0.18)",
-                    "inset 0 0 0 1px rgba(201,169,110,0.10)",
-                    "0 1px 0 rgba(255,255,255,0.6)",
-                    "0 22px 44px -24px rgba(26,47,30,0.28)",
-                  ].join(", "),
+                  marginTop: latestFind ? 22 : 28,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
                   ...revealStyle(STEP.PRICE, "up"),
                 }}
               >
-                {/* One-shot embossed light sweep across the plate. */}
-                <span aria-hidden className="pro-sheen pro-sheen--plate" />
-
-                {/* Hairline gold corner ticks — top-left & bottom-right */}
-                <span aria-hidden style={{ position: "absolute", top: 8, left: 8, width: 10, height: 10, borderTop: "1px solid rgba(201,169,110,0.55)", borderLeft: "1px solid rgba(201,169,110,0.55)", borderTopLeftRadius: 3 }} />
-                <span aria-hidden style={{ position: "absolute", bottom: 8, right: 8, width: 10, height: 10, borderBottom: "1px solid rgba(201,169,110,0.55)", borderRight: "1px solid rgba(201,169,110,0.55)", borderBottomRightRadius: 3 }} />
-
-                <div style={{ display: "flex", alignItems: "stretch", justifyContent: "space-between", gap: 18 }}>
-                  {/* LEFT — eyebrow + meta */}
-                  <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", paddingTop: 2, paddingBottom: 2 }}>
-                    <div
-                      style={{
-                        fontFamily: "'DM Sans', sans-serif",
-                        fontSize: 12,
-                        fontWeight: 700,
-                        letterSpacing: "0.32em",
-                        textTransform: "uppercase",
-                        // Gold-foil gradient text
-                        background: "linear-gradient(180deg, #E6C887 0%, #C9A96E 55%, #8C6F3A 100%)",
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
-                        backgroundClip: "text",
-                      }}
-                    >
-                      Field Pass
-                    </div>
-                    <div style={{ marginTop: 10 }}>
-                      <div
+                {displayPrice === null ? (
+                  <span className="inline-block w-32 h-16 bg-[rgba(240,237,234,0.06)] animate-pulse rounded" />
+                ) : (
+                  <>
+                    {/* $ 9.99 — symbol top-aligned, numeral as the pull quote */}
+                    <div style={{ display: "inline-flex", alignItems: "flex-start", lineHeight: 1 }}>
+                      <span
                         className="font-heading"
                         style={{
-                          fontStyle: "italic",
-                          fontSize: 14,
-                          fontWeight: 500,
-                          color: "#1A2F1E",
-                          letterSpacing: "-0.005em",
-                          lineHeight: 1.1,
+                          fontSize: 20,
+                          fontWeight: 400,
+                          color: "#C9A96E",
+                          marginTop: 6,
+                          marginRight: 4,
+                          lineHeight: 1,
                         }}
                       >
-                        Monthly subscription
-                      </div>
-                      <div
+                        {sym}
+                      </span>
+                      <span
+                        className="font-heading"
                         style={{
-                          marginTop: 3,
-                          fontFamily: "'DM Sans', sans-serif",
-                          fontSize: 12,
-                          color: "rgba(44,44,44,0.62)",
-                          letterSpacing: "0.04em",
+                          fontSize: 72,
+                          fontWeight: 300,
+                          letterSpacing: "-0.03em",
+                          lineHeight: 0.95,
+                          color: "#F0EDEA",
                         }}
                       >
-                        Cancel anytime · billed via Stripe
-                      </div>
+                        {num}
+                      </span>
                     </div>
-                  </div>
-
-                  {/* Vertical hairline divider */}
-                  <div
-                    aria-hidden
-                    style={{
-                      width: 1,
-                      alignSelf: "stretch",
-                      background: "linear-gradient(180deg, rgba(201,169,110,0) 0%, rgba(201,169,110,0.35) 50%, rgba(201,169,110,0) 100%)",
-                    }}
-                  />
-
-                  {/* RIGHT — engraved numeral */}
-                  <div style={{ textAlign: "right", display: "flex", flexDirection: "column", alignItems: "flex-end", justifyContent: "center", minWidth: 110 }}>
-                    {displayPrice === null ? (
-                      <span className="inline-block w-20 h-10 bg-[rgba(26,47,30,0.08)] animate-pulse rounded" />
-                    ) : (
-                      <>
-                        <div style={{ display: "flex", alignItems: "flex-start", lineHeight: 1 }}>
-                          <span
-                            className="font-heading"
-                            style={{
-                              fontSize: 18,
-                              fontWeight: 500,
-                              color: "#1A2F1E",
-                              marginTop: 6,
-                              marginRight: 2,
-                              opacity: 0.75,
-                            }}
-                          >
-                            {sym}
-                          </span>
-                          <span
-                            className="font-heading"
-                            style={{
-                              fontSize: 52,
-                              fontWeight: 500,
-                              letterSpacing: "-0.035em",
-                              lineHeight: 0.9,
-                              color: "#1A2F1E",
-                              textShadow: [
-                                "0 1px 0 rgba(255,255,255,0.6)",
-                                "0 2px 14px rgba(26,47,30,0.10)",
-                              ].join(", "),
-                            }}
-                          >
-                            {whole}
-                          </span>
-                          {dec && (
-                            <span
-                              className="font-heading"
-                              style={{
-                                fontStyle: "italic",
-                                fontSize: 22,
-                                fontWeight: 500,
-                                color: "#8C6F3A",
-                                marginTop: 6,
-                                marginLeft: 1,
-                                letterSpacing: "-0.01em",
-                              }}
-                            >
-                              {dec}
-                            </span>
-                          )}
-                        </div>
-                        <div
-                          style={{
-                            marginTop: 4,
-                            fontFamily: "'DM Sans', sans-serif",
-                            fontSize: 12,
-                            fontWeight: 600,
-                            letterSpacing: "0.22em",
-                            textTransform: "uppercase",
-                            color: "rgba(44,44,44,0.55)",
-                          }}
-                        >
-                          USD / month
-                        </div>
-                      </>
-                    )}
-                  </div>
-                </div>
+                    {/* /mo — DM Sans 13, baseline-aligned below numeral */}
+                    <span
+                      style={{
+                        marginTop: 6,
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 13,
+                        color: "#8A9E8A",
+                        letterSpacing: "0.02em",
+                      }}
+                    >
+                      /mo
+                    </span>
+                  </>
+                )}
               </div>
             );
           })()}
@@ -711,85 +607,73 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             }}
           >
             <motion.button
-              whileTap={{ scale: 0.985 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 600, damping: 22 }}
               onClick={handleCheckout}
               disabled={loading || isPro}
               className="cta-shimmer relative overflow-hidden"
               style={{
                 width: "100%",
-                padding: "18px 20px",
-                borderRadius: 14,
-                background:
-                  "linear-gradient(180deg, #357B57 0%, #245A3D 55%, #143524 100%)",
-                color: "#FBF3DC",
+                height: 56,
+                padding: "0 20px",
+                borderRadius: 12,
+                background: "#2F6F4E",
+                color: "#FFFFFF",
                 fontFamily: "'DM Sans', sans-serif",
                 fontSize: 16,
-                fontWeight: 700,
-                letterSpacing: "0.02em",
+                fontWeight: 600,
+                letterSpacing: "0.01em",
                 cursor: loading || isPro ? "default" : "pointer",
-                border: "1px solid rgba(140,111,58,0.55)",
+                border: "none",
                 boxShadow: [
-                  "inset 0 1px 0 rgba(245,235,211,0.22)",
-                  "inset 0 -1px 0 rgba(0,0,0,0.40)",
-                  "0 18px 36px -14px rgba(26,47,30,0.45)",
-                  "0 0 0 1px rgba(201,169,110,0.14)",
+                  "inset 0 1px 0 rgba(255,255,255,0.10)",
+                  "0 8px 24px -10px rgba(47,111,78,0.55)",
                 ].join(", "),
-                display: "grid",
-                gridTemplateColumns: "1fr auto 1fr",
+                display: "inline-flex",
                 alignItems: "center",
+                justifyContent: "center",
                 gap: 10,
               }}
             >
               {loading ? (
                 <>
-                  <span />
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-                    <Loader2 size={16} className="animate-spin" />
-                    Opening checkout…
-                  </span>
-                  <span />
+                  <Loader2 size={16} className="animate-spin" />
+                  <span>Opening checkout…</span>
                 </>
               ) : isPro ? (
                 <>
-                  <span />
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-                    <Crown size={15} />
-                    You're already Pro
-                  </span>
-                  <span />
+                  <Crown size={15} />
+                  <span>You're already Pro</span>
                 </>
               ) : (
                 <>
-                  <span />
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
-                    Claim your Field Pass
-                  </span>
-                  <ArrowRight size={16} style={{ justifySelf: "end", opacity: 0.9 }} />
+                  <span>Claim your Field Pass</span>
+                  <ArrowRight size={16} style={{ opacity: 0.95 }} />
                 </>
               )}
             </motion.button>
 
-            {/* Reassurance micro-row, right under CTA */}
+            {/* Trust row — single line, lock-only icon */}
             {!isPro && !loading && (
               <div
                 style={{
-                  marginTop: 10,
+                  marginTop: 12,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   gap: 8,
                   fontFamily: "'DM Sans', sans-serif",
                   fontSize: 12,
-                  color: "rgba(44,44,44,0.62)",
-                  letterSpacing: "0.04em",
+                  color: "#8A9E8A",
+                  letterSpacing: "0.02em",
                 }}
               >
-                <Lock size={12} style={{ color: "#8C6F3A" }} strokeWidth={2.2} />
-                <span>Secure checkout</span>
-                <span style={{ color: "rgba(140,111,58,0.55)" }}>·</span>
+                <Lock size={12} style={{ color: "#8A9E8A" }} strokeWidth={2.2} />
+                <span>Secure</span>
+                <span style={{ color: "rgba(138,158,138,0.45)" }}>·</span>
+                <span>Cancel anytime</span>
+                <span style={{ color: "rgba(138,158,138,0.45)" }}>·</span>
                 <span>7-day refund</span>
-                <span style={{ color: "rgba(140,111,58,0.55)" }}>·</span>
-                <span>Instant access</span>
               </div>
             )}
           </div>
@@ -799,7 +683,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             style={{
               fontFamily: "'DM Sans', sans-serif",
               fontSize: 12,
-              color: "rgba(44,44,44,0.55)",
+              color: "rgba(240,237,234,0.45)",
               textAlign: "center",
               margin: "12px 4px 0",
               lineHeight: 1.55,
@@ -813,59 +697,29 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               href="https://wildatlas.app/terms"
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: "#8C6F3A", textDecoration: "underline", textUnderlineOffset: 2 }}
+              style={{ color: "#C9A96E", textDecoration: "underline", textUnderlineOffset: 2 }}
             >
               Full terms
             </a>
           </p>
 
-          {/* Hairline divider — gold */}
+          {/* Hairline divider — gold (kept for timeline cadence) */}
           <div
             style={{
               marginTop: 18,
               height: 1,
               background:
-                "linear-gradient(90deg, transparent 0%, rgba(140,111,58,0.32) 50%, transparent 100%)",
+                "linear-gradient(90deg, transparent 0%, rgba(201,169,110,0.22) 50%, transparent 100%)",
               ...revealStyle(STEP.DIVIDER, "up"),
             }}
           />
 
-          {/* Trust row */}
-          <div
-            className="flex items-center justify-center"
-            style={{
-              gap: 18,
-              marginTop: 14,
-              ...revealStyle(STEP.TRUST, "up"),
-            }}
-          >
-            {[
-              { icon: Lock, label: "Secure" },
-              { icon: RefreshCw, label: "Cancel anytime" },
-              { icon: ShieldCheck, label: "No hidden fees" },
-            ].map((t) => (
-              <div key={t.label} className="flex items-center gap-1.5">
-                <t.icon size={12} style={{ color: "#8C6F3A" }} strokeWidth={2.2} />
-                <span
-                  style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 12,
-                    color: "rgba(44,44,44,0.62)",
-                    fontWeight: 500,
-                  }}
-                >
-                  {t.label}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          {/* Refund link */}
+          {/* Refund link — single utility link, sits where lower trust row used to */}
           <p
             style={{
               fontFamily: "'DM Sans', sans-serif",
               fontSize: 12,
-              color: "rgba(44,44,44,0.55)",
+              color: "rgba(240,237,234,0.45)",
               textAlign: "center",
               marginTop: 14,
               ...revealStyle(STEP.REFUND, "up"),
@@ -873,8 +727,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           >
             <button
               onClick={() => setRefundOpen(true)}
-              className="underline underline-offset-2 transition-colors hover:text-[#8C6F3A]"
-              style={{ color: "rgba(44,44,44,0.62)", fontSize: 12 }}
+              className="underline underline-offset-2 transition-colors hover:text-[#C9A96E]"
+              style={{ color: "rgba(240,237,234,0.55)", fontSize: 12 }}
             >
               Refund Policy
             </button>
