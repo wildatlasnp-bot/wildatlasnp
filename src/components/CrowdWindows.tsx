@@ -123,13 +123,6 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
 
   const NEEDLE_COLOR = "#1A2F1E";
 
-  const GLOW_BY_LEVEL: Record<string, string> = {
-    quiet: "none",
-    building: "none",
-    busy: "0 0 8px rgba(232,147,90,0.3)",
-    packed: "0 0 12px rgba(192,57,43,0.35)",
-  };
-
   return (
     <div
       style={{
@@ -165,7 +158,7 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
             >
               NOW
             </span>
-            {/* 6px filled circle dot at top with white glow */}
+            {/* 6px filled circle dot at top */}
             <div
               className="absolute left-1/2 -translate-x-1/2"
               style={{
@@ -174,7 +167,6 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
                 height: "6px",
                 borderRadius: "50%",
                 backgroundColor: NEEDLE_COLOR,
-                boxShadow: "0 0 6px rgba(255,255,255,0.6)",
                 zIndex: 3,
               }}
             />
@@ -192,8 +184,8 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
           </div>
         )}
 
-        {/* The bar — capsule segments with rounded ends */}
-        <div key={animationKey} className="relative flex" style={{ height: "52px", alignItems: "flex-end", overflow: 'visible', gap: 3 }}>
+        {/* The bar — uniform 48px rectangular segments, 4px radius, 3px gaps */}
+        <div key={animationKey} className="relative flex" style={{ height: "48px", alignItems: "stretch", overflow: 'visible', gap: 3 }}>
           {/* Left padding if first segment doesn't start at DAY_START */}
           {segments.length > 0 && segments[0].startPct > 0 && (
             <div style={{ flex: segments[0].startPct }} />
@@ -206,9 +198,8 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
                 flex: s.flex,
                 backgroundColor: s.color,
                 minWidth: 0,
-                height: CROWD_HEIGHTS[s.level] ?? 52,
-                borderRadius: 9999,
-                boxShadow: GLOW_BY_LEVEL[s.level] ?? "none",
+                height: 48,
+                borderRadius: 4,
                 animation: `barGrow 600ms cubic-bezier(0, 0, 0.2, 1) ${i * 40}ms both`,
               }}
             />
