@@ -9,9 +9,9 @@ interface BottomNavProps {
   hasUnreadAlerts?: boolean;
 }
 
-const INACTIVE = "rgba(255, 255, 255, 0.55)";
-const INACTIVE_LABEL = "rgba(255, 255, 255, 0.50)";
-const ACTIVE = "#FFFFFF";
+const INACTIVE = "rgba(26, 47, 30, 0.55)";
+const INACTIVE_LABEL = "rgba(26, 47, 30, 0.55)";
+const ACTIVE = "#1A2F1E";
 
 const ACTIVE_COLOR: Record<Tab, string> = {
   mochi: ACTIVE,
@@ -72,9 +72,9 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
         justifyContent: "space-around",
         alignItems: "center",
         paddingBottom: "env(safe-area-inset-bottom, 0px)",
-        background: "linear-gradient(180deg, #1F3624 0%, #1A2F1E 60%, #15281A 100%)",
-        borderTop: "0.5px solid rgba(255, 255, 255, 0.08)",
-        boxShadow: "0 -1px 0 rgba(255,255,255,0.04) inset, 0 -8px 24px -8px rgba(5, 20, 12, 0.45), 0 -2px 8px -2px rgba(5, 20, 12, 0.35)",
+        background: "#F0EDEA",
+        borderTop: "1px solid #E5E1DD",
+        boxShadow: "0 -1px 0 rgba(255,255,255,0.6) inset, 0 -8px 24px -8px rgba(26,47,30,0.10), 0 -2px 8px -2px rgba(26,47,30,0.06)",
         zIndex: 50,
       }}
     >
@@ -153,8 +153,8 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
                     width: 7,
                     height: 7,
                     borderRadius: "50%",
-                    background: "rgba(245,245,240,0.85)",
-                    border: "1.5px solid rgba(5,26,16,0.75)",
+                    background: "#1A2F1E",
+                    border: "1.5px solid rgba(240,237,234,0.95)",
                     pointerEvents: "none",
                     zIndex: 2,
                   }}

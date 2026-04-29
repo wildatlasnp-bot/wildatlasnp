@@ -316,13 +316,13 @@ function TypicalPatternsHeader() {
     <div ref={ref} style={{ position: "relative", marginBottom: 14 }}>
       <p
         className="text-[12px] font-semibold uppercase tracking-widest"
-        style={{ color: "var(--ranger-parchment-soft)", margin: 0, display: "flex", alignItems: "center", gap: 6 }}
+        style={{ color: "rgba(26,47,30,0.65)", margin: 0, display: "flex", alignItems: "center", gap: 6 }}
       >
         Typical patterns
         <button
           onClick={() => setOpen((o) => !o)}
           aria-label="About typical patterns data"
-          style={{ background: "none", border: "none", padding: 0, cursor: "pointer", color: "var(--ranger-parchment-soft)", fontSize: 12, lineHeight: 1 }}
+          style={{ background: "none", border: "none", padding: 0, cursor: "pointer", color: "rgba(26,47,30,0.65)", fontSize: 12, lineHeight: 1 }}
         >
           ⓘ
         </button>
@@ -336,11 +336,11 @@ function TypicalPatternsHeader() {
         >
           <button
             onClick={() => setOpen(false)} aria-label="Close"
-            style={{ position: "absolute", top: 8, right: 8, background: "none", border: "none", cursor: "pointer", color: "var(--ranger-parchment-soft)", padding: 2 }}
+            style={{ position: "absolute", top: 8, right: 8, background: "none", border: "none", cursor: "pointer", color: "rgba(26,47,30,0.55)", padding: 2 }}
           >
             <X size={12} />
           </button>
-          <p style={{ margin: 0, fontSize: 12, lineHeight: 1.55, color: "var(--ranger-parchment-body)", paddingRight: 16 }}>
+          <p style={{ margin: 0, fontSize: 12, lineHeight: 1.55, color: "#2C2C2C", paddingRight: 16 }}>
             These times reflect average historical visitor patterns, not live conditions. Check NPS alerts and Recreation.gov for real-time updates.
           </p>
         </div>
@@ -835,8 +835,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         className="wa-reveal"
         style={{
           padding: "14px 20px 12px",
-          background: "var(--ranger-night)",
-          borderBottom: "1px solid var(--ranger-rule-night)",
+          background: "#F0EDEA",
+          borderBottom: "1px solid #E5E1DD",
           ["--d" as any]: "0ms",
         }}
       >
@@ -845,19 +845,19 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             <span className="font-display-italic"
               style={{
                 fontStyle: "italic", fontWeight: 500, fontSize: 18,
-                color: "var(--ranger-parchment)", letterSpacing: "-0.01em", lineHeight: 1,
+                color: "#1A2F1E", letterSpacing: "-0.01em", lineHeight: 1,
               }}
             >
               WildAtlas
             </span>
             <span
               aria-hidden="true"
-              style={{ width: 14, height: 1, background: "var(--ranger-rule-strong)" }}
+              style={{ width: 14, height: 1, background: "rgba(26,47,30,0.30)" }}
             />
             <span
               style={{
                 fontSize: 12, fontWeight: 600, letterSpacing: "0.22em",
-                color: "var(--ranger-parchment-soft)", textTransform: "uppercase",
+                color: "rgba(26,47,30,0.65)", textTransform: "uppercase",
                 whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
               }}
             >
@@ -874,14 +874,14 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
               cursor: "pointer",
             }}
           >
-            <Share2 size={16} strokeWidth={1.5} color="var(--ranger-parchment)" />
+            <Share2 size={16} strokeWidth={1.5} color="#1A2F1E" />
           </button>
         </div>
         <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 8, marginTop: 8 }}>
           <span
             style={{
               fontSize: 12, fontWeight: 600, letterSpacing: "0.18em",
-              color: "var(--ranger-parchment-mute)", textTransform: "uppercase",
+              color: "rgba(26,47,30,0.55)", textTransform: "uppercase",
               overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
             }}
           >
@@ -890,13 +890,13 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           <span className="font-display-italic"
             style={{
               fontStyle: "italic", fontSize: 13,
-              color: "var(--ranger-parchment)", letterSpacing: "0.01em",
+              color: "#1A2F1E", letterSpacing: "0.01em",
             }}
           >
             {localTimeLabel}
             <span className="wa-caret" aria-hidden="true" style={{
               display: "inline-block", width: 5, height: 12, marginLeft: 3,
-              background: "var(--ranger-parchment-soft)", verticalAlign: "middle",
+              background: "rgba(26,47,30,0.65)", verticalAlign: "middle",
             }} />
           </span>
         </div>
@@ -1111,19 +1111,19 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           ].map((c, i) => (
             <div key={c.eyebrow} style={{
               textAlign: "center", padding: "0 4px", minWidth: 0,
-              borderLeft: i === 0 ? "none" : "1px solid var(--ranger-rule-night-soft)",
+              borderLeft: i === 0 ? "none" : "1px solid #E5E1DD",
             }}>
               <p style={{
                 fontSize: 12, fontWeight: 600,
                 letterSpacing: "0.18em", textTransform: "uppercase",
-                color: c.dim ? "var(--ranger-parchment-faint)" : "var(--ranger-parchment-soft)",
+                color: c.dim ? "rgba(26,47,30,0.45)" : "rgba(26,47,30,0.65)",
                 margin: 0, marginBottom: 4,
                 overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
               }}>{c.eyebrow}</p>
               <p className="font-display-italic" style={{
                 fontStyle: "italic",
                 fontSize: c.dim ? 14 : 17, fontWeight: 400,
-                color: c.dim ? "var(--ranger-paper-soft)" : "var(--ranger-paper-soft)",
+                color: "#1A2F1E",
                 letterSpacing: "-0.005em", margin: 0, lineHeight: 1.1,
                 overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
               }}>{c.value}</p>
@@ -1282,7 +1282,6 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           numeral="III"
           eyebrow={`Today · ${localTime.weekday}`}
           italic="What the patterns say about right now"
-          dark
           delay={0}
           focusKey={focusKey}
         />
@@ -1293,7 +1292,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           transition={{ duration: 0.5, delay: 0.16, ease: [0.4, 0, 0.2, 1] }}
         >
           <TypicalPatternsHeader />
-          <TodayParkAdvice parkId={parkId} darkMode />
+          <TodayParkAdvice parkId={parkId} />
         </motion.div>
       </RevealSection>
 
@@ -1473,10 +1472,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             <button
               onClick={() => setTripModalOpen(true)}
               style={{
-                display: "inline-flex", alignItems: "center", background: "var(--ranger-night)",
-                color: "var(--ranger-parchment)", fontSize: 12, fontWeight: 600, letterSpacing: "0.12em",
+                display: "inline-flex", alignItems: "center", background: "#2F6F4E",
+                color: "#FFFFFF", fontSize: 12, fontWeight: 600, letterSpacing: "0.12em",
                 textTransform: "uppercase", padding: "12px 22px",
-                borderRadius: 999, border: "1px solid var(--ranger-rule-strong)",
+                borderRadius: 999, border: "1px solid #2F6F4E",
                 cursor: "pointer", minHeight: 44,
               }}
             >
