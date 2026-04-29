@@ -2054,6 +2054,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         initialDate={arrivalDate}
         isEditMode={!!arrivalDate}
       />
+      <FieldNotesModal open={fieldNotesOpen} onClose={() => setFieldNotesOpen(false)} />
     </div>
   );
 });
