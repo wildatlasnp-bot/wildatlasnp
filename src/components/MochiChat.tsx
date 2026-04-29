@@ -1425,7 +1425,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               ) : (
                 <span
                   style={{ color: '#2F6F4E', cursor: 'pointer' }}
-                  onClick={() => setProModalOpen(true)}
+                  onClick={() => { haptics.medium(); setProModalOpen(true); }}
                   role="button"
                   tabIndex={0}
                 >
@@ -2376,7 +2376,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                       }}
                     >
                       {msg.isRateLimitCard ? (
-                        <RateLimitUpgradeCard onUpgrade={() => setProModalOpen(true)} />
+                        <RateLimitUpgradeCard onUpgrade={() => { haptics.medium(); setProModalOpen(true); }} />
                       ) : (
                         <>
                          {isInitialBriefing && (
@@ -2733,7 +2733,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                         ) : (
                           <span
                             style={{ color: '#A8C4B8', cursor: 'pointer' }}
-                            onClick={() => setProModalOpen(true)}
+                            onClick={() => { haptics.medium(); setProModalOpen(true); }}
                             role="button"
                             tabIndex={0}
                           >
@@ -2793,7 +2793,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   style={{ marginTop, marginBottom: isLastInGroup ? 0 : 0 }}
                 >
                   {msg.isRateLimitCard ? (
-                    <RateLimitUpgradeCard onUpgrade={() => setProModalOpen(true)} />
+                    <RateLimitUpgradeCard onUpgrade={() => { haptics.medium(); setProModalOpen(true); }} />
                   ) : (
                     <>
                       <div
