@@ -789,7 +789,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             style={{
               fontFamily: "'DM Sans', sans-serif",
               fontSize: 12,
-              color: "rgba(245,235,211,0.50)",
+              color: "rgba(44,44,44,0.55)",
               textAlign: "center",
               margin: "12px 4px 0",
               lineHeight: 1.55,
