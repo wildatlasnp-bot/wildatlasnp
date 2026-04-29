@@ -20,6 +20,7 @@ import {
 import PokoReadCard from "@/components/discover/PokoReadCard";
 import FieldLog from "@/components/discover/FieldLog";
 import HeroLightbox from "@/components/discover/HeroLightbox";
+import SavedSignalsSection from "@/components/discover/SavedSignalsSection";
 import ParkSelector from "@/components/ParkSelector";
 import { seasons, getCurrentSeason, parkSeasons, type Season } from "@/lib/park-seasons";
 import TodayParkAdvice from "@/components/TodayParkAdvice";
