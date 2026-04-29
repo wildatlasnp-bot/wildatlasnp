@@ -792,6 +792,164 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [firstSession, trackedPermits]);
 
+  // ─── POKO PERSONALITY: idle dispatch rotation ───────────────────
+  // After 3 minutes of dwelling on the Poko tab without sending a message,
+  // the briefing prose subtly cycles to the next idle one-liner. Cycle is
+  // non-repeating (sessionStorage-backed) and resets on send / tab switch
+  // (the visibility handler clears the timer).
+  // Skipped during firstSession and conversation modes.
+  const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const IDLE_CYCLE_KEY = "poko_idle_cycle";
+  const IDLE_INTERVAL_MS = 3 * 60 * 1000;
+
+  const popNextIdleMessage = useCallback((): string => {
+    let raw = sessionStorage.getItem(IDLE_CYCLE_KEY);
+    let used: number[] = [];
+    try { used = raw ? JSON.parse(raw) : []; } catch { used = []; }
+    if (used.length >= IDLE_MESSAGES.length) used = [];
+    const remaining = IDLE_MESSAGES.map((_, i) => i).filter((i) => !used.includes(i));
+    const next = remaining[Math.floor(Math.random() * remaining.length)] ?? 0;
+    used.push(next);
+    sessionStorage.setItem(IDLE_CYCLE_KEY, JSON.stringify(used));
+    return IDLE_MESSAGES[next];
+  }, []);
+
+  const scheduleIdleRotation = useCallback(() => {
+    if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+    idleTimerRef.current = setTimeout(() => {
+      // Re-check briefing state at fire-time; abort if the user has since
+      // sent a message or a SCANNING / catch event has taken priority.
+      if (isLoading) { scheduleIdleRotation(); return; }
+      setMessages((prev) => {
+        const isBriefing = prev.length <= 2 && prev[0]?.id === 1;
+        if (!isBriefing) return prev;
+        const text = popNextIdleMessage();
+        return [{ id: 1, role: "assistant", content: `${PERSONALITY_MARKER}${text}` }];
+      });
+      scheduleIdleRotation();
+    }, IDLE_INTERVAL_MS);
+  }, [isLoading, popNextIdleMessage]);
+
+  useEffect(() => {
+    if (firstSession) return;
+    scheduleIdleRotation();
+    const onHide = () => {
+      // Spec: timer resets on tab switch — clear & rearm fresh on return.
+      if (document.visibilityState === "hidden" && idleTimerRef.current) {
+        clearTimeout(idleTimerRef.current);
+        idleTimerRef.current = null;
+      } else if (document.visibilityState === "visible") {
+        scheduleIdleRotation();
+      }
+    };
+    document.addEventListener("visibilitychange", onHide);
+    return () => {
+      if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+      document.removeEventListener("visibilitychange", onHide);
+    };
+  }, [firstSession, scheduleIdleRotation]);
+
+  // ─── POKO PERSONALITY: returning-user greeting ──────────────────
+  // On Poko mount, read profile.last_seen_at. If >24h since last visit,
+  // show a returning one-liner for 4s, then crossfade to the standard
+  // time-aware dispatch. Always update last_seen_at to now afterward.
+  const returningChecked = useRef(false);
+  useEffect(() => {
+    if (!user || returningChecked.current || firstSession) return;
+    returningChecked.current = true;
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("last_seen_at")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (cancelled) return;
+      const last = (data as any)?.last_seen_at ? new Date((data as any).last_seen_at).getTime() : 0;
+      const hoursAway = last > 0 ? (Date.now() - last) / (1000 * 60 * 60) : Infinity;
+      // Stamp last_seen_at to now (fire-and-forget). Triggers no UI.
+      supabase
+        .from("profiles")
+        .update({ last_seen_at: new Date().toISOString() } as any)
+        .eq("user_id", user.id)
+        .then(() => {});
+      // First-ever visit (no prior stamp) doesn't qualify as "returning".
+      if (!isFinite(hoursAway) || hoursAway < 24) return;
+      setMessages((prev) => {
+        const isBriefing = prev.length <= 2 && prev[0]?.id === 1;
+        if (!isBriefing) return prev;
+        const msg = RETURNING_MESSAGES[Math.floor(Math.random() * RETURNING_MESSAGES.length)];
+        return [{ id: 1, role: "assistant", content: `${PERSONALITY_MARKER}${msg}` }];
+      });
+      // Crossfade to standard time-aware greeting after 4s.
+      setTimeout(() => {
+        if (cancelled) return;
+        setMessages((prev) => {
+          const isBriefing = prev.length <= 2 && prev[0]?.id === 1;
+          if (!isBriefing) return prev;
+          const parkName = trackedPermits.length > 0
+            ? (PARKS[[...trackedPermits].sort((a, b) => {
+                const ta = a.created_at ? new Date(a.created_at).getTime() : 0;
+                const tb = b.created_at ? new Date(b.created_at).getTime() : 0;
+                return tb - ta;
+              })[0].park_id]?.shortName || "your park")
+            : null;
+          const dispatch = getDispatchWindow(parkName);
+          return [{ id: 1, role: "assistant", content: `${dispatch.title} ${dispatch.body}` }];
+        });
+      }, 4000);
+    })();
+    return () => { cancelled = true; };
+    // trackedPermits intentionally omitted — sampled inside the closure at
+    // fire-time via setMessages; trigger is mount + auth ready.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, firstSession]);
+
+  // ─── POKO PERSONALITY: new-alert compass moment ─────────────────
+  // Polls park_alerts every 90s for the user's tracked parks. When a row
+  // appears whose `last_updated` is newer than the baseline captured on
+  // mount, the compass bezel does a single 15° clockwise rotation (800ms
+  // out / 400ms back) and the status dot pulses once with --park-accent.
+  // Polling > realtime here because park_alerts is server-managed and may
+  // not be in the realtime publication; 90s is plenty for a personality
+  // moment and avoids any connection cost.
+  const [compassNudge, setCompassNudge] = useState(0);
+  const [parkPulse, setParkPulse] = useState(0);
+  const alertBaselineRef = useRef<string | null>(null);
+  useEffect(() => {
+    const trackedIds = Array.from(new Set(trackedPermits.map((p) => p.park_id))).filter(Boolean);
+    if (trackedIds.length === 0) return;
+    let cancelled = false;
+    let intervalId: number | null = null;
+
+    const check = async () => {
+      const { data, error } = await supabase
+        .from("park_alerts")
+        .select("last_updated, park_id")
+        .in("park_id", trackedIds)
+        .order("last_updated", { ascending: false })
+        .limit(1);
+      if (cancelled || error || !data?.[0]) return;
+      const latest = data[0].last_updated as string;
+      if (alertBaselineRef.current === null) {
+        // Seed the baseline on first read — never fires on initial mount.
+        alertBaselineRef.current = latest;
+        return;
+      }
+      if (latest > alertBaselineRef.current) {
+        alertBaselineRef.current = latest;
+        setCompassNudge((n) => n + 1);
+        setParkPulse((n) => n + 1);
+      }
+    };
+    check();
+    intervalId = window.setInterval(check, 90_000);
+    return () => {
+      cancelled = true;
+      if (intervalId !== null) window.clearInterval(intervalId);
+    };
+  }, [trackedPermits]);
+
 
   useEffect(() => {
     if (initialMountRef.current) { initialMountRef.current = false; return; }
