@@ -815,7 +815,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               marginTop: 18,
               height: 1,
               background:
-                "linear-gradient(90deg, transparent 0%, rgba(201,169,110,0.28) 50%, transparent 100%)",
+                "linear-gradient(90deg, transparent 0%, rgba(140,111,58,0.32) 50%, transparent 100%)",
               ...revealStyle(STEP.DIVIDER, "up"),
             }}
           />
