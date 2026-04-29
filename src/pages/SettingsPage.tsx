@@ -39,21 +39,28 @@ const PRO_BENEFITS = [
    Cormorant section headers, embossed icon chips. */
 
 const GOLD = "#C9A96E";
-const IVORY_BORDER = "#ECE7DF";
+const IVORY_BORDER = "#E8E4E0";
+const ROW_DIVIDER = "#F0EDEA";
 const CHIP_BG = "#FAF7F2";
 const FOREST = "#1A2F1E";
-const SAGE_ITALIC = "#7A9B7A";
-const MUTED = "#9A9A9A";
+const SAGE_ITALIC = "#8A9E8A";
+const MUTED = "#8A9E8A";
 
+/* Editorial card surface — white over cream page, soft ink shadow.
+   Consumed by Identity, Alerts, Support. Membership Free card overrides
+   to a tinted-green surface inline. */
 const CARD_SURFACE: React.CSSProperties = {
   backgroundColor: "#FFFFFF",
-  borderRadius: 14,
+  borderRadius: 16,
   border: `1px solid ${IVORY_BORDER}`,
-  boxShadow:
-    "0 1px 0 rgba(0,0,0,0.02), 0 8px 24px -16px rgba(26,47,30,0.12)",
+  boxShadow: "0 2px 8px rgba(26,47,30,0.05)",
   overflow: "hidden",
 };
 
+/* Section label — chapter marker, not form label.
+   Editorial spec asks for 9px/0.25em amber. We honor the project's 12px
+   typography floor (mem://style/typography/legibility-floor) and use 12px
+   with tightened weight + tracking to read as a chapter mark. */
 const SectionHeader = ({
   label,
   trailing,
@@ -64,16 +71,21 @@ const SectionHeader = ({
   <div className="flex items-center gap-3 mb-3" style={{ marginTop: 36 }}>
     <span
       aria-hidden
-      style={{ display: "inline-block", width: 24, height: 1, backgroundColor: GOLD, opacity: 0.55 }}
+      style={{
+        display: "inline-block",
+        width: 24,
+        height: 1,
+        background: `linear-gradient(to right, ${GOLD}, transparent)`,
+      }}
     />
     <span
       style={{
-        fontFamily: "'Cormorant Garamond', serif",
-        fontSize: 13,
-        fontStyle: "italic",
+        fontFamily: "'DM Sans', sans-serif",
+        fontSize: 12,
         fontWeight: 500,
-        color: SAGE_ITALIC,
-        letterSpacing: "0.01em",
+        letterSpacing: "0.25em",
+        textTransform: "uppercase",
+        color: GOLD,
         whiteSpace: "nowrap",
       }}
     >
@@ -110,13 +122,15 @@ const IconChip = ({
   </span>
 );
 
+/* Row eyebrow — tiny uppercase metadata label.
+   Spec asks for 9px/0.20em; honored at 12px floor with tight tracking. */
 const RowEyebrow = ({ children }: { children: React.ReactNode }) => (
   <p
     style={{
       fontFamily: "'DM Sans', sans-serif",
       fontSize: 12,
       fontWeight: 500,
-      letterSpacing: "0.10em",
+      letterSpacing: "0.20em",
       textTransform: "uppercase",
       color: MUTED,
       lineHeight: 1.2,
@@ -240,24 +254,28 @@ const DownloadDataButton = ({ user }: { user: any }) => {
     <button
       onClick={handleDownload}
       disabled={loading}
-      className="w-full flex items-center justify-start gap-2 transition-opacity hover:opacity-70 disabled:opacity-50"
+      className="w-full flex items-center justify-between transition-opacity hover:opacity-70 disabled:opacity-50"
       style={{
-        minHeight: 36,
-        marginBottom: 12,
+        minHeight: 44,
         background: 'none',
         border: 'none',
         fontFamily: "'DM Sans', sans-serif",
-        fontSize: 14,
+        fontSize: 15,
         fontWeight: 400,
-        color: '#9CA3A0',
+        color: '#1A2F1E',
         cursor: loading ? 'default' : 'pointer',
+        padding: '10px 0',
+        textAlign: 'left',
       }}
     >
-      {loading ? (
-        <><Loader2 size={14} className="animate-spin" /> Exporting…</>
-      ) : (
-        <><Download size={14} /> Download my data</>
-      )}
+      <span className="flex items-center gap-2">
+        {loading ? (
+          <><Loader2 size={14} className="animate-spin" /> Exporting…</>
+        ) : (
+          <>Download my data</>
+        )}
+      </span>
+      {!loading && <ArrowRight size={14} style={{ color: '#8A9E8A' }} aria-hidden="true" />}
     </button>
   );
 };
@@ -719,16 +737,22 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
   }
 
   return (
-    <div className={`bg-background max-w-lg mx-auto px-5 py-6 ${embedded ? 'h-full min-h-0 overflow-y-auto pb-[104px]' : 'min-h-screen pb-[80px]'}`} {...(embedded ? { 'data-tab-scroll': '' } : {})}>
+    <div data-settings-root className={`bg-background max-w-lg mx-auto px-5 py-6 ${embedded ? 'h-full min-h-0 overflow-y-auto pb-[104px]' : 'min-h-screen pb-[80px]'}`} {...(embedded ? { 'data-tab-scroll': '' } : {})}>
+      {/* Settings-scoped Switch tones — warmer off-state per editorial spec */}
+      <style>{`
+        [data-settings-root] [role="switch"][data-state="unchecked"] { background-color: #E5E1DD !important; }
+        [data-settings-root] [role="switch"][data-state="checked"] { background-color: #2F6F4E !important; }
+      `}</style>
       {/* Header */}
-      <div style={{ marginTop: 36, marginBottom: 8 }} ref={headerFadeRef}>
-        <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 54, fontWeight: 300, letterSpacing: '-0.02em', color: '#1A1A1A', lineHeight: 1.05, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>Settings</h1>
+      <div style={{ marginTop: 36 }} ref={headerFadeRef}>
+        <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 52, fontWeight: 300, letterSpacing: '-0.02em', color: FOREST, lineHeight: 1.05, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>Settings</h1>
         {displayName && (
-           <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 17, fontStyle: 'italic', fontWeight: 400, color: '#7A9B7A', marginTop: 8, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
+           <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontStyle: 'italic', fontWeight: 400, color: SAGE_ITALIC, marginTop: 8, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
              Hello, {displayName.split(" ")[0]}.
            </p>
         )}
-        <span aria-hidden style={{ display: 'block', width: 32, height: 1, marginTop: 14, backgroundColor: GOLD, opacity: 0.45 }} />
+        {/* 32×1px solid amber rule. SectionHeader supplies the ~36px clearance below. */}
+        <span aria-hidden style={{ display: 'block', width: 32, height: 1, marginTop: 14, backgroundColor: GOLD }} />
       </div>
 
       {/* ───────────── MEMBERSHIP ───────────── */}
@@ -860,19 +884,28 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             </Dialog>
           </div>
         ) : (
-          /* Free — editorial upgrade card */
-          <div style={CARD_SURFACE}>
+          /* Free — editorial upgrade card (tinted-green surface) */
+          <div
+            style={{
+              background: 'rgba(47,111,78,0.04)',
+              border: '1px solid rgba(47,111,78,0.12)',
+              borderRadius: 16,
+              boxShadow: '0 2px 8px rgba(26,47,30,0.05)',
+              overflow: 'hidden',
+            }}
+          >
             {/* Top — Current plan */}
             <div className="px-5 pt-5 pb-4">
-              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 12, fontStyle: 'italic', color: MUTED, marginBottom: 2 }}>Current plan</p>
-              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 500, color: FOREST, lineHeight: 1.1 }}>Free Plan</p>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 500, letterSpacing: '0.20em', textTransform: 'uppercase', color: MUTED, marginBottom: 6 }}>Current plan</p>
+              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 400, color: FOREST, lineHeight: 1.1 }}>Free Plan</p>
               <div className="mt-4">
                 <div className="flex items-center justify-between mb-1.5">
                   <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: 'rgba(58,62,59,0.6)' }}>Permit limit reached</span>
                   <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#2F6F4E', fontWeight: 500 }}>Upgrade for unlimited</span>
                 </div>
-                <div style={{ height: 3, borderRadius: 2, backgroundColor: '#EFEAE0', overflow: 'hidden' }}>
-                  <div style={{ height: 3, borderRadius: 2, background: `linear-gradient(90deg, ${GOLD} 0%, #2F6F4E 100%)`, width: '100%' }} />
+                {/* Fully-rounded progress track + fill */}
+                <div style={{ height: 4, borderRadius: 9999, backgroundColor: '#EFEAE0', overflow: 'hidden' }}>
+                  <div style={{ height: 4, borderRadius: 9999, background: `linear-gradient(90deg, ${GOLD} 0%, #2F6F4E 100%)`, width: '100%' }} />
                 </div>
               </div>
             </div>
@@ -1010,7 +1043,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             </button>
           </div>
 
-          <div className="w-full h-px" style={{ backgroundColor: IVORY_BORDER }} />
+          <div className="w-full h-px" style={{ backgroundColor: ROW_DIVIDER }} />
 
           {/* Name row */}
           <div className="flex items-center gap-3" style={{ padding: '14px 16px' }}>
@@ -1061,7 +1094,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             )}
           </div>
 
-          <div className="w-full h-px" style={{ backgroundColor: IVORY_BORDER }} />
+          <div className="w-full h-px" style={{ backgroundColor: ROW_DIVIDER }} />
 
           {/* Phone row */}
           {!phoneEditing ? (
@@ -1322,7 +1355,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           </div>
         </div>
 
-        <div className="w-full h-px" style={{ backgroundColor: IVORY_BORDER }} />
+        <div className="w-full h-px" style={{ backgroundColor: ROW_DIVIDER }} />
 
         {/* Email row */}
         <div className="px-4" style={{ paddingTop: 14, paddingBottom: 14 }}>
@@ -1357,7 +1390,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           </div>
         </div>
 
-        <div className="w-full h-px" style={{ backgroundColor: IVORY_BORDER }} />
+        <div className="w-full h-px" style={{ backgroundColor: ROW_DIVIDER }} />
 
         {/* Push row */}
         {(() => {
@@ -1428,7 +1461,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           </div>
           <ChevronRight size={14} style={{ color: MUTED }} className="shrink-0" aria-hidden="true" />
         </button>
-        <div className="w-full h-px" style={{ backgroundColor: IVORY_BORDER }} />
+        <div className="w-full h-px" style={{ backgroundColor: ROW_DIVIDER }} />
         <a
           href="https://tally.so/r/XxGJXP"
           target="_blank"
@@ -1445,7 +1478,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
           </div>
           <ChevronRight size={14} style={{ color: MUTED }} className="shrink-0" aria-hidden="true" />
         </a>
-        <div className="w-full h-px" style={{ backgroundColor: IVORY_BORDER }} />
+        <div className="w-full h-px" style={{ backgroundColor: ROW_DIVIDER }} />
         <div className="flex items-center gap-3" style={{ padding: '14px 16px' }}>
           <IconChip><Info size={13} /></IconChip>
           <div className="flex-1">
@@ -1458,38 +1491,39 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       {/* ───────────── ACCOUNT ───────────── */}
       <SectionHeader label="Account" />
       <div className="mb-2">
-        {/* Editorial utility links */}
-        <div className="flex flex-col" style={{ gap: 2 }}>
+        {/* Editorial utility links — full-width tappable rows with → chevron */}
+        <div className="flex flex-col">
           <button
             onClick={handleSignOut}
-            className="w-full flex items-center justify-start transition-opacity hover:opacity-70"
+            className="w-full flex items-center justify-between transition-opacity hover:opacity-70"
             style={{
               minHeight: 44,
               background: 'none',
               border: 'none',
               fontFamily: "'DM Sans', sans-serif",
-              fontSize: 14,
-              fontWeight: 500,
-              color: '#4A5568',
+              fontSize: 15,
+              fontWeight: 400,
+              color: FOREST,
               cursor: 'pointer',
-              padding: '6px 0',
+              padding: '10px 0',
+              textAlign: 'left',
             }}
           >
-            <span style={{ color: GOLD, opacity: 0.6, marginRight: 10 }}>·</span>
-            Sign out
+            <span>Sign out</span>
+            <ArrowRight size={14} style={{ color: MUTED }} aria-hidden="true" />
           </button>
 
           <DownloadDataButton user={user} />
         </div>
 
-        {/* Delete Account */}
-        <div className="flex flex-col items-start" style={{ marginTop: 20 }}>
+        {/* Delete Account — separated by 24px spacer + 1px hairline */}
+        <div className="flex flex-col items-start" style={{ marginTop: 24, paddingTop: 24, borderTop: `1px solid ${IVORY_BORDER}` }}>
           {scheduledDeletionAt ? (
-            <div className="w-full px-4 py-3.5" style={{ ...CARD_SURFACE, borderLeft: '3px solid #E24B4A' }}>
+            <div className="w-full px-4 py-3.5" style={{ ...CARD_SURFACE, borderLeft: '3px solid #C0392B' }}>
               <div className="flex items-start gap-2.5">
                 <AlertTriangle size={16} className="text-destructive shrink-0 mt-0.5" />
                 <div className="flex-1">
-                  <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontStyle: 'italic', fontWeight: 500, color: '#E24B4A' }}>
+                  <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontStyle: 'italic', fontWeight: 500, color: '#C0392B' }}>
                     Account deletion scheduled
                   </p>
                   <p className="text-[12px] text-muted-foreground mt-1 leading-relaxed">
@@ -1517,12 +1551,11 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             </div>
           ) : (
             <>
-              <span aria-hidden style={{ display: 'block', width: 24, height: 1, backgroundColor: GOLD, opacity: 0.45, marginBottom: 10 }} />
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <button
                     className="transition-opacity hover:opacity-70"
-                    style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontStyle: 'italic', fontWeight: 500, color: '#E24B4A', background: 'none', border: 'none', cursor: 'pointer', padding: '4px 0' }}
+                    style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontStyle: 'italic', fontWeight: 500, color: '#C0392B', background: 'none', border: 'none', cursor: 'pointer', padding: '4px 0' }}
                   >
                     Delete account
                   </button>
@@ -1552,7 +1585,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
-              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 12, fontStyle: 'italic', color: MUTED, marginTop: 4 }}>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: MUTED, marginTop: 6 }}>
                 Permanent. Cannot be undone after 7 days.
               </p>
             </>
@@ -1561,17 +1594,17 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       </div>
 
       {/* ───────────── FOOTER ───────────── */}
-      <div className="flex flex-col items-center" style={{ marginTop: 40 }}>
-        <span aria-hidden style={{ display: 'block', width: 32, height: 1, backgroundColor: GOLD, opacity: 0.45, marginBottom: 14 }} />
-        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 12, fontStyle: 'italic', color: MUTED, textAlign: 'center', margin: 0 }} className="px-2">
-          Independent service — not affiliated with NPS or Recreation.gov.
+      {/* Spec asks for 11px DM Sans #8A9E8A; honored at 12px floor (mem://style/typography/legibility-floor). */}
+      <div className="flex flex-col items-center" style={{ marginTop: 48 }}>
+        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#8A9E8A', textAlign: 'center', margin: 0, lineHeight: 1.5 }} className="px-2">
+          Independent service — not affiliated with NPS or Recreation.gov
         </p>
         <div className="flex items-center justify-center gap-2 mt-3">
-          <Link to="/privacy" className="hover:opacity-70 transition-opacity" style={{ fontSize: 12, color: MUTED, fontFamily: "'DM Sans', sans-serif" }}>Privacy Policy</Link>
-          <span style={{ fontSize: 12, color: GOLD, opacity: 0.5 }}>·</span>
-          <Link to="/terms" className="hover:opacity-70 transition-opacity" style={{ fontSize: 12, color: MUTED, fontFamily: "'DM Sans', sans-serif" }}>Terms & Conditions</Link>
+          <Link to="/privacy" className="hover:opacity-70 transition-opacity" style={{ fontSize: 12, color: '#8A9E8A', fontFamily: "'DM Sans', sans-serif" }}>Privacy Policy</Link>
+          <span style={{ fontSize: 12, color: '#8A9E8A' }}>·</span>
+          <Link to="/terms" className="hover:opacity-70 transition-opacity" style={{ fontSize: 12, color: '#8A9E8A', fontFamily: "'DM Sans', sans-serif" }}>Terms &amp; Conditions</Link>
         </div>
-        <p style={{ fontSize: 12, color: MUTED, opacity: 0.7, marginTop: 8, fontFamily: "'DM Sans', sans-serif", paddingBottom: embedded ? 0 : 24 }}>© 2026 WildAtlas</p>
+        <p style={{ fontSize: 12, color: '#8A9E8A', marginTop: 8, fontFamily: "'DM Sans', sans-serif", paddingBottom: embedded ? 0 : 48 }}>© 2026 WildAtlas</p>
       </div>
 
       {!embedded && <BottomNav activeTab="settings" onTabChange={(tab) => navigate(`/app?tab=${tab}`)} />}
