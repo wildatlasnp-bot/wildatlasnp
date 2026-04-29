@@ -374,26 +374,24 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           <h2
             className="font-heading"
             style={{
-              fontSize: 34,
+              fontStyle: "italic",
+              fontSize: 28,
               fontWeight: 400,
-              lineHeight: 1.02,
-              letterSpacing: "-0.015em",
+              lineHeight: 1.1,
+              letterSpacing: "-0.01em",
               color: "#F5EBD3",
-              // Layered halo: tight contact shadow for edge definition,
-              // mid ink shadow for body separation, wide soft halo to suppress
-              // bright photo highlights (sky, aurora wash) under the title.
               textShadow: [
                 "0 1px 0 rgba(0,0,0,0.55)",
                 "0 2px 6px rgba(0,0,0,0.65)",
                 "0 6px 18px rgba(0,0,0,0.55)",
                 "0 0 28px rgba(14,26,20,0.45)",
               ].join(", "),
+              margin: 0,
             }}
           >
-            The window{" "}
-            <em style={{ fontStyle: "italic", color: "#C9A96E" }}>opens.</em>
-            <br />
-            You're already there.
+            Permits open.<br />
+            Then vanish.<br />
+            <span style={{ color: "#C9A96E" }}>Be first.</span>
           </h2>
         </div>
 
