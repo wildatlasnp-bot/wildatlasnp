@@ -15,7 +15,7 @@ import OnboardingFlow from "@/components/OnboardingFlow";
 
 
 import SettingsPage from "@/pages/SettingsPage";
-import { Loader2 } from "lucide-react";
+import WildAtlasSplash from "@/components/WildAtlasSplash";
 import { DEFAULT_PARK_ID } from "@/lib/parks";
 import { applyParkAccent } from "@/lib/park-accent";
 import posthog from "@/lib/posthog";
@@ -251,11 +251,7 @@ const Index = () => {
   // background refetches and token refreshes must not disrupt the active session.
   if (!dashboardRenderedRef.current) {
     if (!ready) {
-      return (
-        <div className="min-h-screen bg-background flex items-center justify-center">
-          <Loader2 className="animate-spin text-primary" size={28} />
-        </div>
-      );
+      return <WildAtlasSplash />;
     }
 
     if (user && needsOnboarding) {
