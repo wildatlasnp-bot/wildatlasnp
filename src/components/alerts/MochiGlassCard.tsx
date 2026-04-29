@@ -68,17 +68,15 @@ const MochiGlassCard = ({
   const isEmptyState = watchCount === 0;
   const isFoundState = hasFound;
 
-  const mochiImage = isEmptyState
-    ? "/mochi-wave.png"
-    : isFoundState
-      ? "/mochi-celebrate.png"
-      : "/mochi-binoculars.png";
+  // Status semantics drive the emblem state (no mascot art on this surface)
+  const statusKey = isEmptyState ? "STANDBY" : isFoundState ? "OPENING" : "WATCHING";
+  const statusDot = isFoundState ? "#E8C674" : "#C9A96E";
 
   const contextualHeadline = isEmptyState
-    ? "I'm ready to watch."
+    ? "Ready to watch"
     : isFoundState
-      ? "Got one!"
-      : "Poko";
+      ? "Opening detected"
+      : "On watch";
 
   /* ── Build the briefing message ───────────────────────────── */
   const seed = `${parkName ?? ""}:${permitName ?? ""}`;
