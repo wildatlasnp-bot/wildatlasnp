@@ -2845,3 +2845,29 @@ a.ranger-card--night:active,
 @media (prefers-reduced-motion: reduce) {
   .wa-nav-ripple { animation: none; opacity: 0; }
 }
+
+/* ─────────────────────────────────────────────────────────────
+   Card elevation utilities (Prompt 6 — Card Depth System)
+   Apply consistent depth to cards across the app. Use the most
+   specific class for the surface; do not stack elevations.
+   ───────────────────────────────────────────────────────────── */
+.elev-card {
+  background: #FFFFFF;
+  border: 1px solid #E8E4E0;
+  border-radius: 16px;
+  box-shadow: var(--elev-card);
+}
+.elev-featured {
+  background: #FFFFFF;
+  border: 1px solid #E8E4E0;
+  border-radius: 16px;
+  box-shadow: var(--elev-featured);
+}
+/* Amber border tint for Poko-flavored featured cards */
+.elev-featured.elev-poko {
+  border-color: var(--elev-poko-tint);
+}
+/* Park photo cards — feel like they hover above the surface */
+.elev-photo {
+  box-shadow: var(--elev-photo);
+}
