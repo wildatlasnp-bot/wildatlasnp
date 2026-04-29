@@ -835,12 +835,12 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               { icon: ShieldCheck, label: "No hidden fees" },
             ].map((t) => (
               <div key={t.label} className="flex items-center gap-1.5">
-                <t.icon size={12} style={{ color: "rgba(201,169,110,0.75)" }} strokeWidth={2.2} />
+                <t.icon size={12} style={{ color: "#8C6F3A" }} strokeWidth={2.2} />
                 <span
                   style={{
                     fontFamily: "'DM Sans', sans-serif",
                     fontSize: 12,
-                    color: "rgba(245,235,211,0.55)",
+                    color: "rgba(44,44,44,0.62)",
                     fontWeight: 500,
                   }}
                 >
