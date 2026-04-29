@@ -23,6 +23,7 @@ import WelcomeModal from "@/components/WelcomeModal";
 import CoachMark from "@/components/CoachMark";
 import { getParkConfig } from "@/lib/parks";
 import MochiGlassCard from "@/components/alerts/MochiGlassCard";
+import { haptics } from "@/lib/haptics";
 import RecentCatchesFeed from "@/components/RecentCatchesFeed";
 import { WatchActivatedToast } from "@/components/WatchActivatedToast";
 
