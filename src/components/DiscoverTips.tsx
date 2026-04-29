@@ -1427,28 +1427,34 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
 
             <button
               onClick={() => onNavigateToMochi?.(`What should I know for my ${parkConfig.shortName} trip on ${format(arrivalDate, "MMM d")}?`)}
-              className="ranger-card--night ranger-card--night-rounded-lg"
+              className="ranger-card--interactive"
               style={{
                 display: "flex", alignItems: "center", gap: 12, padding: "16px 20px",
                 width: "100%", cursor: "pointer", textAlign: "left", marginTop: 10, minHeight: 44,
+                background: "var(--ranger-paper-warm)",
+                border: "1px solid var(--ranger-rule)",
+                borderLeft: "3px solid var(--ranger-forest)",
+                borderRadius: 14,
+                color: "var(--ranger-ink)",
+                boxShadow: "var(--ranger-shadow-soft)",
               }}
             >
               <img src="/mochi-map.png" alt="Poko" style={{ width: 32, height: 32, flexShrink: 0, objectFit: "contain" }} />
               <div style={{ flex: 1, minWidth: 0 }}>
                 <p className="font-display-italic" style={{
                   fontStyle: "italic",
-                  fontSize: 16, color: "var(--ranger-parchment)", margin: 0, letterSpacing: "-0.005em",
+                  fontSize: 16, color: "var(--ranger-ink)", margin: 0, letterSpacing: "-0.005em",
                 }}>
                   Get Poko's trip briefing
                 </p>
                 <p style={{
                   fontSize: 12, fontWeight: 400,
-                  color: "var(--ranger-parchment-soft)", margin: "2px 0 0",
+                  color: "var(--ranger-ink-muted)", margin: "2px 0 0",
                 }}>
                   What to know for {parkConfig.shortName} on {format(arrivalDate, "MMM d")}
                 </p>
               </div>
-              <ChevronRight size={16} style={{ color: "var(--ranger-parchment-soft)", flexShrink: 0 }} />
+              <ChevronRight size={16} style={{ color: "var(--ranger-forest)", flexShrink: 0 }} />
             </button>
           </>
         ) : (
