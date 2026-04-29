@@ -123,22 +123,20 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
 
   const NEEDLE_COLOR = "#1A2F1E";
 
-  // Build a smooth, data-driven gradient from the segment list.
-  // Each segment contributes a color stop at its midpoint; ends anchor edges.
-  const gradientCss = useMemo(() => {
-    if (segments.length === 0) return "transparent";
-    const stops: string[] = [];
-    let cursor = segments[0].startPct;
-    stops.push(`${segments[0].color} ${cursor.toFixed(2)}%`);
-    segments.forEach((s) => {
-      const mid = s.startPct + (s.flex / DAY_SPAN) * 100 / 2;
-      stops.push(`${s.color} ${mid.toFixed(2)}%`);
-    });
-    const last = segments[segments.length - 1];
-    const end = last.startPct + (last.flex / DAY_SPAN) * 100;
-    stops.push(`${last.color} ${end.toFixed(2)}%`);
-    return `linear-gradient(to right, ${stops.join(", ")})`;
-  }, [segments]);
+  // Plateau gradient — each color holds for a stretch, then fades to the next.
+  // Uses fixed stops aligned to typical day rhythm to prevent muddy blending.
+  const gradientCss = `linear-gradient(to right,
+    #2F6F4E 0%,
+    #2F6F4E 15%,
+    #C9A96E 28%,
+    #C9A96E 32%,
+    #C0392B 42%,
+    #C0392B 52%,
+    #E8935A 62%,
+    #E8935A 72%,
+    #2F6F4E 85%,
+    #2F6F4E 100%
+  )`;
 
   return (
     <div>
