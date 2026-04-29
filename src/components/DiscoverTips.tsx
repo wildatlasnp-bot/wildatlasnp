@@ -1034,32 +1034,34 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         <div className="absolute left-5 right-5 wa-reveal" style={{ bottom: 24, zIndex: 10, ["--d" as any]: "440ms" }}>
           {/* Tiny gold rule above title */}
           <span className="wa-rule-solid" style={{ width: 36, marginBottom: 12, background: "var(--ranger-parchment)", ["--d" as any]: "560ms" }} />
-          {(() => {
-            const heroText = parkConfig.shortName;
-            // Editorial scale — bold contrast for short names, graceful clamp for long ones.
-            const heroFontSize = heroText.length <= 12 ? 64 : heroText.length <= 18 ? 52 : heroText.length <= 24 ? 42 : 34;
-            return (
-              <h1 className="font-display-italic" style={{
-                fontSize: heroFontSize, fontStyle: "italic",
-                fontWeight: 400, letterSpacing: "-0.025em",
-                color: "var(--ranger-paper)", lineHeight: 0.96,
-                textShadow: "var(--ranger-text-shadow-2)",
-                margin: "8px 0 0", wordBreak: "break-word",
-                overflow: "visible",
-              }}>
-                {heroText}
-              </h1>
-            );
-          })()}
-          <p style={{
-            fontSize: 13, fontWeight: 400,
-            color: "var(--ranger-on-image-soft)",
-            margin: "10px 0 0", letterSpacing: "0.005em",
-            lineHeight: 1.45, maxWidth: 320,
-            textShadow: "var(--ranger-text-shadow-3)",
-          }}>
-            {parkConfig.heroDescription}
-          </p>
+          <div ref={heroTitleRef} style={{ willChange: "opacity, transform", transition: "none" }}>
+            {(() => {
+              const heroText = parkConfig.shortName;
+              // Editorial scale — bold contrast for short names, graceful clamp for long ones.
+              const heroFontSize = heroText.length <= 12 ? 64 : heroText.length <= 18 ? 52 : heroText.length <= 24 ? 42 : 34;
+              return (
+                <h1 className="font-display-italic" style={{
+                  fontSize: heroFontSize, fontStyle: "italic",
+                  fontWeight: 400, letterSpacing: "-0.025em",
+                  color: "var(--ranger-paper)", lineHeight: 0.96,
+                  textShadow: "var(--ranger-text-shadow-2)",
+                  margin: "8px 0 0", wordBreak: "break-word",
+                  overflow: "visible",
+                }}>
+                  {heroText}
+                </h1>
+              );
+            })()}
+            <p style={{
+              fontSize: 13, fontWeight: 400,
+              color: "var(--ranger-on-image-soft)",
+              margin: "10px 0 0", letterSpacing: "0.005em",
+              lineHeight: 1.45, maxWidth: 320,
+              textShadow: "var(--ranger-text-shadow-3)",
+            }}>
+              {parkConfig.heroDescription}
+            </p>
+          </div>
           {/* Live forecast pill or shimmer placeholder */}
           {heroForecast ? (
             <div ref={heroPillRef} style={{
