@@ -1296,7 +1296,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
       </RevealSection>
 
       {/* ═══════════════════════ VI. FIELD LOG (live signals) ═══════════════════════ */}
-      <RevealSection style={{ padding: "30px 20px 4px" }} delay={60}>
+      <RevealSection style={{ padding: "30px 20px 4px" }} delay={60} resetKey={parkId}>
         <SectionPlate
           numeral="II"
           eyebrow="Field log"
