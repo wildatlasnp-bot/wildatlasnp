@@ -262,13 +262,73 @@ const maskPhone = (phone: string): string => {
   return `(***) ***-${digits.slice(-4)}`;
 };
 
-/** Time-of-day phrase for greeting */
+/** Time-of-day phrase for greeting (legacy — used for non-dispatch copy) */
 const getTimePeriod = (): { label: string; casual: string } => {
   const hour = new Date().getHours();
   if (hour >= 5 && hour < 12) return { label: "Good morning", casual: "this morning" };
   if (hour >= 12 && hour < 17) return { label: "Good afternoon", casual: "this afternoon" };
   if (hour >= 17 && hour < 21) return { label: "Good evening", casual: "tonight" };
   return { label: "Hey", casual: "tonight" };
+};
+
+/** Time-aware dispatch windows for the Poko briefing card.
+    Selects from 5 windows based on the user's local hour. Park name is
+    woven into title/body so the greeting feels like Poko has been paying
+    attention. Returns a stable `key` so callers can detect window changes
+    and crossfade between messages without re-animating identical copy. */
+type DispatchWindow = "early" | "morning" | "midday" | "evening" | "night";
+const getDispatchWindow = (parkName: string | null): {
+  key: DispatchWindow;
+  title: string;
+  body: string;
+} => {
+  const hour = new Date().getHours();
+  const hasPark = !!parkName;
+  // No watched parks → soft CTA, generic across all windows
+  if (!hasPark) {
+    return {
+      key: hour >= 5 && hour < 9 ? "early"
+        : hour >= 9 && hour < 12 ? "morning"
+        : hour >= 12 && hour < 17 ? "midday"
+        : hour >= 17 && hour < 21 ? "evening"
+        : "night",
+      title: "Poko's ready.",
+      body: "Add a park to start watching.",
+    };
+  }
+  if (hour >= 5 && hour < 9) {
+    return {
+      key: "early",
+      title: "Early start.",
+      body: `Best window for ${parkName} cancellations right now. Most hikers are still asleep.`,
+    };
+  }
+  if (hour >= 9 && hour < 12) {
+    return {
+      key: "morning",
+      title: "Peak hours building.",
+      body: `Crowds are filling in around ${parkName}. Poko's scanning every 2 minutes — cancellations still surface.`,
+    };
+  }
+  if (hour >= 12 && hour < 17) {
+    return {
+      key: "midday",
+      title: "Midday watch.",
+      body: `High traffic at ${parkName}. Cancellations happen anytime — often when plans change last minute.`,
+    };
+  }
+  if (hour >= 17 && hour < 21) {
+    return {
+      key: "evening",
+      title: "Evening turnover.",
+      body: `Second quiet window opening at ${parkName}. Cancellations often appear as tomorrow's plans shift.`,
+    };
+  }
+  return {
+    key: "night",
+    title: "Night watch.",
+    body: `Poko's on ${parkName} — won't miss a thing. Early morning is peak cancellation territory.`,
+  };
 };
 type VisitWindow = "weekend" | "2weeks" | "flexible";
 const VISIT_OPTIONS: { key: VisitWindow; label: string }[] = [
