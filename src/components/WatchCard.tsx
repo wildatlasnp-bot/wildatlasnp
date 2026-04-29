@@ -12,6 +12,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { getParkConfig } from "@/lib/parks";
 import { type ScannerState } from "@/lib/scanner-status";
 import InlinePhoneInput from "@/components/InlinePhoneInput";
+import { haptics } from "@/lib/haptics";
 
 import {
   AlertDialog,
@@ -661,6 +662,7 @@ const WatchCard = ({
                 href={recGovUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => haptics.medium()}
                 className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-[14px] hover:bg-primary/90 transition-colors"
               >
                 <ExternalLink size={14} />
