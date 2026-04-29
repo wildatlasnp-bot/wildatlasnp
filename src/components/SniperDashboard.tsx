@@ -184,6 +184,16 @@ const SniperDashboard = () => {
   // Expanded state for permit cards
   const [expandedCardId, setExpandedCardId] = useState<string | null>(null);
 
+  // Permit catch detected — fire signature double-pulse haptic when the
+  // success overlay opens. This is the most important moment in the app.
+  const successOpenRef = useRef(false);
+  useEffect(() => {
+    if (s.successOpen && !successOpenRef.current) {
+      haptics.catch();
+    }
+    successOpenRef.current = s.successOpen;
+  }, [s.successOpen]);
+
   if (s.initialLoading) {
     return (
       <div className="flex flex-col h-full px-5 pt-4 gap-4 content-crossfade" style={{ backgroundColor: "#F0EDEA" }}>
@@ -394,7 +404,7 @@ const SniperDashboard = () => {
               <div className="flex justify-center" style={{ marginTop: 14 }}>
                 <button
                   type="button"
-                  onClick={() => s.setProModalOpen(true)}
+                  onClick={() => { haptics.medium(); s.setProModalOpen(true); }}
                   style={{
                     fontFamily: DM_SANS,
                     fontSize: 11,
@@ -469,7 +479,7 @@ const SniperDashboard = () => {
                   Add a park and Poko starts watching immediately. Permits surface and vanish in minutes.
                 </p>
                 <button
-                  onClick={() => setAddModalOpen(true)}
+                  onClick={() => { haptics.medium(); setAddModalOpen(true); }}
                   style={{
                     fontFamily: DM_SANS,
                     fontSize: 15,
@@ -567,9 +577,10 @@ const SniperDashboard = () => {
                   seasonLabel={seasonLabel}
                   daysUntilSeason={daysUntilSeason}
                   isExpanded={isExpanded}
-                  onToggleExpand={() =>
-                    setExpandedCardId(isExpanded ? null : watch.id)
-                  }
+                  onToggleExpand={() => {
+                    haptics.light();
+                    setExpandedCardId(isExpanded ? null : watch.id);
+                  }}
                   onDelete={() => s.deleteWatch(watch.id)}
                   onToggleNotify={() => s.toggleNotify(watch.id)}
                   smsEnabled={watch.notify_sms}
@@ -602,6 +613,7 @@ const SniperDashboard = () => {
         <div style={{ padding: '12px 16px 16px' }}>
           <button
             onClick={() => {
+              haptics.medium();
               if (!isPro && s.activeCount >= 1) {
                 s.setProModalOpen(true);
               } else {
@@ -1031,6 +1043,7 @@ const PermitPhotoCard = ({
           <button
             onClick={(e) => {
               e.stopPropagation();
+              haptics.medium();
               window.open(`https://www.recreation.gov/permits/${permitDef.recgov_permit_id}`, "_blank");
             }}
             style={{
