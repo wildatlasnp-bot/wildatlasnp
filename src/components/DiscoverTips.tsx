@@ -982,7 +982,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           background: `linear-gradient(to top, ${parkConfig.primaryColor ?? "var(--ranger-forest)"}b8 0%, ${parkConfig.primaryColor ?? "var(--ranger-forest)"}26 38%, transparent 68%)`,
           zIndex: 2,
         }} />
-
+        {/* Cinematic dissolve into cream surface below */}
+        <div className="park-photo-dissolve" />
         {/* Top eyebrow — FIELD REPORT cluster */}
         <div className="absolute top-5 left-5 right-5 wa-reveal" style={{ zIndex: 10, ["--d" as any]: "260ms" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
