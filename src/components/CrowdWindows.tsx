@@ -170,12 +170,6 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
                 zIndex: 3,
               }}
             />
-                borderRadius: "50%",
-                backgroundColor: NEEDLE_COLOR,
-                boxShadow: "0 0 6px rgba(255,255,255,0.6)",
-                zIndex: 3,
-              }}
-            />
             {/* 1px hairline from dot down through bar */}
             <div
               className="absolute left-1/2 -translate-x-1/2"
