@@ -26,6 +26,8 @@ import TodayParkAdvice from "@/components/TodayParkAdvice";
 import { useRecentFinds } from "@/hooks/useRecentFinds";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useSettlingSkeleton } from "@/hooks/useSettlingSkeleton";
+import FieldNotesModal from "@/components/FieldNotesModal";
+import { haptics } from "@/lib/haptics";
 
 import yosemiteHero from "@/assets/yosemite-hero.jpg";
 import rainierHero from "@/assets/rainier-hero.jpg";
