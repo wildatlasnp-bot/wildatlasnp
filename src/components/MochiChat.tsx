@@ -468,6 +468,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   const briefingChipTotal = useRef(BRIEFING_CHIP_SETS[0].length);
   const scrollRef = useRef<HTMLDivElement>(null);
   const initialMountRef = useRef(true);
+  // Tracks the message-list length as of the previous render. Anything from
+  // this index onward is part of the most recent "burst" and receives the
+  // 80ms-per-bubble entrance stagger. Older messages render with no delay
+  // so re-renders deep in long threads never re-trigger animations.
+  const prevMsgCountRef = useRef(1);
+  const burstStartRef = useRef(1);
   const prevPrimaryParkRef = useRef(selectedParkId);
   const sendTimestamps = useRef<number[]>([]);
   const pendingSendRef = useRef<string | null>(null);
@@ -1914,6 +1920,15 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
             <div style={{ margin: '28px 0 0', padding: '0 24px', minWidth: 0 }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: 0, minWidth: 0 }} aria-live="polite" aria-atomic="false" aria-relevant="additions">
                 <style>{`.mochi-prose ⚠, .mochi-prose [data-emoji="⚠️"] { filter: grayscale(1) brightness(1.3); }`}</style>
+                {(() => {
+                  // Compute the burst window once per render: any message at
+                  // index ≥ burstStart is "newly arrived" and gets a stagger.
+                  // If the list shrank or didn't grow, the window stays empty.
+                  const grew = messages.length > prevMsgCountRef.current;
+                  if (grew) burstStartRef.current = prevMsgCountRef.current;
+                  prevMsgCountRef.current = messages.length;
+                  return null;
+                })()}
                 {messages.map((msg, idx) => {
                   if (msg.isSystem) {
                     return (
@@ -1941,11 +1956,16 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   );
                   const marginTop = idx === 0 ? 0 : 12;
 
-                  const isNew = msg.id > 2;
+                  const isNew = idx >= burstStartRef.current && msg.id > 2;
                   const isInitialBriefing =
                     msg.role === "assistant" &&
                     idx === 0 &&
                     !messages.some((m) => m.role === "user");
+
+                  // Per-bubble entrance stagger — relative to the burst start,
+                  // capped so a long single-burst paste can't run past ~640ms.
+                  const burstOffset = Math.max(0, idx - burstStartRef.current);
+                  const staggerMs = isNew ? Math.min(burstOffset * 80, 640) : 0;
 
                   return (
                     <div
@@ -1957,6 +1977,18 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                         alignItems: msg.role === "assistant" ? 'flex-start' : 'flex-end',
                         width: isInitialBriefing ? '100%' : 'auto',
                         minWidth: 0,
+                        // Isolate layout/paint so a new bubble's animation
+                        // can't trigger reflow on bubbles above it.
+                        contain: 'layout paint',
+                        ...(isNew
+                          ? {
+                              animationDelay: `${staggerMs}ms`,
+                              willChange: 'opacity, transform',
+                              // Start invisible so the delay window doesn't
+                              // flash the final-state bubble before animating.
+                              opacity: 0,
+                            }
+                          : null),
                       }}
                     >
                       {msg.isRateLimitCard ? (
