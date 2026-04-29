@@ -2437,12 +2437,12 @@ button.wa-cluster-head-toggle:hover .wa-cluster-chevron {
   border-radius: 14px;
 }
 .ranger-card--night-pop {
-  background: var(--ranger-canopy);
-  border: 1px solid var(--ranger-rule-night);
+  background: #FFFFFF;
+  border: 1px solid #E5E1DD;
   border-radius: var(--ranger-r-lg);
-  box-shadow: var(--ranger-shadow-pop);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.10);
   padding: 12px 14px;
-  color: var(--ranger-parchment-body);
+  color: #1A2F1E;
 }
 
 /* Edge-to-edge "ribbon" strips — full-bleed dividers between major
