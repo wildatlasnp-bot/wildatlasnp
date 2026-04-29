@@ -374,6 +374,20 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
   const { user } = useAuth();
   const { toast } = useToast();
 
+  // ── Field Notes easter egg — triple-tap WildAtlas wordmark to open ──
+  const [fieldNotesOpen, setFieldNotesOpen] = useState(false);
+  const wordmarkTapsRef = useRef<number[]>([]);
+  const handleWordmarkTap = useCallback(() => {
+    const now = Date.now();
+    wordmarkTapsRef.current = wordmarkTapsRef.current.filter((t) => now - t < 600);
+    wordmarkTapsRef.current.push(now);
+    if (wordmarkTapsRef.current.length >= 3) {
+      wordmarkTapsRef.current = [];
+      haptics.light();
+      setFieldNotesOpen(true);
+    }
+  }, []);
+
   // ── Watched parks for the selector dropdown indicators ──
   const [watchedParkIds, setWatchedParkIds] = useState<Set<string>>(new Set());
   useEffect(() => {
