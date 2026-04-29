@@ -123,22 +123,20 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
 
   const NEEDLE_COLOR = "#1A2F1E";
 
-  // Build a smooth, data-driven gradient from the segment list.
-  // Each segment contributes a color stop at its midpoint; ends anchor edges.
-  const gradientCss = useMemo(() => {
-    if (segments.length === 0) return "transparent";
-    const stops: string[] = [];
-    let cursor = segments[0].startPct;
-    stops.push(`${segments[0].color} ${cursor.toFixed(2)}%`);
-    segments.forEach((s) => {
-      const mid = s.startPct + (s.flex / DAY_SPAN) * 100 / 2;
-      stops.push(`${s.color} ${mid.toFixed(2)}%`);
-    });
-    const last = segments[segments.length - 1];
-    const end = last.startPct + (last.flex / DAY_SPAN) * 100;
-    stops.push(`${last.color} ${end.toFixed(2)}%`);
-    return `linear-gradient(to right, ${stops.join(", ")})`;
-  }, [segments]);
+  // Plateau gradient — each color holds for a stretch, then fades to the next.
+  // Uses fixed stops aligned to typical day rhythm to prevent muddy blending.
+  const gradientCss = `linear-gradient(to right,
+    #2F6F4E 0%,
+    #2F6F4E 15%,
+    #C9A96E 28%,
+    #C9A96E 32%,
+    #C0392B 42%,
+    #C0392B 52%,
+    #E8935A 62%,
+    #E8935A 72%,
+    #2F6F4E 85%,
+    #2F6F4E 100%
+  )`;
 
   return (
     <div>
@@ -147,9 +145,9 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
 
       {/* Gradient timeline with NOW marker */}
       <div className="relative" style={{ paddingTop: nowPct !== null ? "26px" : "0", overflow: 'visible' }}>
-        {/* NOW marker — white knife with dot */}
+        {/* NOW marker — white knife with dot, layered above the band */}
         {nowPct !== null && (
-          <div className="absolute z-20 pointer-events-none" style={{ left: `${nowPct}%`, top: 0, bottom: 0, overflow: 'visible' }}>
+          <div className="absolute pointer-events-none" style={{ left: `${nowPct}%`, top: 0, bottom: 0, overflow: 'visible', zIndex: 10 }}>
             {/* NOW label */}
             <span
               className="absolute uppercase whitespace-nowrap"
@@ -178,7 +176,7 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
                 borderRadius: "50%",
                 backgroundColor: "#FFFFFF",
                 boxShadow: "0 0 8px rgba(0,0,0,0.4)",
-                zIndex: 3,
+                zIndex: 11,
               }}
             />
             {/* 2px white knife line through gradient band */}
@@ -186,11 +184,11 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
               className="absolute left-1/2 -translate-x-1/2"
               style={{
                 top: "26px",
-                height: "56px",
+                height: "40px",
                 width: "2px",
                 backgroundColor: "#FFFFFF",
                 boxShadow: "0 0 6px rgba(0,0,0,0.35)",
-                zIndex: 2,
+                zIndex: 10,
               }}
             />
           </div>
@@ -201,8 +199,8 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
           key={animationKey}
           className="relative crowd-gradient-band"
           style={{
-            height: "56px",
-            borderRadius: "28px",
+            height: "40px",
+            borderRadius: "20px",
             background: gradientCss,
             boxShadow: "inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.08)",
           }}
@@ -222,17 +220,17 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
         </div>
       </div>
 
-      {/* Single-line legend */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '6px 16px', marginTop: 14, marginBottom: 12 }}>
+      {/* Single-line legend — forced nowrap */}
+      <div style={{ display: 'flex', flexWrap: 'nowrap', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginTop: 14, marginBottom: 12 }}>
         {[
           { color: CHART_COLORS.quiet, label: "Quiet" },
           { color: CHART_COLORS.building, label: "Building" },
           { color: CHART_COLORS.busy, label: "Busy" },
           { color: CHART_COLORS.packed, label: "Packed" },
         ].map((item) => (
-          <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 5, flexShrink: 0 }}>
             <span style={{ width: 8, height: 8, borderRadius: '50%', flexShrink: 0, backgroundColor: item.color }} />
-            <span style={{ fontSize: 12, fontWeight: 400, color: '#8A9E8A', fontFamily: "'DM Sans', sans-serif" }}>{item.label}</span>
+            <span style={{ fontSize: 12, fontWeight: 400, color: '#8A9E8A', fontFamily: "'DM Sans', sans-serif", whiteSpace: 'nowrap' }}>{item.label}</span>
           </div>
         ))}
       </div>
