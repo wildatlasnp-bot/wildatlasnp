@@ -2466,7 +2466,19 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                                           ))}
                                         </div>
                                       ) : (
-                                        <div key={bi}><ReactMarkdown components={MARKDOWN_NO_TABLES}>{formatInlineBullets(stripMarkdownTables(block.value))}</ReactMarkdown></div>
+                                        <div key={bi}>
+                                          {parseMapBlocks(block.value).map((sub, si) =>
+                                            sub.type === "map" ? (
+                                              <div key={si} style={{ margin: "10px 0" }}>
+                                                <PokoMapCard map={sub.value} />
+                                              </div>
+                                            ) : (
+                                              <ReactMarkdown key={si} components={MARKDOWN_NO_TABLES}>
+                                                {formatInlineBullets(stripMarkdownTables(sub.value))}
+                                              </ReactMarkdown>
+                                            ),
+                                          )}
+                                        </div>
                                       )
                                     )}
                                     {isInitialBriefing && !isPersonality && !firstSession && (
