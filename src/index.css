@@ -2457,20 +2457,24 @@ button.wa-cluster-head-toggle:hover .wa-cluster-chevron {
   padding: 12px 20px;
 }
 .ranger-card--strip-night {
-  background: var(--ranger-night);
+  background: #F0EDEA;
+  border-bottom-color: #E5E1DD;
+  color: #1A2F1E;
 }
 .ranger-card--strip-warm {
-  background: var(--ranger-night-warm);
-  border-bottom-color: var(--ranger-rule-night-soft);
+  background: #F0EDEA;
+  border-bottom-color: #E5E1DD;
   padding: 14px 12px;
+  color: #1A2F1E;
 }
 .ranger-card--strip-gradient {
-  background: linear-gradient(180deg, var(--ranger-night-warm) 0%, var(--ranger-night-deep) 100%);
-  border-top: 1px solid var(--ranger-rule-night);
-  border-bottom: 1px solid var(--ranger-rule-night-soft);
+  background: linear-gradient(180deg, #F4F1EC 0%, #EAE6E0 100%);
+  border-top: 1px solid #E5E1DD;
+  border-bottom: 1px solid #E5E1DD;
   border-radius: 0;
   box-shadow: none;
   padding: 26px 20px 28px;
+  color: #1A2F1E;
 }
 
 /* Lightbox caption strip — bottom-bar surface inside the image viewer.
