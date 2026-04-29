@@ -622,7 +622,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                   {/* RIGHT — engraved numeral */}
                   <div style={{ textAlign: "right", display: "flex", flexDirection: "column", alignItems: "flex-end", justifyContent: "center", minWidth: 110 }}>
                     {displayPrice === null ? (
-                      <span className="inline-block w-20 h-10 bg-white/10 animate-pulse rounded" />
+                      <span className="inline-block w-20 h-10 bg-[rgba(26,47,30,0.08)] animate-pulse rounded" />
                     ) : (
                       <>
                         <div style={{ display: "flex", alignItems: "flex-start", lineHeight: 1 }}>
@@ -631,11 +631,10 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                             style={{
                               fontSize: 18,
                               fontWeight: 500,
-                              color: "#F5EBD3",
+                              color: "#1A2F1E",
                               marginTop: 6,
                               marginRight: 2,
-                              opacity: 0.85,
-                              textShadow: "0 1px 0 rgba(0,0,0,0.5)",
+                              opacity: 0.75,
                             }}
                           >
                             {sym}
@@ -647,12 +646,10 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                               fontWeight: 500,
                               letterSpacing: "-0.035em",
                               lineHeight: 0.9,
-                              color: "#FBF3DC",
-                              // Engraved double-shadow: dark depth + champagne rim light
+                              color: "#1A2F1E",
                               textShadow: [
-                                "0 1px 0 rgba(245,235,211,0.18)",
-                                "0 -1px 0 rgba(0,0,0,0.55)",
-                                "0 2px 14px rgba(0,0,0,0.45)",
+                                "0 1px 0 rgba(255,255,255,0.6)",
+                                "0 2px 14px rgba(26,47,30,0.10)",
                               ].join(", "),
                             }}
                           >
@@ -665,7 +662,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                                 fontStyle: "italic",
                                 fontSize: 22,
                                 fontWeight: 500,
-                                color: "#C9A96E",
+                                color: "#8C6F3A",
                                 marginTop: 6,
                                 marginLeft: 1,
                                 letterSpacing: "-0.01em",
@@ -683,7 +680,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                             fontWeight: 600,
                             letterSpacing: "0.22em",
                             textTransform: "uppercase",
-                            color: "rgba(245,235,211,0.55)",
+                            color: "rgba(44,44,44,0.55)",
                           }}
                         >
                           USD / month
