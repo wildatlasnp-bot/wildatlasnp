@@ -835,8 +835,8 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         className="wa-reveal"
         style={{
           padding: "14px 20px 12px",
-          background: "var(--ranger-night)",
-          borderBottom: "1px solid var(--ranger-rule-night)",
+          background: "#F0EDEA",
+          borderBottom: "1px solid #E5E1DD",
           ["--d" as any]: "0ms",
         }}
       >
@@ -845,19 +845,19 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
             <span className="font-display-italic"
               style={{
                 fontStyle: "italic", fontWeight: 500, fontSize: 18,
-                color: "var(--ranger-parchment)", letterSpacing: "-0.01em", lineHeight: 1,
+                color: "#1A2F1E", letterSpacing: "-0.01em", lineHeight: 1,
               }}
             >
               WildAtlas
             </span>
             <span
               aria-hidden="true"
-              style={{ width: 14, height: 1, background: "var(--ranger-rule-strong)" }}
+              style={{ width: 14, height: 1, background: "rgba(26,47,30,0.30)" }}
             />
             <span
               style={{
                 fontSize: 12, fontWeight: 600, letterSpacing: "0.22em",
-                color: "var(--ranger-parchment-soft)", textTransform: "uppercase",
+                color: "rgba(26,47,30,0.65)", textTransform: "uppercase",
                 whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
               }}
             >
@@ -874,14 +874,14 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
               cursor: "pointer",
             }}
           >
-            <Share2 size={16} strokeWidth={1.5} color="var(--ranger-parchment)" />
+            <Share2 size={16} strokeWidth={1.5} color="#1A2F1E" />
           </button>
         </div>
         <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 8, marginTop: 8 }}>
           <span
             style={{
               fontSize: 12, fontWeight: 600, letterSpacing: "0.18em",
-              color: "var(--ranger-parchment-mute)", textTransform: "uppercase",
+              color: "rgba(26,47,30,0.55)", textTransform: "uppercase",
               overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
             }}
           >
@@ -890,13 +890,13 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           <span className="font-display-italic"
             style={{
               fontStyle: "italic", fontSize: 13,
-              color: "var(--ranger-parchment)", letterSpacing: "0.01em",
+              color: "#1A2F1E", letterSpacing: "0.01em",
             }}
           >
             {localTimeLabel}
             <span className="wa-caret" aria-hidden="true" style={{
               display: "inline-block", width: 5, height: 12, marginLeft: 3,
-              background: "var(--ranger-parchment-soft)", verticalAlign: "middle",
+              background: "rgba(26,47,30,0.65)", verticalAlign: "middle",
             }} />
           </span>
         </div>
