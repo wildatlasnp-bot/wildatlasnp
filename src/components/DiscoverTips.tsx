@@ -436,8 +436,10 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
     setLightboxOpen(true);
   }, [heroImgError, heroImgLoaded]);
 
-  // ── Hero parallax: subtle vertical drift driven by scroll position.
-  //    Honors prefers-reduced-motion (CSS guards animation; we also no-op here).
+  // ── Hero scroll-depth: parallax drift + scale ease + title/pill dissolve.
+  //    Driven from scrollTop in a single rAF; honors prefers-reduced-motion.
+  const heroTitleRef = useRef<HTMLDivElement | null>(null);
+  const heroPillRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     const scrollEl =
       typeof ref === "function" || !ref
@@ -452,9 +454,38 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
       raf = 0;
       const img = heroImgRef.current;
       if (!img) return;
+      const top = scrollEl.scrollTop;
+      const heroH = img.parentElement?.getBoundingClientRect().height ?? 480;
+
       // Damped translate: max ~28px downward shift across the hero's height.
-      const y = Math.min(scrollEl.scrollTop * 0.18, 28);
+      const y = Math.min(top * 0.18, 28);
       img.style.setProperty("--wa-parallax", `${y.toFixed(1)}px`);
+
+      // Scale ease: 1.04 at rest → 1.0 once the hero is fully scrolled out.
+      const progress = Math.max(0, Math.min(1, top / heroH));
+      const scale = 1.04 - 0.04 * progress;
+      img.style.setProperty("--wa-hero-scale", scale.toFixed(4));
+
+      // Title dissolve: starts fading once title top is ≤ 80px from viewport top.
+      const titleEl = heroTitleRef.current;
+      if (titleEl) {
+        const r = titleEl.getBoundingClientRect();
+        const fadeStart = 80;
+        const fadeEnd = 0;
+        const t = Math.max(0, Math.min(1, (fadeStart - r.top) / (fadeStart - fadeEnd)));
+        titleEl.style.opacity = String(1 - t);
+        titleEl.style.transform = `translateY(${(-8 * t).toFixed(2)}px)`;
+      }
+      // Pill dissolve: exits 40px earlier and slightly faster than the title.
+      const pillEl = heroPillRef.current;
+      if (pillEl) {
+        const r = pillEl.getBoundingClientRect();
+        const fadeStart = 120; // 40px before title
+        const fadeEnd = 40;
+        const t = Math.max(0, Math.min(1, (fadeStart - r.top) / (fadeStart - fadeEnd)));
+        pillEl.style.opacity = String(1 - t);
+        pillEl.style.transform = `translateY(${(-10 * t).toFixed(2)}px)`;
+      }
     };
     const onScroll = () => {
       if (raf) return;
