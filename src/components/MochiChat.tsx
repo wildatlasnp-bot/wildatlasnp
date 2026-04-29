@@ -2000,29 +2000,31 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                     margin: 0, lineHeight: 1,
                     textIndent: '0.3em',
                   }}>POKO</p>
-                  {/* Hairline + diamond rule (drawn-in) */}
-                  <div className="poko-rule-draw" aria-hidden="true" style={{
+                  {/* Hairline + diamond rule (drawn-in) — accent shifts with active park */}
+                  <div className="poko-rule-draw poko-park-rule" aria-hidden="true" style={{
                     marginTop: 8,
                     display: 'flex', alignItems: 'center', gap: 7,
                     width: '100%', minWidth: 110,
                   }}>
-                    <span style={{ flex: 1, height: 1, background: 'linear-gradient(to right, rgba(201,169,110,0.55), rgba(201,169,110,0.20))' }} />
+                    <span style={{ flex: 1, height: 1, background: 'linear-gradient(to right, rgba(var(--park-accent-rgb), 0.55), rgba(var(--park-accent-rgb), 0.20))', transition: 'background 300ms ease-out' }} />
                     <span style={{
                       width: 4, height: 4, transform: 'rotate(45deg)',
-                      background: 'rgba(201,169,110,0.85)',
-                      boxShadow: '0 0 4px rgba(201,169,110,0.45)',
+                      background: 'rgba(var(--park-accent-rgb), 0.85)',
+                      boxShadow: '0 0 4px rgba(var(--park-accent-rgb), 0.45)',
+                      transition: 'background 300ms ease-out, box-shadow 300ms ease-out',
                     }} />
-                    <span style={{ flex: 1, height: 1, background: 'linear-gradient(to left, rgba(201,169,110,0.55), rgba(201,169,110,0.20))' }} />
+                    <span style={{ flex: 1, height: 1, background: 'linear-gradient(to left, rgba(var(--park-accent-rgb), 0.55), rgba(var(--park-accent-rgb), 0.20))', transition: 'background 300ms ease-out' }} />
                   </div>
-                  {/* Coordinate stamp — falls back to "Field Journal" if no park */}
+                  {/* Coordinate stamp — uses --park-accent on the dark Poko surface (full opacity) */}
                   <p style={{
                     fontFamily: "'DM Sans', sans-serif",
                     fontSize: 10, fontWeight: 500,
                     letterSpacing: '0.28em', textTransform: 'uppercase',
-                    color: 'rgba(201,169,110,0.78)',
+                    color: 'var(--park-accent)',
                     margin: '8px 0 0',
                     fontFeatureSettings: '"tnum" 1',
                     whiteSpace: 'nowrap',
+                    transition: 'color 300ms ease-out',
                   }}>
                     {coordStamp ?? 'Field Journal · Est. MMXXIV'}
                   </p>
