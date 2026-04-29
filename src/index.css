@@ -1641,8 +1641,23 @@
   }
   .hero-anim-nav {
     animation: hero-nav-in 0.9s ease 0.1s both;
-  }
+}
 
+/* ── Card stagger entry ──
+   Apply .card-stagger-in to children of a list. The parent should set
+   --stagger-index on each child via inline style or :nth-child if known.
+   Triggered on mount only — no looping. */
+@keyframes cardStaggerIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.card-stagger-in {
+  animation: cardStaggerIn 180ms cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation-delay: calc(var(--stagger-index, 0) * 20ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .card-stagger-in { animation: none; }
+}
 
   /* Phone mockup entrance */
   @keyframes hero-phone-in {
