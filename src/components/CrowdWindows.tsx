@@ -201,7 +201,9 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
                 top: 0,
                 left: 0,
                 transform: `translateX(${labelTranslatePx}px)`,
-                transition: "transform 240ms cubic-bezier(0.4, 0, 0.2, 1)",
+                // Skip transition on the very first measurement (chartWidth 0 → real),
+                // so the label settles instantly on mount and only eases on subsequent resizes.
+                transition: chartWidth > 0 ? "transform 240ms cubic-bezier(0.4, 0, 0.2, 1)" : "none",
                 willChange: "transform",
                 fontSize: 12,
                 fontWeight: 700,
