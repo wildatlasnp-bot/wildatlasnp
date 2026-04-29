@@ -134,18 +134,18 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
     const busyStart = qe + Math.round(buildSpan * 0.6);
 
     // Anchor points: [minutes, intensity, level]
-    const points: Array<{ m: number; v: number; level: keyof typeof ZONE_HEX }> = [
-      { m: DAY_START,                v: 8,   level: "quiet" },
-      { m: Math.max(qs, DAY_START),  v: 12,  level: "quiet" },
-      { m: qe,                       v: 35,  level: "building" },
-      { m: busyStart,                v: 65,  level: "busy" },
-      { m: ps,                       v: 95,  level: "packed" },
-      { m: (ps + pe) / 2,            v: 100, level: "packed" },
-      { m: pe,                       v: 70,  level: "busy" },
-      { m: eq,                       v: 28,  level: "building" },
-      { m: Math.min(eq + 90, DAY_END), v: 14, level: "quiet" },
-      { m: DAY_END,                  v: 8,   level: "quiet" },
-    ].filter((p, i, arr) => i === 0 || p.m > arr[i - 1].m);
+    const points: Array<{ m: number; v: number; level: keyof typeof ZONE_HEX }> = ([
+      { m: DAY_START,                v: 8,   level: "quiet" as const },
+      { m: Math.max(qs, DAY_START),  v: 12,  level: "quiet" as const },
+      { m: qe,                       v: 35,  level: "building" as const },
+      { m: busyStart,                v: 65,  level: "busy" as const },
+      { m: ps,                       v: 95,  level: "packed" as const },
+      { m: (ps + pe) / 2,            v: 100, level: "packed" as const },
+      { m: pe,                       v: 70,  level: "busy" as const },
+      { m: eq,                       v: 28,  level: "building" as const },
+      { m: Math.min(eq + 90, DAY_END), v: 14, level: "quiet" as const },
+      { m: DAY_END,                  v: 8,   level: "quiet" as const },
+    ]).filter((p, i, arr) => i === 0 || p.m > arr[i - 1].m);
 
     return points;
   }, [f.quiet_start, f.quiet_end, f.peak_start, f.peak_end, f.evening_quiet]);
