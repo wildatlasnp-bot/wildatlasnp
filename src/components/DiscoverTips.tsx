@@ -1062,12 +1062,14 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           </p>
           {/* Live forecast pill or shimmer placeholder */}
           {heroForecast ? (
-            <div style={{
+            <div ref={heroPillRef} style={{
               display: "inline-flex", alignItems: "center", gap: 7, maxWidth: "100%",
               background: badgeBg(parkConfig.primaryColor),
               backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
               border: "0.5px solid var(--ranger-on-image-faint)",
               borderRadius: 999, padding: "5px 13px", marginTop: 14,
+              willChange: "opacity, transform",
+              transition: "none",
             }}>
               <span style={{
                 width: 6, height: 6, borderRadius: "50%", flexShrink: 0,
