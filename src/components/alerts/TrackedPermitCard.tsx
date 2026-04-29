@@ -160,6 +160,8 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
             }}
           />
           <div className="park-photo-scrim" />
+          {/* Cinematic dissolve into cream surface below */}
+          <div className="park-photo-dissolve" />
           <span
             style={{
               position: "absolute", top: 14, left: 16, zIndex: 10,
