@@ -15,6 +15,8 @@ import { useProCtaIntent } from "@/hooks/useProCtaIntent";
 import { useFleetActivity, formatRecency, recencyStyle } from "@/hooks/useFleetActivity";
 import WatchOhOne from "@/components/landing/WatchOhOne";
 import FleetParkPopover from "@/components/landing/FleetParkPopover";
+import PokoSchematic from "@/components/landing/PokoSchematic";
+import QuietHoursTimeline from "@/components/landing/QuietHoursTimeline";
 import "./landing.css";
 
 // Park list for the landing strip — order intentional (signature parks first).
@@ -971,15 +973,37 @@ const LandingPage = () => {
                 >
                   You sleep. Poko keeps the watch.
                 </p>
+
+                {/* Mobile/narrow: Quiet Hours timeline rendered inline
+                    under the deck so the horology language survives even
+                    when the right-rail panel collapses. */}
+                {(isMobile || isNarrow) && (
+                  <div
+                    data-hero-fade
+                    style={{
+                      marginTop: 28,
+                      paddingTop: 20,
+                      borderTop: "1px solid rgba(240, 237, 234, 0.18)",
+                      animation:
+                        "heroFadeUp 1100ms cubic-bezier(0.16, 1, 0.3, 1) both",
+                      animationDelay: "900ms",
+                    }}
+                  >
+                    <QuietHoursTimeline tone="dark" compact />
+                  </div>
+                )}
               </div>
 
-              {/* Pull-quote — desktop only, anchored right with hairline */}
+              {/* Quiet Watchman panel — desktop only.
+                  Replaces the pull-quote with a watchmaker's panel:
+                  a technical Poko schematic over a 24h Quiet Hours
+                  timeline, gold-banded for the Pro window. */}
               {!isMobile && !isNarrow && (
                 <aside
                   data-hero-fade
                   style={{
                     gridColumn: "10 / span 3",
-                    paddingLeft: 20,
+                    paddingLeft: 22,
                     borderLeft: "1px solid rgba(240, 237, 234, 0.28)",
                     animation:
                       "heroFadeUp 1100ms cubic-bezier(0.16, 1, 0.3, 1) both",
@@ -994,24 +1018,28 @@ const LandingPage = () => {
                       textTransform: "uppercase",
                       color: "rgba(240, 237, 234, 0.55)",
                       margin: 0,
-                      marginBottom: 12,
+                      marginBottom: 14,
                     }}
                   >
-                    § 01 · The Watcher
+                    § 01 · The Quiet Watchman
                   </p>
+                  <div style={{ marginBottom: 18 }}>
+                    <PokoSchematic size={108} live tone="dark" />
+                  </div>
                   <p
                     style={{
                       fontFamily: "'Cormorant Garamond', serif",
                       fontStyle: "italic",
-                      fontSize: 17,
+                      fontSize: 16,
                       lineHeight: 1.45,
-                      color: "rgba(240, 237, 234, 0.85)",
-                      margin: 0,
+                      color: "rgba(240, 237, 234, 0.82)",
+                      margin: "0 0 18px",
                     }}
                   >
-                    "Cancellations arrive on no schedule. We hold the door
-                    so you needn't."
+                    "Cancellations arrive on no schedule.
+                    We hold the door so you needn't."
                   </p>
+                  <QuietHoursTimeline tone="dark" compact />
                 </aside>
               )}
             </div>
@@ -1139,9 +1167,35 @@ const LandingPage = () => {
                       marginTop: 10,
                     }}
                   >
-                    {demoPhase === "scanning"
-                      ? "Scanning next park…"
-                      : `Caught at ${currentCatch.caughtAt} · window closes in ${currentCatch.closesIn}`}
+                    {demoPhase === "scanning" ? (
+                      "Scanning next park…"
+                    ) : (
+                      <>
+                        <span
+                          style={{
+                            fontFamily:
+                              "ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace",
+                            fontVariantNumeric: "tabular-nums",
+                            fontSize: 12,
+                            letterSpacing: "0.02em",
+                          }}
+                        >
+                          {currentCatch.caughtAt}
+                        </span>
+                        {" · window closes in "}
+                        <span
+                          style={{
+                            fontFamily:
+                              "ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace",
+                            fontVariantNumeric: "tabular-nums",
+                            fontSize: 12,
+                            letterSpacing: "0.02em",
+                          }}
+                        >
+                          {currentCatch.closesIn}
+                        </span>
+                      </>
+                    )}
                   </p>
                   <span
                     style={{
@@ -1347,11 +1401,16 @@ const LandingPage = () => {
                     />
                     <span
                       style={{
+                        fontFamily:
+                          "ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace",
                         fontVariantNumeric: "tabular-nums",
+                        fontSize: 11,
+                        letterSpacing: "0.04em",
                         color: "rgba(240, 237, 234, 0.55)",
+                        textTransform: "none",
                       }}
                     >
-                      Sweep {String(secondsSinceSweep).padStart(2, "0")}s
+                      sweep +{String(secondsSinceSweep).padStart(2, "0")}s
                     </span>
                   </>
                 )}
