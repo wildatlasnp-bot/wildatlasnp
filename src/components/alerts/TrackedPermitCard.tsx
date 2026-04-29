@@ -278,17 +278,17 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
               </span>
               <div
                 style={{
-                position: "absolute", top: 14, right: 14, zIndex: 10,
+                  position: "absolute", bottom: 16, right: 16, zIndex: 10,
                   background: "rgba(255,255,255,0.15)", backdropFilter: "blur(8px)",
                   WebkitBackdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.22)",
-                  borderRadius: 99, padding: "6px 16px",
-                  display: "flex", flexDirection: "column", alignItems: "center",
+                  borderRadius: 99, padding: "6px 14px",
+                  display: "flex", alignItems: "baseline", gap: 6,
                 }}
               >
-                <span style={{ fontFamily: PLAYFAIR, fontSize: 18, fontWeight: 500, color: "white", lineHeight: 1.1 }}>
+                <span style={{ fontFamily: PLAYFAIR, fontSize: 16, fontWeight: 500, color: "white", lineHeight: 1 }}>
                   {permit.oddsPercent}%
                 </span>
-                <span style={{ fontFamily: INTER, fontSize: 12, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(255,255,255,0.6)", marginTop: 1 }}>
+                <span style={{ fontFamily: INTER, fontSize: 12, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(255,255,255,0.6)" }}>
                   ODDS
                 </span>
               </div>
