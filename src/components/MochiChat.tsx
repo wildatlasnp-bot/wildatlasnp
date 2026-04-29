@@ -6,6 +6,7 @@ import { getSuggestedChips, type UserWatch } from "@/components/mochi/ChatInterf
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import MochiTrailCard, { parseTrailBlocks } from "@/components/MochiTrailCard";
+import PokoMapCard, { parseMapBlocks } from "@/components/poko/PokoMapCard";
 import MochiScannerBanner from "@/components/MochiScannerBanner";
 import MochiStatusCard from "@/components/MochiStatusCard";
 import ProModal from "@/components/ProModal";
