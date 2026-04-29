@@ -855,7 +855,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             style={{
               fontFamily: "'DM Sans', sans-serif",
               fontSize: 12,
-              color: "rgba(245,235,211,0.40)",
+              color: "rgba(44,44,44,0.55)",
               textAlign: "center",
               marginTop: 14,
               ...revealStyle(STEP.REFUND, "up"),
@@ -863,8 +863,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           >
             <button
               onClick={() => setRefundOpen(true)}
-              className="underline underline-offset-2 transition-colors hover:text-[#C9A96E]"
-              style={{ color: "rgba(245,235,211,0.55)", fontSize: 12 }}
+              className="underline underline-offset-2 transition-colors hover:text-[#8C6F3A]"
+              style={{ color: "rgba(44,44,44,0.62)", fontSize: 12 }}
             >
               Refund Policy
             </button>
