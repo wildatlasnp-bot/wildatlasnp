@@ -510,7 +510,7 @@ function FieldDispatchHero({
       {/* Header row: kicker + refresh */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", position: "relative", zIndex: 2 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
-          <span style={{ display: "block", width: 18, height: 1, background: "rgba(201,169,110,0.5)" }} />
+          <span style={{ display: "block", width: 18, height: 1, background: "var(--park-accent)", opacity: 0.5, transition: "background-color 300ms ease-out" }} />
           <span style={{
             fontFamily: DM, fontSize: 12, fontWeight: 500, letterSpacing: "0.22em",
             textTransform: "uppercase", color: "rgba(201,169,110,0.75)",
