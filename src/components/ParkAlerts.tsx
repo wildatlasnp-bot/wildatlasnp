@@ -1003,6 +1003,25 @@ function TelegramCard({
 
   const isFresh = isUnread && (Date.now() - new Date(alert.last_updated).getTime() < 72 * 60 * 60 * 1000);
 
+  /* ── Severity border + header wash system ──
+     Spec: 4px solid left border, 4% header wash, label/dot match border color.
+     Emergency uses ✕ icon prefix instead of a dot. */
+  const SEV_BORDER: Record<Severity, string> = {
+    critical: "#8B0000",   // Emergency
+    closure:  "#C0392B",   // Closure
+    caution:  "#E8935A",   // Caution
+    info:     "#2F6F4E",   // Dispatch
+  };
+  const SEV_WASH: Record<Severity, string> = {
+    critical: "rgba(139,0,0,0.04)",
+    closure:  "rgba(192,57,43,0.04)",
+    caution:  "rgba(232,147,90,0.04)",
+    info:     "rgba(47,111,78,0.04)",
+  };
+  const sevBorder = SEV_BORDER[sev];
+  const sevWash = SEV_WASH[sev];
+  const sevLabel = sev === "critical" ? "EMERGENCY" : sev === "closure" ? "CLOSURE" : sev === "caution" ? "CAUTION" : "DISPATCH";
+
   return (
     <motion.div
       layout
@@ -1021,54 +1040,52 @@ function TelegramCard({
       onKeyDown={(showChevron || hasSubstantialDesc) ? (e) => e.key === "Enter" && handleToggle() : undefined}
       style={{
         position: "relative",
-        background: "var(--ranger-paper)",
-        border: "1px solid var(--ranger-rule-onlight)",
+        background: "#FFFFFF",
+        // Sole indicator: 4px left border in severity color. No other border.
+        border: "none",
+        borderLeft: `4px solid ${sevBorder}`,
         borderRadius: 12,
-        padding: "16px 16px 14px 18px",
-        boxShadow: sev === "critical" ? "0 6px 22px rgba(226,75,74,0.10)" : "var(--ranger-shadow-2)",
+        boxShadow: "0 2px 8px rgba(26,47,30,0.05)",
         cursor: (showChevron || hasSubstantialDesc) ? "pointer" : "default",
         overflow: "hidden",
       }}
     >
-      {/* Severity bar (left edge) */}
-      <span
-        aria-hidden
-        style={{
-          position: "absolute", left: 0, top: 0, bottom: 0, width: 3,
-          background: meta.ink,
-          opacity: sev === "critical" ? 1 : 0.85,
-        }}
-      />
-      {/* Critical: animated shimmer overlay on the bar */}
+      {/* Critical: subtle shimmer along the left border for unread items */}
       {sev === "critical" && isUnread && (
         <span
           aria-hidden
           style={{
-            position: "absolute", left: 0, top: 0, bottom: 0, width: 3,
-            background: "linear-gradient(180deg, transparent, rgba(255,255,255,0.6), transparent)",
+            position: "absolute", left: 0, top: 0, bottom: 0, width: 4,
+            background: "linear-gradient(180deg, transparent, rgba(255,255,255,0.55), transparent)",
             animation: "tg-shimmer 2.4s ease-in-out infinite",
+            pointerEvents: "none",
           }}
         />
       )}
 
-      {/* Header row */}
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-        {/* Sigil tile */}
-        <span style={{
-          width: 22, height: 22, borderRadius: 6,
-          background: meta.tint,
-          display: "inline-flex", alignItems: "center", justifyContent: "center",
-          fontFamily: CG, fontSize: 14, fontWeight: 600, color: meta.ink,
-          flexShrink: 0,
-        }}>
-          {meta.sigil}
-        </span>
+      {/* Header row — tinted wash matches border color at 4% */}
+      <div style={{
+        display: "flex", alignItems: "center", gap: 8,
+        background: sevWash,
+        padding: "10px 16px",
+      }}>
+        {/* Severity dot or ✕ for Emergency. 12px text floor for label. */}
+        {sev === "critical" ? (
+          <span aria-hidden style={{
+            width: 12, height: 12, display: "inline-flex", alignItems: "center", justifyContent: "center",
+            color: sevBorder, fontFamily: DM, fontSize: 12, fontWeight: 700, lineHeight: 1, flexShrink: 0,
+          }}>✕</span>
+        ) : (
+          <span aria-hidden style={{
+            width: 6, height: 6, borderRadius: "50%", background: sevBorder, flexShrink: 0,
+          }} />
+        )}
         <span style={{
           fontFamily: DM, fontSize: 12, fontWeight: 600,
-          letterSpacing: "0.16em", textTransform: "uppercase",
-          color: meta.ink,
+          letterSpacing: "0.20em", textTransform: "uppercase",
+          color: sevBorder,
         }}>
-          {meta.label}
+          {sevLabel}
         </span>
         {isFresh && (
           <span style={{
@@ -1082,64 +1099,98 @@ function TelegramCard({
         )}
         <div style={{ flex: 1 }} />
         <span style={{
-          fontFamily: DM, fontSize: 12, color: "var(--ranger-ink-faint)",
+          fontFamily: DM, fontSize: 12, color: "#8A9E8A",
           fontVariantNumeric: "tabular-nums",
         }}>
           {smartTimeAgo(new Date(alert.last_updated).getTime())}
         </span>
       </div>
 
-      {/* Title */}
-      <h3 style={{
-        fontFamily: CG, fontSize: 19, fontWeight: 500,
-        color: sev === "critical" ? "#A32D2D" : "var(--ranger-ink)",
-        lineHeight: 1.18, letterSpacing: "-0.005em",
-        marginBottom: hasSubstantialDesc ? 6 : 8,
-      }}>
-        {alert.title}
-      </h3>
-
-      {/* Body */}
-      {hasSubstantialDesc && (
-        <div style={{
-          maxHeight: expanded ? 600 : 42,
-          overflow: "hidden",
-          transition: "max-height 280ms cubic-bezier(0.4,0,0.2,1)",
+      {/* Card body */}
+      <div style={{ padding: "12px 16px 0 16px" }}>
+        {/* Title */}
+        <h3 style={{
+          fontFamily: DM, fontSize: 15, fontWeight: 500,
+          color: "#1A2F1E",
+          lineHeight: 1.35, letterSpacing: "-0.005em",
+          marginBottom: hasSubstantialDesc ? 6 : 8,
         }}>
-          <p
-            ref={expanded ? undefined : previewRef}
-            className={expanded ? "" : "line-clamp-2"}
-            style={{
-              fontFamily: DM, fontSize: 13, fontWeight: 300,
-              color: "var(--ranger-ink-body)", lineHeight: 1.55,
-              marginBottom: 8,
-            }}
-          >
-            {desc}
-          </p>
-        </div>
-      )}
+          {alert.title}
+        </h3>
 
-      {/* Footer hairline */}
+        {/* Body preview (collapsed) / full body (expanded) */}
+        {hasSubstantialDesc && (
+          <div style={{
+            maxHeight: expanded ? 600 : 42,
+            overflow: "hidden",
+            transition: "max-height 280ms cubic-bezier(0.4,0,0.2,1)",
+          }}>
+            {expanded ? (
+              <>
+                {/* 1px hairline divider between preview area and expanded body */}
+                <div aria-hidden style={{ height: 1, background: "#F0EDEA", marginBottom: 12 }} />
+                <p style={{
+                  fontFamily: DM, fontSize: 14, fontWeight: 400,
+                  color: "#1A2F1E", lineHeight: 1.6,
+                  padding: "4px 0 12px 0",
+                  margin: 0,
+                }}>
+                  {desc}
+                </p>
+                {hasUrl && (
+                  <a
+                    href={alert.url!}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    style={{
+                      display: "inline-flex", alignItems: "center", gap: 4,
+                      fontFamily: DM, fontSize: 13, fontWeight: 500,
+                      color: "#2F6F4E", textDecoration: "none",
+                      paddingBottom: 12,
+                    }}
+                  >
+                    View on NPS.gov →
+                  </a>
+                )}
+              </>
+            ) : (
+              <p
+                ref={previewRef}
+                className="line-clamp-2"
+                style={{
+                  fontFamily: DM, fontSize: 13, fontWeight: 400,
+                  color: "#6B7B6B", lineHeight: 1.5,
+                  marginBottom: 8, marginTop: 0,
+                }}
+              >
+                {desc}
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Footer row — park dot + name + date + external + chevron */}
       <div style={{
-        marginTop: 10,
+        margin: "0 16px",
         paddingTop: 10,
-        borderTop: "1px solid var(--ranger-rule-onlight)",
+        paddingBottom: 12,
+        borderTop: "1px solid #F0EDEA",
         display: "flex", alignItems: "center", gap: 8,
       }}>
         <span style={{
           width: 6, height: 6, borderRadius: "50%", background: parkColor,
-          boxShadow: `0 0 6px ${parkColor}55`,
           flexShrink: 0,
         }} />
         <span style={{
           fontFamily: DM, fontSize: 12, fontWeight: 500,
-          color: "var(--ranger-ink-muted)", letterSpacing: "0.02em",
+          color: "#8A9E8A", letterSpacing: "0.02em",
         }}>
           {parkName}
         </span>
-        <span style={{ fontFamily: DM, fontSize: 12, color: "var(--ranger-ink-faint)" }}>·</span>
-        <span style={{ fontFamily: DM, fontSize: 12, color: "var(--ranger-ink-faint)" }}>
+        <span style={{ fontFamily: DM, fontSize: 12, color: "#8A9E8A" }}>·</span>
+        <span style={{ fontFamily: DM, fontSize: 12, color: "#8A9E8A" }}>
           {formatPostedDate(alert.last_updated)}
         </span>
         <div style={{ flex: 1 }} />
@@ -1153,20 +1204,20 @@ function TelegramCard({
             style={{
               display: "inline-flex", alignItems: "center", justifyContent: "center",
               width: 28, height: 28, borderRadius: 6,
-              color: "var(--ranger-ink-muted)",
+              color: "#8A9E8A",
               transition: "background 150ms",
             }}
             onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(0,0,0,0.04)")}
             onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
           >
-            <ExternalLink size={12} />
+            <ExternalLink size={14} />
           </a>
         )}
         {showChevron && (
           <span style={{
             display: "inline-flex", alignItems: "center", justifyContent: "center",
             width: 28, height: 28,
-            color: "var(--ranger-ink-faint)",
+            color: "#8A9E8A",
             transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
             transition: "transform 240ms cubic-bezier(0.4,0,0.2,1)",
           }}>
