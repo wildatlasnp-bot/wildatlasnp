@@ -431,14 +431,14 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                 key={p.kicker}
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "28px 1fr",
+                  gridTemplateColumns: "24px 1fr",
                   columnGap: 14,
                   paddingTop: i === 0 ? 0 : 14,
                   paddingBottom: 14,
                   borderBottom:
                     i === PILLARS.length - 1
                       ? "none"
-                      : "1px solid rgba(140,111,58,0.18)",
+                      : "1px solid rgba(229,225,221,0.10)",
                   ...revealStyle(STEP.PILLAR_0 + i, "up"),
                 }}
               >
@@ -446,24 +446,24 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                   className="font-heading"
                   style={{
                     fontStyle: "italic",
-                    fontSize: 18,
+                    fontSize: 13,
                     fontWeight: 400,
                     color: "#C9A96E",
                     lineHeight: 1.2,
-                    paddingTop: 2,
+                    paddingTop: 3,
                   }}
                 >
                   {p.kicker}
                 </span>
                 <div>
                   <div
-                    className="font-heading"
                     style={{
-                      fontSize: 19,
-                      fontWeight: 500,
-                      lineHeight: 1.2,
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 15,
+                      fontWeight: 600,
+                      lineHeight: 1.25,
                       letterSpacing: "-0.005em",
-                      color: "#1A2F1E",
+                      color: "#F0EDEA",
                     }}
                   >
                     {p.title}
@@ -473,8 +473,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                       marginTop: 4,
                       fontFamily: "'DM Sans', sans-serif",
                       fontSize: 13,
-                      lineHeight: 1.55,
-                      color: "rgba(44,44,44,0.68)",
+                      lineHeight: 1.5,
+                      color: "#8A9E8A",
                     }}
                   >
                     {p.body}
