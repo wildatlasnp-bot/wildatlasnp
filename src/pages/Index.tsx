@@ -274,69 +274,92 @@ const Index = () => {
     dashboardRenderedRef.current = true;
   }
 
+  const handleNavTabChange = (tab: Tab) => {
+    const endMeasure = startTabSwitch(activeTab, tab);
+    posthog.capture("tab_viewed", { tab });
+    handleTabChange(tab);
+    requestAnimationFrame(() => requestAnimationFrame(endMeasure));
+  };
+
   return (
-    <div className="h-[100dvh] overflow-hidden flex flex-col max-w-lg mx-auto relative light-focus-ctx" style={{ backgroundColor: '#EEE9E3' }}>
-      <a href="#main-content" className="skip-link">Skip to main content</a>
-      <OfflineBanner />
-      {scheduledDeletionAt && (
-        <DeletionBanner
-          scheduledDeletionAt={scheduledDeletionAt}
-          onCancelDeletion={clearDeletionSchedule}
+    <>
+      {/* Desktop-only left rail (≥1024px). Hidden below lg; mobile uses BottomNav. */}
+      <div className="hidden lg:block">
+        <SideRailNav
+          activeTab={activeTab}
+          hasUnreadAlerts={hasUnreadAlerts}
+          onTabChange={handleNavTabChange}
         />
-      )}
-      <main id="main-content" className="flex-1 min-h-0 pb-0 flex flex-col relative">
-        {TAB_ORDER.map((tab) => {
-          const isActive = activeTab === tab;
-          const isLeaving = prevTab === tab && !isActive;
-          return (
-            <div
-              key={tab}
-              ref={(el) => { tabContainerRefs.current[tab] = el; }}
-              onAnimationEnd={() => {
-                if (isLeaving) setPrevTab(null);
-              }}
-              className={`tab-pane ${
-                isActive
-                  ? (prevTab ? "tab-pane-enter" : "tab-pane-active")
-                  : isLeaving
-                    ? "tab-pane-exit"
-                    : "tab-pane-hidden"
-              }`}
-              data-slide={isActive && prevTab ? slideDirection : undefined}
-              aria-hidden={!isActive}
-            >
-              {mountedTabs.has(tab) && (
-                <>
-                  {tab === "mochi" && (
-                    <MochiTab
-                      onNavigateToDiscover={handleNavigateToDiscover}
-                      onNavigateToAlerts={handleNavigateToSniper}
-                      initialQuery={mochiInitialQuery}
-                    />
-                  )}
-                  {tab === "sniper" && <SniperTab />}
-                  {tab === "discover" && (
-                    <DiscoverTab
-                      parkId={parkId}
-                      onParkChange={handleParkChange}
-                      onNavigateToSniper={handleNavigateToSniper}
-                      onNavigateToMochi={handleNavigateToMochi}
-                    />
-                  )}
-                  {tab === "settings" && <SettingsTab />}
-                </>
-              )}
-            </div>
-          );
-        })}
-      </main>
-      <BottomNav activeTab={activeTab} hasUnreadAlerts={hasUnreadAlerts} onTabChange={(tab) => {
-        const endMeasure = startTabSwitch(activeTab, tab);
-        posthog.capture("tab_viewed", { tab });
-        handleTabChange(tab);
-        requestAnimationFrame(() => requestAnimationFrame(endMeasure));
-      }} />
-    </div>
+      </div>
+
+      <div
+        className="h-[100dvh] overflow-hidden flex flex-col max-w-lg mx-auto relative light-focus-ctx lg:max-w-[720px] lg:ml-[88px] lg:mr-auto lg:px-0"
+        style={{ backgroundColor: '#EEE9E3' }}
+      >
+        <a href="#main-content" className="skip-link">Skip to main content</a>
+        <OfflineBanner />
+        {scheduledDeletionAt && (
+          <DeletionBanner
+            scheduledDeletionAt={scheduledDeletionAt}
+            onCancelDeletion={clearDeletionSchedule}
+          />
+        )}
+        <main id="main-content" className="flex-1 min-h-0 pb-0 flex flex-col relative">
+          {TAB_ORDER.map((tab) => {
+            const isActive = activeTab === tab;
+            const isLeaving = prevTab === tab && !isActive;
+            return (
+              <div
+                key={tab}
+                ref={(el) => { tabContainerRefs.current[tab] = el; }}
+                onAnimationEnd={() => {
+                  if (isLeaving) setPrevTab(null);
+                }}
+                className={`tab-pane ${
+                  isActive
+                    ? (prevTab ? "tab-pane-enter" : "tab-pane-active")
+                    : isLeaving
+                      ? "tab-pane-exit"
+                      : "tab-pane-hidden"
+                }`}
+                data-slide={isActive && prevTab ? slideDirection : undefined}
+                aria-hidden={!isActive}
+              >
+                {mountedTabs.has(tab) && (
+                  <>
+                    {tab === "mochi" && (
+                      <MochiTab
+                        onNavigateToDiscover={handleNavigateToDiscover}
+                        onNavigateToAlerts={handleNavigateToSniper}
+                        initialQuery={mochiInitialQuery}
+                      />
+                    )}
+                    {tab === "sniper" && <SniperTab />}
+                    {tab === "discover" && (
+                      <DiscoverTab
+                        parkId={parkId}
+                        onParkChange={handleParkChange}
+                        onNavigateToSniper={handleNavigateToSniper}
+                        onNavigateToMochi={handleNavigateToMochi}
+                      />
+                    )}
+                    {tab === "settings" && <SettingsTab />}
+                  </>
+                )}
+              </div>
+            );
+          })}
+        </main>
+        {/* Mobile bottom nav — hidden on desktop where the left rail takes over. */}
+        <div className="lg:hidden contents">
+          <BottomNav
+            activeTab={activeTab}
+            hasUnreadAlerts={hasUnreadAlerts}
+            onTabChange={handleNavTabChange}
+          />
+        </div>
+      </div>
+    </>
   );
 };
 
