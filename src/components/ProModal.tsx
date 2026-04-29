@@ -683,7 +683,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             style={{
               fontFamily: "'DM Sans', sans-serif",
               fontSize: 12,
-              color: "rgba(44,44,44,0.55)",
+              color: "rgba(240,237,234,0.45)",
               textAlign: "center",
               margin: "12px 4px 0",
               lineHeight: 1.55,
@@ -697,59 +697,29 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               href="https://wildatlas.app/terms"
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: "#8C6F3A", textDecoration: "underline", textUnderlineOffset: 2 }}
+              style={{ color: "#C9A96E", textDecoration: "underline", textUnderlineOffset: 2 }}
             >
               Full terms
             </a>
           </p>
 
-          {/* Hairline divider — gold */}
+          {/* Hairline divider — gold (kept for timeline cadence) */}
           <div
             style={{
               marginTop: 18,
               height: 1,
               background:
-                "linear-gradient(90deg, transparent 0%, rgba(140,111,58,0.32) 50%, transparent 100%)",
+                "linear-gradient(90deg, transparent 0%, rgba(201,169,110,0.22) 50%, transparent 100%)",
               ...revealStyle(STEP.DIVIDER, "up"),
             }}
           />
 
-          {/* Trust row */}
-          <div
-            className="flex items-center justify-center"
-            style={{
-              gap: 18,
-              marginTop: 14,
-              ...revealStyle(STEP.TRUST, "up"),
-            }}
-          >
-            {[
-              { icon: Lock, label: "Secure" },
-              { icon: RefreshCw, label: "Cancel anytime" },
-              { icon: ShieldCheck, label: "No hidden fees" },
-            ].map((t) => (
-              <div key={t.label} className="flex items-center gap-1.5">
-                <t.icon size={12} style={{ color: "#8C6F3A" }} strokeWidth={2.2} />
-                <span
-                  style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 12,
-                    color: "rgba(44,44,44,0.62)",
-                    fontWeight: 500,
-                  }}
-                >
-                  {t.label}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          {/* Refund link */}
+          {/* Refund link — single utility link, sits where lower trust row used to */}
           <p
             style={{
               fontFamily: "'DM Sans', sans-serif",
               fontSize: 12,
-              color: "rgba(44,44,44,0.55)",
+              color: "rgba(240,237,234,0.45)",
               textAlign: "center",
               marginTop: 14,
               ...revealStyle(STEP.REFUND, "up"),
@@ -757,8 +727,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           >
             <button
               onClick={() => setRefundOpen(true)}
-              className="underline underline-offset-2 transition-colors hover:text-[#8C6F3A]"
-              style={{ color: "rgba(44,44,44,0.62)", fontSize: 12 }}
+              className="underline underline-offset-2 transition-colors hover:text-[#C9A96E]"
+              style={{ color: "rgba(240,237,234,0.55)", fontSize: 12 }}
             >
               Refund Policy
             </button>
