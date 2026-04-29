@@ -1511,9 +1511,25 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
             }
             .poko-drift { animation: poko-drift 60s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
             .poko-grain {
-              background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-              background-size: 160px 160px;
+              background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+              background-size: 180px 180px;
             }
+            /* Compass rose decoration drift — ±0.5° / 8s ease-in-out, infinite.
+               Applies to spokes + cardinals only. The needle stays semantically
+               locked to the live park bearing (per cartographer-masthead memory).
+               Per ambient-loops exception: Poko is the only screen with loops. */
+            @keyframes poko-rose-drift {
+              0%   { transform: rotate(-0.5deg); }
+              50%  { transform: rotate(0.5deg); }
+              100% { transform: rotate(-0.5deg); }
+            }
+            .poko-rose-drift { transform-origin: 66px 66px; animation: poko-rose-drift 16s ease-in-out infinite; }
+            /* READY status heartbeat — 2s scale + opacity breath. Signals presence. */
+            @keyframes poko-ready-heartbeat {
+              0%, 100% { transform: scale(1);   opacity: 1;   }
+              50%      { transform: scale(1.4); opacity: 0.6; }
+            }
+            .poko-ready-heartbeat { animation: poko-ready-heartbeat 2s ease-in-out infinite; transform-origin: center; }
             @keyframes poko-aurora-burst {
               0%   { opacity: 0;    transform: scale(0.985); }
               35%  { opacity: 1;    transform: scale(1.012); }
