@@ -119,7 +119,7 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
         className={`tactile-card pc-card${permit.statusLabel === "Found" ? " found-glow" : ""}`}
         style={{
           margin: "0 24px 14px",
-          borderRadius: 18,
+          borderRadius: 16,
           overflow: "hidden",
           background: "var(--forest-deep)",
           cursor: "pointer",
@@ -133,8 +133,8 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
                 boxShadow: expanded
                   ? "none"
                   : hovered
-                    ? "0 4px 12px rgba(26,47,30,0.14), 0 12px 32px rgba(26,47,30,0.18)"
-                    : "var(--elev-photo)",
+                    ? "0 12px 40px rgba(26,47,30,0.22), 0 4px 12px rgba(26,47,30,0.14)"
+                    : "0 8px 32px rgba(26,47,30,0.18), 0 2px 8px rgba(26,47,30,0.12)",
                 border: expanded ? "1px solid var(--rule2)" : "1px solid transparent",
                 transform: hovered && !expanded ? "translateY(-1px)" : "translateY(0)",
                 transition: "transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease",
@@ -154,20 +154,43 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
               width: "100%",
               height: "100%",
               objectFit: "cover",
-              filter: "blur(0.6px) saturate(1.08) brightness(0.92)",
+              filter: "contrast(1.06) saturate(1.08)",
               transition: "transform 0.4s ease",
               transform: hovered ? "scale(1.015)" : "scale(1)",
             }}
           />
-          <div className="park-photo-scrim" />
-          {/* Cinematic dissolve — dark variant protects white title & odds pill */}
-          <div className="park-photo-dissolve park-photo-dissolve--dark" />
+          {/* Vignette — subtle edge darkening, draws eye to center */}
+          <div
+            aria-hidden
+            style={{
+              position: "absolute", inset: 0, pointerEvents: "none", zIndex: 2,
+              background: "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.25) 100%)",
+            }}
+          />
+          {/* Cinematic dissolve — bottom 35%, protects text legibility */}
+          <div
+            aria-hidden
+            style={{
+              position: "absolute", left: 0, right: 0, bottom: 0, height: "35%",
+              pointerEvents: "none", zIndex: 3,
+              background:
+                "linear-gradient(to bottom, transparent 0%, rgba(26,47,30,0.4) 60%, rgba(26,47,30,0.85) 100%)",
+            }}
+          />
+          {/* Park name badge — frosted forest pill */}
           <span
             style={{
               position: "absolute", top: 14, left: 16, zIndex: 10,
-              fontFamily: INTER, fontSize: 12, fontWeight: 500,
-              letterSpacing: "0.18em", textTransform: "uppercase",
-              color: "rgba(255,255,255,0.55)", textShadow: "0 1px 3px rgba(0,0,0,0.30)",
+              fontFamily: INTER, fontSize: 10, fontWeight: 600,
+              letterSpacing: "0.15em", textTransform: "uppercase",
+              color: "#FFFFFF",
+              background: "rgba(26,47,30,0.7)",
+              backdropFilter: "blur(8px)",
+              WebkitBackdropFilter: "blur(8px)",
+              border: "1px solid rgba(255,255,255,0.15)",
+              borderRadius: 99,
+              padding: "5px 10px",
+              lineHeight: 1,
             }}
           >
             {permit.parkLabel}
@@ -215,9 +238,13 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
             <>
               <span
                 style={{
-              position: "absolute", bottom: 14, left: 16, right: 88, zIndex: 10,
-              fontFamily: PLAYFAIR, fontSize: 26, fontWeight: 500,
-              color: "white", textShadow: "0 1px 3px rgba(0,0,0,0.30)",
+                  position: "absolute", bottom: 20, left: 20, right: 88, zIndex: 10,
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontStyle: "italic",
+                  fontSize: 22,
+                  fontWeight: 500,
+                  color: "#FFFFFF",
+                  textShadow: "0 1px 8px rgba(0,0,0,0.4)",
                   lineHeight: 1.15,
                 }}
               >
@@ -226,8 +253,8 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
               <div
                 style={{
                 position: "absolute", top: 14, right: 14, zIndex: 10,
-                  background: "rgba(255,255,255,0.13)", backdropFilter: "blur(10px)",
-                  WebkitBackdropFilter: "blur(10px)", border: "1px solid rgba(255,255,255,0.22)",
+                  background: "rgba(255,255,255,0.15)", backdropFilter: "blur(8px)",
+                  WebkitBackdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.22)",
                   borderRadius: 99, padding: "6px 16px",
                   display: "flex", flexDirection: "column", alignItems: "center",
                 }}
