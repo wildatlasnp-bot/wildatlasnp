@@ -998,6 +998,8 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
       return;
     }
     sendTimestamps.current.push(now);
+    // Personality: any send resets the 3-min idle dispatch rotation timer.
+    if (idleTimerRef.current) { clearTimeout(idleTimerRef.current); idleTimerRef.current = null; }
 
     posthog.capture("mochi_message_sent");
     if (!isPro) setQuestionsUsed((prev) => prev + 1);
