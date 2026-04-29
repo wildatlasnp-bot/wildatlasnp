@@ -112,9 +112,9 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
       }));
 
     const labels = [
-      { dot: CHART_COLORS.quiet, label: "Best window", time: `${formatTime12(Math.max(qs, DAY_START))}–${formatTime12(qe)}` },
-      { dot: CHART_COLORS.packed, label: "Peak hours", time: `${formatTime12(ps)}–${formatTime12(pe)}` },
-      { dot: CHART_COLORS.quiet, label: "Quiet again", time: `After ${formatTime12(eq)}` },
+      { dot: ZONE_HEX.quiet, label: "Best window", time: `${formatTime12(Math.max(qs, DAY_START))}–${formatTime12(qe)}` },
+      { dot: ZONE_HEX.packed, label: "Peak hours", time: `${formatTime12(ps)}–${formatTime12(pe)}` },
+      { dot: ZONE_HEX.quiet, label: "Quiet again", time: `After ${formatTime12(eq)}` },
     ];
 
     return { segments: segs, windowLabels: labels };
