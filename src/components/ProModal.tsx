@@ -25,13 +25,15 @@ const EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
 const EASE_AMBIENT = "cubic-bezier(0.4, 0, 0.2, 1)";
 
 /**
- * Premium Field Pass — dark editorial direction.
+ * Premium Field Pass — cream paper editorial direction.
  * Palette:
- *   Ink (paper):  #0E1A14  deep forest near-black
- *   Vellum:       #F5EBD3  warm cream highlight
- *   Champagne:    #C9A96E  gold leaf
+ *   Paper:        #F0EDEA  warm cream surface
+ *   Paper warm:   #F5EFE7  highlight tint
+ *   Ink:          #1A2F1E  deep forest text
+ *   Ink soft:     #2C2C2C  body text
+ *   Champagne:    #C9A96E  gold leaf accent
  *   Gold deep:    #8C6F3A
- *   Moss:         #5C7A5E  hairlines
+ *   Forest CTA:   #2F6F4E  primary action
  */
 
 // Pillars — what Pro actually buys you. Asymmetric, editorial — no table.
@@ -215,22 +217,18 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
         style={{
           maxWidth: "min(404px, calc(100vw - 24px))",
           borderRadius: 20,
-          background: "#0E1A14",
-          color: "#F5EBD3",
+          background: "#F0EDEA",
+          color: "#1A2F1E",
           zIndex: 1000,
-          // Embossed dark vellum — deep ambient + a single warm rim highlight.
+          // Soft cream paper — gentle ambient + warm rim highlight.
           boxShadow: [
-            "0 50px 120px -24px rgba(0,0,0,0.78)",
-            "0 22px 50px -16px rgba(0,0,0,0.55)",
-            "inset 0 1px 0 rgba(245,235,211,0.10)",
-            "inset 0 0 0 1px rgba(201,169,110,0.18)",
+            "0 50px 120px -24px rgba(26,47,30,0.32)",
+            "0 22px 50px -16px rgba(26,47,30,0.22)",
+            "inset 0 1px 0 rgba(255,255,255,0.6)",
+            "inset 0 0 0 1px rgba(201,169,110,0.28)",
           ].join(", "),
           animation: `proModalIn 720ms ${EASE} both`,
-          // Isolate from the rest of the page so paint/layout invalidations
-          // inside the modal don't cascade out (and vice versa).
           contain: "paint layout style",
-          // `isolation` promotes a stacking context without clobbering Radix's
-          // translate(-50%,-50%) centering on `transform`.
           isolation: "isolate",
         }}
       >
@@ -267,7 +265,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             style={{
               background: [
                 "radial-gradient(120% 80% at 50% 0%, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0) 55%)",
-                "linear-gradient(180deg, rgba(14,26,20,0.18) 0%, rgba(14,26,20,0.58) 55%, #0E1A14 100%)",
+                "linear-gradient(180deg, rgba(14,26,20,0.18) 0%, rgba(14,26,20,0.55) 60%, rgba(240,237,234,0.85) 92%, #F0EDEA 100%)",
               ].join(", "),
             }}
           />
@@ -397,7 +395,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               fontFamily: "'DM Sans', sans-serif",
               fontSize: 14,
               fontWeight: 400,
-              color: "rgba(245,235,211,0.72)",
+              color: "rgba(44,44,44,0.78)",
               lineHeight: 1.6,
               marginTop: 4,
               ...revealStyle(STEP.SUBDECK, "up"),
@@ -432,7 +430,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                   borderBottom:
                     i === PILLARS.length - 1
                       ? "none"
-                      : "1px solid rgba(201,169,110,0.10)",
+                      : "1px solid rgba(140,111,58,0.18)",
                   ...revealStyle(STEP.PILLAR_0 + i, "up"),
                 }}
               >
@@ -457,7 +455,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                       fontWeight: 500,
                       lineHeight: 1.2,
                       letterSpacing: "-0.005em",
-                      color: "#F5EBD3",
+                      color: "#1A2F1E",
                     }}
                   >
                     {p.title}
@@ -468,7 +466,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                       fontFamily: "'DM Sans', sans-serif",
                       fontSize: 13,
                       lineHeight: 1.55,
-                      color: "rgba(245,235,211,0.62)",
+                      color: "rgba(44,44,44,0.68)",
                     }}
                   >
                     {p.body}
@@ -498,7 +496,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                   fontFamily: "'DM Sans', sans-serif",
                   fontSize: 12,
                   letterSpacing: "0.06em",
-                  color: "rgba(245,235,211,0.62)",
+                  color: "rgba(44,44,44,0.62)",
                   ...revealStyle(STEP.PROOF, "up"),
                 }}
               >
@@ -508,20 +506,20 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                     width: 6,
                     height: 6,
                     borderRadius: "50%",
-                    background: "#7FB98B",
-                    boxShadow: "0 0 0 4px rgba(127,185,139,0.18), 0 0 10px rgba(127,185,139,0.55)",
+                    background: "#2F6F4E",
+                    boxShadow: "0 0 0 4px rgba(47,111,78,0.18), 0 0 10px rgba(47,111,78,0.45)",
                     animation: "proPulse 2.4s ease-in-out infinite",
                     flexShrink: 0,
                   }}
                 />
-                <span style={{ color: "rgba(245,235,211,0.85)" }}>
+                <span style={{ color: "rgba(26,47,30,0.85)" }}>
                   Caught{" "}
-                  <span style={{ color: "#C9A96E", fontWeight: 600 }}>{timeLabel}</span>
-                  <span style={{ color: "rgba(201,169,110,0.45)", margin: "0 6px" }}>·</span>
-                  <span style={{ fontStyle: "italic", color: "rgba(245,235,211,0.78)" }}>
+                  <span style={{ color: "#8C6F3A", fontWeight: 600 }}>{timeLabel}</span>
+                  <span style={{ color: "rgba(140,111,58,0.45)", margin: "0 6px" }}>·</span>
+                  <span style={{ fontStyle: "italic", color: "rgba(44,44,44,0.78)" }}>
                     {latestFind.permit_name}
                   </span>
-                  <span style={{ color: "rgba(245,235,211,0.45)" }}> · {parkShort}</span>
+                  <span style={{ color: "rgba(44,44,44,0.55)" }}> · {parkShort}</span>
                 </span>
               </div>
             );
@@ -542,18 +540,17 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                   marginTop: latestFind ? 14 : 22,
                   borderRadius: 16,
                   padding: "20px 22px",
-                  // Clip the sheen sweep to the plate's rounded rect.
                   overflow: "hidden",
                   background:
-                    "linear-gradient(180deg, rgba(245,235,211,0.07) 0%, rgba(201,169,110,0.045) 48%, rgba(0,0,0,0.18) 100%)",
-                  border: "1px solid rgba(201,169,110,0.32)",
-                  // Deep inset rim + outer drop = struck/embossed feel
+                    "linear-gradient(180deg, #FFFFFF 0%, #F7F2EA 55%, #EFE7DA 100%)",
+                  border: "1px solid rgba(201,169,110,0.42)",
+                  // Embossed cream plate
                   boxShadow: [
-                    "inset 0 1px 0 rgba(245,235,211,0.14)",
-                    "inset 0 -1px 0 rgba(0,0,0,0.45)",
-                    "inset 0 0 0 1px rgba(201,169,110,0.08)",
-                    "0 1px 0 rgba(245,235,211,0.04)",
-                    "0 22px 44px -24px rgba(0,0,0,0.7)",
+                    "inset 0 1px 0 rgba(255,255,255,0.85)",
+                    "inset 0 -1px 0 rgba(140,111,58,0.18)",
+                    "inset 0 0 0 1px rgba(201,169,110,0.10)",
+                    "0 1px 0 rgba(255,255,255,0.6)",
+                    "0 22px 44px -24px rgba(26,47,30,0.28)",
                   ].join(", "),
                   ...revealStyle(STEP.PRICE, "up"),
                 }}
@@ -591,7 +588,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                           fontStyle: "italic",
                           fontSize: 14,
                           fontWeight: 500,
-                          color: "#F5EBD3",
+                          color: "#1A2F1E",
                           letterSpacing: "-0.005em",
                           lineHeight: 1.1,
                         }}
@@ -603,7 +600,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                           marginTop: 3,
                           fontFamily: "'DM Sans', sans-serif",
                           fontSize: 12,
-                          color: "rgba(245,235,211,0.55)",
+                          color: "rgba(44,44,44,0.62)",
                           letterSpacing: "0.04em",
                         }}
                       >
@@ -625,7 +622,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                   {/* RIGHT — engraved numeral */}
                   <div style={{ textAlign: "right", display: "flex", flexDirection: "column", alignItems: "flex-end", justifyContent: "center", minWidth: 110 }}>
                     {displayPrice === null ? (
-                      <span className="inline-block w-20 h-10 bg-white/10 animate-pulse rounded" />
+                      <span className="inline-block w-20 h-10 bg-[rgba(26,47,30,0.08)] animate-pulse rounded" />
                     ) : (
                       <>
                         <div style={{ display: "flex", alignItems: "flex-start", lineHeight: 1 }}>
@@ -634,11 +631,10 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                             style={{
                               fontSize: 18,
                               fontWeight: 500,
-                              color: "#F5EBD3",
+                              color: "#1A2F1E",
                               marginTop: 6,
                               marginRight: 2,
-                              opacity: 0.85,
-                              textShadow: "0 1px 0 rgba(0,0,0,0.5)",
+                              opacity: 0.75,
                             }}
                           >
                             {sym}
@@ -650,12 +646,10 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                               fontWeight: 500,
                               letterSpacing: "-0.035em",
                               lineHeight: 0.9,
-                              color: "#FBF3DC",
-                              // Engraved double-shadow: dark depth + champagne rim light
+                              color: "#1A2F1E",
                               textShadow: [
-                                "0 1px 0 rgba(245,235,211,0.18)",
-                                "0 -1px 0 rgba(0,0,0,0.55)",
-                                "0 2px 14px rgba(0,0,0,0.45)",
+                                "0 1px 0 rgba(255,255,255,0.6)",
+                                "0 2px 14px rgba(26,47,30,0.10)",
                               ].join(", "),
                             }}
                           >
@@ -668,7 +662,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                                 fontStyle: "italic",
                                 fontSize: 22,
                                 fontWeight: 500,
-                                color: "#C9A96E",
+                                color: "#8C6F3A",
                                 marginTop: 6,
                                 marginLeft: 1,
                                 letterSpacing: "-0.01em",
@@ -686,7 +680,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                             fontWeight: 600,
                             letterSpacing: "0.22em",
                             textTransform: "uppercase",
-                            color: "rgba(245,235,211,0.55)",
+                            color: "rgba(44,44,44,0.55)",
                           }}
                         >
                           USD / month
@@ -723,11 +717,11 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                 fontWeight: 700,
                 letterSpacing: "0.02em",
                 cursor: loading || isPro ? "default" : "pointer",
-                border: "1px solid rgba(201,169,110,0.55)",
+                border: "1px solid rgba(140,111,58,0.55)",
                 boxShadow: [
                   "inset 0 1px 0 rgba(245,235,211,0.22)",
                   "inset 0 -1px 0 rgba(0,0,0,0.40)",
-                  "0 22px 44px -12px rgba(0,0,0,0.65)",
+                  "0 18px 36px -14px rgba(26,47,30,0.45)",
                   "0 0 0 1px rgba(201,169,110,0.14)",
                 ].join(", "),
                 display: "grid",
@@ -776,15 +770,15 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                   gap: 8,
                   fontFamily: "'DM Sans', sans-serif",
                   fontSize: 12,
-                  color: "rgba(245,235,211,0.62)",
+                  color: "rgba(44,44,44,0.62)",
                   letterSpacing: "0.04em",
                 }}
               >
-                <Lock size={12} style={{ color: "rgba(201,169,110,0.85)" }} strokeWidth={2.2} />
+                <Lock size={12} style={{ color: "#8C6F3A" }} strokeWidth={2.2} />
                 <span>Secure checkout</span>
-                <span style={{ color: "rgba(201,169,110,0.45)" }}>·</span>
+                <span style={{ color: "rgba(140,111,58,0.55)" }}>·</span>
                 <span>7-day refund</span>
-                <span style={{ color: "rgba(201,169,110,0.45)" }}>·</span>
+                <span style={{ color: "rgba(140,111,58,0.55)" }}>·</span>
                 <span>Instant access</span>
               </div>
             )}
@@ -795,7 +789,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             style={{
               fontFamily: "'DM Sans', sans-serif",
               fontSize: 12,
-              color: "rgba(245,235,211,0.50)",
+              color: "rgba(44,44,44,0.55)",
               textAlign: "center",
               margin: "12px 4px 0",
               lineHeight: 1.55,
@@ -809,7 +803,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               href="https://wildatlas.app/terms"
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: "#C9A96E", textDecoration: "underline", textUnderlineOffset: 2 }}
+              style={{ color: "#8C6F3A", textDecoration: "underline", textUnderlineOffset: 2 }}
             >
               Full terms
             </a>
@@ -821,7 +815,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               marginTop: 18,
               height: 1,
               background:
-                "linear-gradient(90deg, transparent 0%, rgba(201,169,110,0.28) 50%, transparent 100%)",
+                "linear-gradient(90deg, transparent 0%, rgba(140,111,58,0.32) 50%, transparent 100%)",
               ...revealStyle(STEP.DIVIDER, "up"),
             }}
           />
@@ -841,12 +835,12 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               { icon: ShieldCheck, label: "No hidden fees" },
             ].map((t) => (
               <div key={t.label} className="flex items-center gap-1.5">
-                <t.icon size={12} style={{ color: "rgba(201,169,110,0.75)" }} strokeWidth={2.2} />
+                <t.icon size={12} style={{ color: "#8C6F3A" }} strokeWidth={2.2} />
                 <span
                   style={{
                     fontFamily: "'DM Sans', sans-serif",
                     fontSize: 12,
-                    color: "rgba(245,235,211,0.55)",
+                    color: "rgba(44,44,44,0.62)",
                     fontWeight: 500,
                   }}
                 >
@@ -861,7 +855,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             style={{
               fontFamily: "'DM Sans', sans-serif",
               fontSize: 12,
-              color: "rgba(245,235,211,0.40)",
+              color: "rgba(44,44,44,0.55)",
               textAlign: "center",
               marginTop: 14,
               ...revealStyle(STEP.REFUND, "up"),
@@ -869,8 +863,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
           >
             <button
               onClick={() => setRefundOpen(true)}
-              className="underline underline-offset-2 transition-colors hover:text-[#C9A96E]"
-              style={{ color: "rgba(245,235,211,0.55)", fontSize: 12 }}
+              className="underline underline-offset-2 transition-colors hover:text-[#8C6F3A]"
+              style={{ color: "rgba(44,44,44,0.62)", fontSize: 12 }}
             >
               Refund Policy
             </button>
