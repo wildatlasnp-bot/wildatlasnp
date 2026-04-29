@@ -1256,32 +1256,26 @@ function QuietTrail() {
   return (
     <div style={{
       background: "linear-gradient(180deg, var(--ranger-paper-cream) 0%, #F2F1ED 80px)",
-      padding: "44px 24px 56px",
+      padding: "48px 24px",
       display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center",
     }}>
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        style={{ position: "relative", marginBottom: 18 }}
-      >
-        <svg width="120" height="80" viewBox="0 0 120 80" fill="none" aria-hidden>
-          <path d="M0,80 L0,52 L20,40 L36,46 L52,28 L70,42 L88,32 L106,44 L120,38 L120,80 Z" fill="#1A2E1F" opacity="0.85" />
-          <path d="M0,80 L0,64 L26,58 L48,62 L72,54 L96,60 L120,56 L120,80 Z" fill="#0E1A11" />
-          <circle cx="92" cy="14" r="6" fill="#E8D9B5" opacity="0.85" />
-        </svg>
-      </motion.div>
       <p style={{
-        fontFamily: CG, fontStyle: "italic", fontSize: 22, fontWeight: 400,
-        color: "var(--ranger-ink)", lineHeight: 1.25, maxWidth: 280, marginBottom: 8,
+        fontFamily: CG, fontStyle: "italic", fontSize: 24, fontWeight: 400,
+        color: "#1A2F1E", lineHeight: 1.2, marginBottom: 8,
       }}>
-        The trail is quiet.
+        All clear.
       </p>
       <p style={{
-        fontFamily: DM, fontSize: 13, fontWeight: 300,
-        color: "var(--ranger-ink-muted)", lineHeight: 1.55, maxWidth: 260,
+        fontFamily: DM, fontSize: 13, fontWeight: 400,
+        color: "#8A9E8A", lineHeight: 1.55, maxWidth: 280, marginBottom: 20,
       }}>
-        No active dispatches for the parks you watch. We'll send word the moment something changes.
+        No active alerts for your watched parks. Sourced live from NPS.
+      </p>
+      <p style={{
+        fontFamily: DM, fontSize: 12, fontWeight: 400,
+        color: "#8A9E8A",
+      }}>
+        Last checked just now
       </p>
     </div>
   );
