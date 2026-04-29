@@ -364,8 +364,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
         {/* ============ EDITORIAL TITLE — overlaps hero/body seam ============ */}
         <div
           style={{
-            padding: "0 26px",
-            marginTop: -28,
+            padding: "20px 26px 0",
+            marginTop: 0,
             position: "relative",
             zIndex: 2,
             ...revealStyle(STEP.TITLE, "up"),
@@ -377,21 +377,20 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               fontStyle: "italic",
               fontSize: 28,
               fontWeight: 400,
-              lineHeight: 1.1,
+              lineHeight: 1.15,
               letterSpacing: "-0.01em",
               color: "#F5EBD3",
               textShadow: [
                 "0 1px 0 rgba(0,0,0,0.55)",
                 "0 2px 6px rgba(0,0,0,0.65)",
                 "0 6px 18px rgba(0,0,0,0.55)",
-                "0 0 28px rgba(14,26,20,0.45)",
               ].join(", "),
               margin: 0,
             }}
           >
-            Permits open.<br />
-            Then vanish.<br />
-            <span style={{ color: "#C9A96E" }}>Be first.</span>
+            <span style={{ display: "block" }}>Permits open.</span>
+            <span style={{ display: "block" }}>Then vanish.</span>
+            <span style={{ display: "block", color: "#C9A96E" }}>Be first.</span>
           </h2>
         </div>
 
@@ -571,8 +570,10 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                       <span
                         className="font-heading"
                         style={{
+                          fontFamily: "'Cormorant Garamond', Georgia, serif",
                           fontSize: 72,
                           fontWeight: 300,
+                          fontStyle: "normal",
                           letterSpacing: "-0.03em",
                           lineHeight: 0.95,
                           color: "#F0EDEA",
