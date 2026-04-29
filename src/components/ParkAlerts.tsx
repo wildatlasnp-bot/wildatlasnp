@@ -338,16 +338,23 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
                 onClick={() => setUnreadOnly((v) => !v)}
               />
             )}
-            {typeChips.map((tc) => (
-              <RailChip
-                key={tc.id}
-                label={tc.label}
-                count={tc.count}
-                active={activeTypeFilter === tc.id}
-                accent={SEVERITY_META[tc.id as Severity].ink}
-                onClick={() => setActiveTypeFilter((p) => (p === tc.id ? null : tc.id))}
-              />
-            ))}
+            {typeChips.map((tc) => {
+              // Match RailChip count color to the new severity-border palette
+              // (defined inline in TelegramCard). Keep duplicated map small + local.
+              const SEV_BORDER_TAB: Record<Severity, string> = {
+                critical: "#8B0000", closure: "#C0392B", caution: "#E8935A", info: "#2F6F4E",
+              };
+              return (
+                <RailChip
+                  key={tc.id}
+                  label={tc.label}
+                  count={tc.count}
+                  active={activeTypeFilter === tc.id}
+                  accent={SEV_BORDER_TAB[tc.id as Severity]}
+                  onClick={() => setActiveTypeFilter((p) => (p === tc.id ? null : tc.id))}
+                />
+              );
+            })}
             {parkChips.length > 0 && typeChips.length > 0 && (
               <div style={{ width: 1, alignSelf: "center", height: 18, background: "rgba(0,0,0,0.10)", margin: "0 6px", flexShrink: 0 }} />
             )}
