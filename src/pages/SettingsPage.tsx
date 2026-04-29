@@ -875,19 +875,28 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             </Dialog>
           </div>
         ) : (
-          /* Free — editorial upgrade card */
-          <div style={CARD_SURFACE}>
+          /* Free — editorial upgrade card (tinted-green surface) */
+          <div
+            style={{
+              background: 'rgba(47,111,78,0.04)',
+              border: '1px solid rgba(47,111,78,0.12)',
+              borderRadius: 16,
+              boxShadow: '0 2px 8px rgba(26,47,30,0.05)',
+              overflow: 'hidden',
+            }}
+          >
             {/* Top — Current plan */}
             <div className="px-5 pt-5 pb-4">
-              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 12, fontStyle: 'italic', color: MUTED, marginBottom: 2 }}>Current plan</p>
-              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 500, color: FOREST, lineHeight: 1.1 }}>Free Plan</p>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 500, letterSpacing: '0.20em', textTransform: 'uppercase', color: MUTED, marginBottom: 6 }}>Current plan</p>
+              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 400, color: FOREST, lineHeight: 1.1 }}>Free Plan</p>
               <div className="mt-4">
                 <div className="flex items-center justify-between mb-1.5">
                   <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: 'rgba(58,62,59,0.6)' }}>Permit limit reached</span>
                   <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#2F6F4E', fontWeight: 500 }}>Upgrade for unlimited</span>
                 </div>
-                <div style={{ height: 3, borderRadius: 2, backgroundColor: '#EFEAE0', overflow: 'hidden' }}>
-                  <div style={{ height: 3, borderRadius: 2, background: `linear-gradient(90deg, ${GOLD} 0%, #2F6F4E 100%)`, width: '100%' }} />
+                {/* Fully-rounded progress track + fill */}
+                <div style={{ height: 4, borderRadius: 9999, backgroundColor: '#EFEAE0', overflow: 'hidden' }}>
+                  <div style={{ height: 4, borderRadius: 9999, background: `linear-gradient(90deg, ${GOLD} 0%, #2F6F4E 100%)`, width: '100%' }} />
                 </div>
               </div>
             </div>
