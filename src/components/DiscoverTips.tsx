@@ -1347,9 +1347,15 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         >
           <FieldLog parkId={parkId} onNavigateToSniper={onNavigateToSniper} />
         </motion.div>
+
+      {/* ═══════════════════════ USER INTEL — saved signals from Poko chat ═══════════════════════
+          Renders only when the user has captured at least one chat snippet
+          for this park. Empty → component returns null and the section is
+          skipped (no plate). Captures fly in from the Poko tab. */}
+      <RevealSection style={{ padding: "32px 20px 4px" }} delay={90} resetKey={parkId}>
+        <SavedSignalsWithPlate parkId={parkId} focusKey={focusKey} />
       </RevealSection>
 
-      {/* ═══════════════════════ VII. TODAY IN PARK (dark plate) ═══════════════════════ */}
       <RevealSection
         className="ranger-card--strip-gradient"
         style={{
