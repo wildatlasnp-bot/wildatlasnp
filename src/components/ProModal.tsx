@@ -217,22 +217,18 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
         style={{
           maxWidth: "min(404px, calc(100vw - 24px))",
           borderRadius: 20,
-          background: "#0E1A14",
-          color: "#F5EBD3",
+          background: "#F0EDEA",
+          color: "#1A2F1E",
           zIndex: 1000,
-          // Embossed dark vellum — deep ambient + a single warm rim highlight.
+          // Soft cream paper — gentle ambient + warm rim highlight.
           boxShadow: [
-            "0 50px 120px -24px rgba(0,0,0,0.78)",
-            "0 22px 50px -16px rgba(0,0,0,0.55)",
-            "inset 0 1px 0 rgba(245,235,211,0.10)",
-            "inset 0 0 0 1px rgba(201,169,110,0.18)",
+            "0 50px 120px -24px rgba(26,47,30,0.32)",
+            "0 22px 50px -16px rgba(26,47,30,0.22)",
+            "inset 0 1px 0 rgba(255,255,255,0.6)",
+            "inset 0 0 0 1px rgba(201,169,110,0.28)",
           ].join(", "),
           animation: `proModalIn 720ms ${EASE} both`,
-          // Isolate from the rest of the page so paint/layout invalidations
-          // inside the modal don't cascade out (and vice versa).
           contain: "paint layout style",
-          // `isolation` promotes a stacking context without clobbering Radix's
-          // translate(-50%,-50%) centering on `transform`.
           isolation: "isolate",
         }}
       >
