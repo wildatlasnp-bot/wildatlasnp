@@ -121,16 +121,30 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
     return { segments: segs, windowLabels: labels };
   }, [f.quiet_start, f.quiet_end, f.peak_start, f.peak_end, f.evening_quiet]);
 
-  const NEEDLE_COLOR = "var(--wa-crowd-needle)";
+  const NEEDLE_COLOR = "#1A2F1E";
+
+  const GLOW_BY_LEVEL: Record<string, string> = {
+    quiet: "none",
+    building: "none",
+    busy: "0 0 8px rgba(232,147,90,0.3)",
+    packed: "0 0 12px rgba(192,57,43,0.35)",
+  };
 
   return (
-    <div>
+    <div
+      style={{
+        background: "#FFFFFF",
+        border: "1px solid #E5E1DD",
+        borderRadius: 16,
+        padding: 24,
+      }}
+    >
       {/* Location name */}
       <h3 className="font-semibold text-[13px] text-foreground/70 mb-2">{f.location_name}</h3>
 
       {/* Day chart with gauge-style NOW marker */}
       <div className="relative" style={{ paddingTop: nowPct !== null ? "28px" : "0", paddingLeft: 8, paddingRight: 8, overflow: 'visible' }}>
-        {/* NOW gauge marker — above + through the bar */}
+        {/* NOW gauge marker — hairline + dot */}
         {nowPct !== null && (
           <div className="absolute z-20" style={{ left: `${nowPct}%`, top: 0, bottom: 0, overflow: 'visible' }}>
             {/* NOW label */}
@@ -151,26 +165,26 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
             >
               NOW
             </span>
-            {/* Circle anchor at top of bar */}
+            {/* 6px filled circle dot at top with white glow */}
             <div
               className="absolute left-1/2 -translate-x-1/2"
               style={{
-                top: "18px",
+                top: "20px",
                 width: "6px",
                 height: "6px",
                 borderRadius: "50%",
-                backgroundColor: "#fff",
-                border: `2px solid ${NEEDLE_COLOR}`,
+                backgroundColor: NEEDLE_COLOR,
+                boxShadow: "0 0 6px rgba(255,255,255,0.6)",
                 zIndex: 3,
               }}
             />
-            {/* Vertical needle line from circle into bar */}
+            {/* 1px hairline from dot down through bar */}
             <div
-              className="absolute left-1/2 -translate-x-1/2 now-marker-pulse"
+              className="absolute left-1/2 -translate-x-1/2"
               style={{
-                top: "24px",
+                top: "26px",
                 bottom: 0,
-                width: "2px",
+                width: "1px",
                 backgroundColor: NEEDLE_COLOR,
                 zIndex: 2,
               }}
@@ -178,8 +192,8 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
           </div>
         )}
 
-        {/* The bar — 52px, continuous strip using flex for zero gaps */}
-        <div key={animationKey} className="relative flex" style={{ height: "52px", borderRadius: "12px", backgroundColor: CHART_COLORS.base, alignItems: "flex-end", overflow: 'visible' }}>
+        {/* The bar — capsule segments with rounded ends */}
+        <div key={animationKey} className="relative flex" style={{ height: "52px", alignItems: "flex-end", overflow: 'visible', gap: 3 }}>
           {/* Left padding if first segment doesn't start at DAY_START */}
           {segments.length > 0 && segments[0].startPct > 0 && (
             <div style={{ flex: segments[0].startPct }} />
@@ -193,8 +207,9 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
                 backgroundColor: s.color,
                 minWidth: 0,
                 height: CROWD_HEIGHTS[s.level] ?? 52,
-                transformOrigin: 'left center',
-                animation: `barGrow 300ms cubic-bezier(0.4,0,0.2,1) ${i * 60}ms both`,
+                borderRadius: 9999,
+                boxShadow: GLOW_BY_LEVEL[s.level] ?? "none",
+                animation: `barGrow 600ms cubic-bezier(0, 0, 0.2, 1) ${i * 40}ms both`,
               }}
             />
           ))}
