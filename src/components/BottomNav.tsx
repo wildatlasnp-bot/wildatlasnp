@@ -72,9 +72,9 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
         justifyContent: "space-around",
         alignItems: "center",
         paddingBottom: "env(safe-area-inset-bottom, 0px)",
-        background: "linear-gradient(180deg, #1F3624 0%, #1A2F1E 60%, #15281A 100%)",
-        borderTop: "0.5px solid rgba(255, 255, 255, 0.08)",
-        boxShadow: "0 -1px 0 rgba(255,255,255,0.04) inset, 0 -8px 24px -8px rgba(5, 20, 12, 0.45), 0 -2px 8px -2px rgba(5, 20, 12, 0.35)",
+        background: "#F0EDEA",
+        borderTop: "1px solid #E5E1DD",
+        boxShadow: "0 -1px 0 rgba(255,255,255,0.6) inset, 0 -8px 24px -8px rgba(26,47,30,0.10), 0 -2px 8px -2px rgba(26,47,30,0.06)",
         zIndex: 50,
       }}
     >
