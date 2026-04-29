@@ -503,8 +503,8 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                   gap: 10,
                   fontFamily: "'DM Sans', sans-serif",
                   fontSize: 12,
-                  letterSpacing: "0.06em",
-                  color: "rgba(44,44,44,0.62)",
+                  letterSpacing: "0.04em",
+                  color: "rgba(240,237,234,0.72)",
                   ...revealStyle(STEP.PROOF, "up"),
                 }}
               >
@@ -515,19 +515,19 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                     height: 6,
                     borderRadius: "50%",
                     background: "#2F6F4E",
-                    boxShadow: "0 0 0 4px rgba(47,111,78,0.18), 0 0 10px rgba(47,111,78,0.45)",
-                    animation: "proPulse 2.4s ease-in-out infinite",
+                    boxShadow: "0 0 0 0 rgba(47,111,78,0.55)",
+                    animation: "proProofPulse 1.2s cubic-bezier(0.4, 0, 0.2, 1) 600ms 1 both",
                     flexShrink: 0,
                   }}
                 />
-                <span style={{ color: "rgba(26,47,30,0.85)" }}>
+                <span style={{ color: "rgba(240,237,234,0.78)" }}>
                   Caught{" "}
-                  <span style={{ color: "#8C6F3A", fontWeight: 600 }}>{timeLabel}</span>
-                  <span style={{ color: "rgba(140,111,58,0.45)", margin: "0 6px" }}>·</span>
-                  <span style={{ fontStyle: "italic", color: "rgba(44,44,44,0.78)" }}>
+                  <span style={{ color: "#2F6F4E", fontWeight: 700 }}>{timeLabel}</span>
+                  <span style={{ color: "rgba(201,169,110,0.45)", margin: "0 6px" }}>·</span>
+                  <span className="font-heading" style={{ fontStyle: "italic", fontSize: 13, color: "#F0EDEA" }}>
                     {latestFind.permit_name}
                   </span>
-                  <span style={{ color: "rgba(44,44,44,0.55)" }}> · {parkShort}</span>
+                  <span style={{ color: "rgba(240,237,234,0.50)" }}> · {parkShort}</span>
                 </span>
               </div>
             );
