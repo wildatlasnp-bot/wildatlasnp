@@ -907,10 +907,15 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
       >
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
           <div style={{ display: "flex", alignItems: "baseline", gap: 10, minWidth: 0 }}>
-            <span className="font-display-italic"
+            <span
+              className="font-display-italic"
+              onClick={handleWordmarkTap}
               style={{
                 fontStyle: "italic", fontWeight: 500, fontSize: 18,
                 color: "#1A2F1E", letterSpacing: "-0.01em", lineHeight: 1,
+                cursor: "default",
+                userSelect: "none",
+                WebkitTapHighlightColor: "transparent",
               }}
             >
               WildAtlas
