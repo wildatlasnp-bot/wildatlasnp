@@ -265,7 +265,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             style={{
               background: [
                 "radial-gradient(120% 80% at 50% 0%, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0) 55%)",
-                "linear-gradient(180deg, rgba(14,26,20,0.18) 0%, rgba(14,26,20,0.58) 55%, #0E1A14 100%)",
+                "linear-gradient(180deg, rgba(14,26,20,0.18) 0%, rgba(14,26,20,0.55) 60%, rgba(240,237,234,0.85) 92%, #F0EDEA 100%)",
               ].join(", "),
             }}
           />
