@@ -2423,80 +2423,81 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                               </span>
                             </div>
                           )}
-                         <div
-                            className="mochi-prose-container"
-                            style={
-                              msg.role === "assistant"
-                                ? {
-                                    // Layout / typography (variant-specific)
-                                    maxWidth: isInitialBriefing ? '100%' : '85%',
-                                    width: isInitialBriefing ? '100%' : 'auto',
-                                    alignSelf: 'flex-start',
-                                    marginRight: 'auto',
-                                    marginLeft: 0,
-                                    fontSize: isInitialBriefing ? 16 : 15,
-                                    fontWeight: 400,
-                                    fontFamily: isInitialBriefing ? "'Cormorant Garamond', serif" : "'DM Sans', sans-serif",
-                                    fontStyle: isInitialBriefing ? 'italic' : 'normal',
-                                    // Themed surface tokens
-                                    ...pokoBubbleStyle(isInitialBriefing ? 'briefing' : 'default'),
-                                    // Briefing tweaks line-height slightly tighter
-                                    lineHeight: isInitialBriefing ? 1.55 : 1.6,
-                                  }
-                                : {
-                                    // Layout
-                                    width: 'fit-content',
-                                    maxWidth: '72%',
-                                    alignSelf: 'flex-end',
-                                    marginLeft: 'auto',
-                                    marginRight: 0,
-                                    fontSize: 15,
-                                    fontWeight: 400,
-                                    fontFamily: "'DM Sans', sans-serif",
-                                    // Themed surface tokens
-                                    ...userBubbleStyle,
-                                  }
-                            }
-                          >
-                            {msg.role === "assistant" ? (() => {
-                              // Strip personality marker (idle/returning) so it
-                              // never reaches the renderer. When stripped, the
-                              // seasonal subtitle is also suppressed.
-                              const isPersonality = isInitialBriefing && msg.content.startsWith(PERSONALITY_MARKER);
-                              const cleaned = isPersonality ? msg.content.slice(PERSONALITY_MARKER.length) : msg.content;
-                              return (
-                                <div
-                                  /* Briefing crossfades on window change by remounting via content key */
-                                  key={isInitialBriefing ? `briefing-${cleaned}` : undefined}
-                                  className={`mochi-prose ${isInitialBriefing ? "poko-dispatch-fade" : ""}`}
-                                >
-                                  {parseTrailBlocks(cleaned).map((block, bi) =>
-                                    block.type === "trails" ? (
-                                      <div key={bi} className="space-y-2 -mx-1">
-                                        {block.value.map((trail, ti) => (
-                                          <MochiTrailCard key={ti} trail={trail} />
-                                        ))}
-                                      </div>
-                                    ) : (
-                                      <div key={bi}><ReactMarkdown components={MARKDOWN_NO_TABLES}>{formatInlineBullets(stripMarkdownTables(block.value))}</ReactMarkdown></div>
-                                    )
-                                  )}
-                                  {/* Seasonal subtitle — only on standard time-aware
-                                      greetings (skip during idle/returning/first session). */}
-                                  {isInitialBriefing && !isPersonality && !firstSession && (
-                                    <p style={{
-                                      marginTop: 8, marginBottom: 0,
-                                      fontFamily: "'DM Sans', sans-serif",
-                                      fontSize: 12, fontStyle: 'italic',
-                                      color: '#8A9E8A', lineHeight: 1.5,
-                                    }}>{getSeasonalSubtitle()}</p>
-                                  )}
-                                </div>
-                              );
-                            })() : (
-                              msg.content
-                            )}
-                          </div>
+                          {msg.role === "assistant" ? (
+                            <AssistantBubbleShell
+                              className="mochi-prose-container"
+                              parkId={selectedParkId ?? null}
+                              captureText={
+                                msg.content.startsWith(PERSONALITY_MARKER)
+                                  ? msg.content.slice(PERSONALITY_MARKER.length)
+                                  : msg.content
+                              }
+                              // No capture button on the initial dispatch /
+                              // briefing — it's a greeting, not field intel.
+                              enableCapture={!isInitialBriefing && !msg.isSystem}
+                              bubbleStyle={{
+                                maxWidth: isInitialBriefing ? '100%' : '85%',
+                                width: isInitialBriefing ? '100%' : 'auto',
+                                alignSelf: 'flex-start',
+                                marginRight: 'auto',
+                                marginLeft: 0,
+                                fontSize: isInitialBriefing ? 16 : 15,
+                                fontWeight: 400,
+                                fontFamily: isInitialBriefing ? "'Cormorant Garamond', serif" : "'DM Sans', sans-serif",
+                                fontStyle: isInitialBriefing ? 'italic' : 'normal',
+                                ...pokoBubbleStyle(isInitialBriefing ? 'briefing' : 'default'),
+                                lineHeight: isInitialBriefing ? 1.55 : 1.6,
+                              }}
+                            >
+                              {(() => {
+                                const isPersonality = isInitialBriefing && msg.content.startsWith(PERSONALITY_MARKER);
+                                const cleaned = isPersonality ? msg.content.slice(PERSONALITY_MARKER.length) : msg.content;
+                                return (
+                                  <div
+                                    key={isInitialBriefing ? `briefing-${cleaned}` : undefined}
+                                    className={`mochi-prose ${isInitialBriefing ? "poko-dispatch-fade" : ""}`}
+                                  >
+                                    {parseTrailBlocks(cleaned).map((block, bi) =>
+                                      block.type === "trails" ? (
+                                        <div key={bi} className="space-y-2 -mx-1">
+                                          {block.value.map((trail, ti) => (
+                                            <MochiTrailCard key={ti} trail={trail} />
+                                          ))}
+                                        </div>
+                                      ) : (
+                                        <div key={bi}><ReactMarkdown components={MARKDOWN_NO_TABLES}>{formatInlineBullets(stripMarkdownTables(block.value))}</ReactMarkdown></div>
+                                      )
+                                    )}
+                                    {isInitialBriefing && !isPersonality && !firstSession && (
+                                      <p style={{
+                                        marginTop: 8, marginBottom: 0,
+                                        fontFamily: "'DM Sans', sans-serif",
+                                        fontSize: 12, fontStyle: 'italic',
+                                        color: '#8A9E8A', lineHeight: 1.5,
+                                      }}>{getSeasonalSubtitle()}</p>
+                                    )}
+                                  </div>
+                                );
+                              })()}
+                            </AssistantBubbleShell>
+                          ) : (
+                            <div
+                              className="mochi-prose-container"
+                              style={{
+                                width: 'fit-content',
+                                maxWidth: '72%',
+                                alignSelf: 'flex-end',
+                                marginLeft: 'auto',
+                                marginRight: 0,
+                                fontSize: 15,
+                                fontWeight: 400,
+                                fontFamily: "'DM Sans', sans-serif",
+                                ...userBubbleStyle,
+                              }}
+                            >
+                              {msg.content}
+                            </div>
+                          )}
                           {msg.role === "assistant" && msg.hasDisclaimer && <InlineDisclaimer />}
                         </>
                       )}
