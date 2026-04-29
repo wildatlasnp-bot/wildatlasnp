@@ -774,11 +774,11 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                   letterSpacing: "0.04em",
                 }}
               >
-                <Lock size={12} style={{ color: "rgba(201,169,110,0.85)" }} strokeWidth={2.2} />
+                <Lock size={12} style={{ color: "#8C6F3A" }} strokeWidth={2.2} />
                 <span>Secure checkout</span>
-                <span style={{ color: "rgba(201,169,110,0.45)" }}>·</span>
+                <span style={{ color: "rgba(140,111,58,0.55)" }}>·</span>
                 <span>7-day refund</span>
-                <span style={{ color: "rgba(201,169,110,0.45)" }}>·</span>
+                <span style={{ color: "rgba(140,111,58,0.55)" }}>·</span>
                 <span>Instant access</span>
               </div>
             )}
