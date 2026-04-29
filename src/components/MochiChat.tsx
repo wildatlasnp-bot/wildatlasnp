@@ -1691,7 +1691,18 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   position: 'relative', width: 96, height: 96, flexShrink: 0,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}>
-                  {/* Soft gold parchment glow */}
+                  {/* Static 200px amber wash — barely-visible warmth centered
+                      on the compass. Per spec: rgba(201,169,110,0.06). Static. */}
+                  <div aria-hidden="true" style={{
+                    position: 'absolute',
+                    width: 200, height: 200,
+                    top: '50%', left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    background: 'radial-gradient(circle at center, rgba(201,169,110,0.06) 0%, rgba(201,169,110,0.03) 45%, transparent 70%)',
+                    pointerEvents: 'none',
+                    zIndex: 0,
+                  }} />
+                  {/* Soft gold parchment glow (existing layered warmth) */}
                   <div className="mochi-glow-pulse" aria-hidden="true" style={{
                     position: 'absolute', inset: -16,
                     background: 'radial-gradient(ellipse at center, rgba(201,169,110,0.16) 0%, rgba(201,169,110,0.04) 50%, transparent 75%)',
