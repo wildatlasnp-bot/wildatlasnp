@@ -150,7 +150,7 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
               style={{
                 flex: s.flex,
                 backgroundColor: s.color,
-                minWidth: 0,
+                minWidth: 20,
                 height: BAR_HEIGHT,
                 borderRadius: BAR_RADIUS,
                 animation: `barGrow 600ms cubic-bezier(0, 0, 0.2, 1) ${i * 40}ms both`,
