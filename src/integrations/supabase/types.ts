@@ -836,6 +836,7 @@ export type Database = {
           display_name: string | null
           id: string
           is_pro: boolean
+          last_seen_at: string | null
           notify_email: boolean
           notify_sms: boolean
           onboarded_at: string | null
@@ -856,6 +857,7 @@ export type Database = {
           display_name?: string | null
           id?: string
           is_pro?: boolean
+          last_seen_at?: string | null
           notify_email?: boolean
           notify_sms?: boolean
           onboarded_at?: string | null
@@ -876,6 +878,7 @@ export type Database = {
           display_name?: string | null
           id?: string
           is_pro?: boolean
+          last_seen_at?: string | null
           notify_email?: boolean
           notify_sms?: boolean
           onboarded_at?: string | null
