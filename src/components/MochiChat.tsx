@@ -1769,31 +1769,30 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                       })}
                     </g>
 
-                    {/* Cardinal letters — N E S W */}
-                    {[
-                      { l: 'N', x: 66, y: 18 },
-                      { l: 'E', x: 116, y: 70 },
-                      { l: 'S', x: 66, y: 120 },
-                      { l: 'W', x: 16, y: 70 },
-                    ].map((c) => (
-                      <text
-                        key={c.l}
-                        x={c.x} y={c.y}
-                        textAnchor="middle"
-                        fontFamily="'Cormorant Garamond', serif"
-                        fontSize="9"
-                        fontStyle="italic"
-                        fill="rgba(201,169,110,0.85)"
-                        letterSpacing="0.12em"
-                      >{c.l}</text>
-                    ))}
-
-                    {/* Compass rose — needle rotates toward tracked park */}
-                    <g
-                      className="poko-needle-living"
-                      style={{ transform: `rotate(${needleBearing}deg)` }}
-                    >
-                      {/* Diagonal spokes — static, faint guides */}
+                    {/* Rose decoration — cardinal letters + diagonal spokes.
+                        Drifts ±0.5° / 16s (8s each way) ease-in-out infinite.
+                        Per ambient-loops exception: Poko-only loop. The needle
+                        below stays semantically locked to the live bearing. */}
+                    <g className="poko-rose-drift">
+                      {/* Cardinal letters — N E S W */}
+                      {[
+                        { l: 'N', x: 66, y: 18 },
+                        { l: 'E', x: 116, y: 70 },
+                        { l: 'S', x: 66, y: 120 },
+                        { l: 'W', x: 16, y: 70 },
+                      ].map((c) => (
+                        <text
+                          key={c.l}
+                          x={c.x} y={c.y}
+                          textAnchor="middle"
+                          fontFamily="'Cormorant Garamond', serif"
+                          fontSize="9"
+                          fontStyle="italic"
+                          fill="rgba(201,169,110,0.85)"
+                          letterSpacing="0.12em"
+                        >{c.l}</text>
+                      ))}
+                      {/* Diagonal spokes — static, faint guides (drift with rose) */}
                       {[45, 135, 225, 315].map((deg) => (
                         <polygon
                           key={deg}
@@ -1804,6 +1803,14 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                           transform={`rotate(${deg} 66 66)`}
                         />
                       ))}
+                    </g>
+
+                    {/* Compass needle — rotates toward tracked park (live bearing).
+                        Stays outside the rose drift so its angle remains truthful. */}
+                    <g
+                      className="poko-needle-living"
+                      style={{ transform: `rotate(${needleBearing}deg)` }}
+                    >
                       {/* Main pointing needle (gold half = "toward park") */}
                       <polygon
                         points="66,22 70,66 66,110 62,66"
