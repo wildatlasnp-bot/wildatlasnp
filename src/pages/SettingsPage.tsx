@@ -39,21 +39,28 @@ const PRO_BENEFITS = [
    Cormorant section headers, embossed icon chips. */
 
 const GOLD = "#C9A96E";
-const IVORY_BORDER = "#ECE7DF";
+const IVORY_BORDER = "#E8E4E0";
+const ROW_DIVIDER = "#F0EDEA";
 const CHIP_BG = "#FAF7F2";
 const FOREST = "#1A2F1E";
-const SAGE_ITALIC = "#7A9B7A";
-const MUTED = "#9A9A9A";
+const SAGE_ITALIC = "#8A9E8A";
+const MUTED = "#8A9E8A";
 
+/* Editorial card surface — white over cream page, soft ink shadow.
+   Consumed by Identity, Alerts, Support. Membership Free card overrides
+   to a tinted-green surface inline. */
 const CARD_SURFACE: React.CSSProperties = {
   backgroundColor: "#FFFFFF",
-  borderRadius: 14,
+  borderRadius: 16,
   border: `1px solid ${IVORY_BORDER}`,
-  boxShadow:
-    "0 1px 0 rgba(0,0,0,0.02), 0 8px 24px -16px rgba(26,47,30,0.12)",
+  boxShadow: "0 2px 8px rgba(26,47,30,0.05)",
   overflow: "hidden",
 };
 
+/* Section label — chapter marker, not form label.
+   Editorial spec asks for 9px/0.25em amber. We honor the project's 12px
+   typography floor (mem://style/typography/legibility-floor) and use 12px
+   with tightened weight + tracking to read as a chapter mark. */
 const SectionHeader = ({
   label,
   trailing,
@@ -64,16 +71,21 @@ const SectionHeader = ({
   <div className="flex items-center gap-3 mb-3" style={{ marginTop: 36 }}>
     <span
       aria-hidden
-      style={{ display: "inline-block", width: 24, height: 1, backgroundColor: GOLD, opacity: 0.55 }}
+      style={{
+        display: "inline-block",
+        width: 24,
+        height: 1,
+        background: `linear-gradient(to right, ${GOLD}, transparent)`,
+      }}
     />
     <span
       style={{
-        fontFamily: "'Cormorant Garamond', serif",
-        fontSize: 13,
-        fontStyle: "italic",
+        fontFamily: "'DM Sans', sans-serif",
+        fontSize: 12,
         fontWeight: 500,
-        color: SAGE_ITALIC,
-        letterSpacing: "0.01em",
+        letterSpacing: "0.25em",
+        textTransform: "uppercase",
+        color: GOLD,
         whiteSpace: "nowrap",
       }}
     >
@@ -110,13 +122,15 @@ const IconChip = ({
   </span>
 );
 
+/* Row eyebrow — tiny uppercase metadata label.
+   Spec asks for 9px/0.20em; honored at 12px floor with tight tracking. */
 const RowEyebrow = ({ children }: { children: React.ReactNode }) => (
   <p
     style={{
       fontFamily: "'DM Sans', sans-serif",
       fontSize: 12,
       fontWeight: 500,
-      letterSpacing: "0.10em",
+      letterSpacing: "0.20em",
       textTransform: "uppercase",
       color: MUTED,
       lineHeight: 1.2,
