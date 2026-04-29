@@ -2002,23 +2002,19 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                                     marginRight: 'auto',
                                     marginLeft: 0,
                                     background: isInitialBriefing
-                                      ? 'linear-gradient(180deg, rgba(240,237,234,0.96) 0%, rgba(232,228,220,0.94) 100%)'
-                                      : 'rgba(236,232,226,0.90)',
-                                    backdropFilter: 'blur(24px)',
-                                    WebkitBackdropFilter: 'blur(24px)',
+                                      ? 'linear-gradient(180deg, #FDFBF8 0%, #F6F1E8 100%)'
+                                      : '#FDFBF8',
                                     border: 'none',
-                                    borderLeft: isInitialBriefing ? '2px solid rgba(201,169,110,0.55)' : 'none',
-                                    borderRadius: isInitialBriefing ? '4px 14px 14px 4px' : '18px 18px 18px 4px',
-                                    padding: isInitialBriefing ? '18px 20px' : '16px 18px',
-                                    fontSize: isInitialBriefing ? 16 : 14,
+                                    borderLeft: '2px solid rgba(201,169,110,0.35)',
+                                    borderRadius: isInitialBriefing ? '4px 16px 16px 4px' : '16px 16px 16px 4px',
+                                    padding: isInitialBriefing ? '18px 20px' : '14px 18px',
+                                    fontSize: isInitialBriefing ? 16 : 15,
                                     fontWeight: 400,
                                     fontFamily: isInitialBriefing ? "'Cormorant Garamond', serif" : "'DM Sans', sans-serif",
                                     fontStyle: isInitialBriefing ? 'italic' : 'normal',
                                     color: '#1A2F1E',
-                                    lineHeight: isInitialBriefing ? 1.55 : 1.8,
-                                    boxShadow: isInitialBriefing
-                                      ? '0 1px 2px rgba(0,0,0,0.08), 0 12px 32px rgba(0,0,0,0.14)'
-                                      : '0 1px 3px rgba(0,0,0,0.10), 0 8px 20px rgba(0,0,0,0.16), 0 24px 48px rgba(0,0,0,0.10)',
+                                    lineHeight: isInitialBriefing ? 1.55 : 1.6,
+                                    boxShadow: '0 2px 8px rgba(26,47,30,0.06)',
                                   }
                                 : {
                                     width: 'fit-content',
@@ -2026,18 +2022,18 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                                     alignSelf: 'flex-end',
                                     marginLeft: 'auto',
                                     marginRight: 0,
-                                    background: 'rgba(30,70,45,0.30)',
-                                    backdropFilter: 'blur(28px)',
-                                    WebkitBackdropFilter: 'blur(28px)',
-                                    border: 'none',
+                                    background: 'rgba(47,111,78,0.18)',
+                                    backdropFilter: 'blur(20px)',
+                                    WebkitBackdropFilter: 'blur(20px)',
+                                    border: '1px solid rgba(47,111,78,0.28)',
                                     color: '#F0EDEA',
-                                    borderRadius: '18px 18px 4px 18px',
-                                    padding: '16px 18px',
-                                    fontSize: 14,
+                                    borderRadius: '16px 16px 4px 16px',
+                                    padding: '12px 16px',
+                                    fontSize: 15,
                                     fontWeight: 400,
                                     fontFamily: "'DM Sans', sans-serif",
-                                    lineHeight: 1.8,
-                                    boxShadow: '0 1px 3px rgba(0,0,0,0.10), 0 8px 20px rgba(0,0,0,0.16), 0 24px 48px rgba(0,0,0,0.10)',
+                                    lineHeight: 1.6,
+                                    boxShadow: 'none',
                                   }
                             }
                           >
