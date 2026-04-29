@@ -10,6 +10,7 @@ import MochiScannerBanner from "@/components/MochiScannerBanner";
 import MochiStatusCard from "@/components/MochiStatusCard";
 import ProModal from "@/components/ProModal";
 import ParkSelector from "@/components/ParkSelector";
+import ScanningLedger from "@/components/poko/ScanningLedger";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
 import { supabase } from "@/integrations/supabase/client";
@@ -1947,6 +1948,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               />
             ) : null}
           </div>
+
+          {/* Scanning Ledger — persistent constraint pills.
+              Sits just under the park header so users always see what
+              they've told Poko to filter for. Tapping a pill opens an
+              edit/remove menu — no need to retype constraints in chat. */}
+          <ScanningLedger parkId={selectedParkId ?? null} />
 
           {/* Scrollable area */}
           <div
