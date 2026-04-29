@@ -132,17 +132,14 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
       {/* Location name */}
       <h3 className="font-semibold text-[13px] text-foreground/70 mb-2">{f.location_name}</h3>
 
-      {/* Segmented bar chart — dynamic right padding when NOW marker is near end of day */}
-      <div className="relative" style={{ paddingTop: nowPct !== null ? 22 : 0, paddingRight: nowPct !== null && nowPct > 80 ? 32 : 0, overflow: "visible" }}>
-        {/* The bars row */}
+      {/* Segmented bar chart — bars span full width, NOW label clamps to edges */}
+      <div className="relative" style={{ paddingTop: nowPct !== null ? 22 : 0, overflow: "visible" }}>
+        {/* The bars row — spans 100% with no leading/trailing dead space */}
         <div
           key={animationKey}
           className="relative flex"
           style={{ height: BAR_HEIGHT, alignItems: "stretch", gap: SEG_GAP, overflow: "visible" }}
         >
-          {segments.length > 0 && segments[0].startPct > 0 && (
-            <div style={{ flex: segments[0].startPct }} />
-          )}
           {segments.map((s, i) => (
             <div
               key={i}
@@ -159,55 +156,60 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
           ))}
         </div>
 
-        {/* NOW marker — label, dot, and 1.5px hairline through the bars */}
-        {nowPct !== null && (
-          <div
-            className="absolute pointer-events-none"
-            style={{ left: `${nowPct}%`, top: 0, bottom: 0, zIndex: 10, overflow: "visible" }}
-          >
-            {/* NOW label directly above dot */}
-            <span
-              className="absolute uppercase whitespace-nowrap"
-              style={{
-                top: 0,
-                left: "50%",
-                transform: "translateX(-50%)",
-                fontSize: 12,
-                fontWeight: 700,
-                letterSpacing: "0.1em",
-                fontFamily: "'DM Sans', sans-serif",
-                color: NEEDLE_COLOR,
-              }}
+        {/* NOW marker — only renders when current time is within displayed range */}
+        {nowPct !== null && (() => {
+          // Clamp label horizontal anchor so "NOW" never clips at edges
+          const labelAnchor =
+            nowPct < 6 ? "0%" : nowPct > 94 ? "-100%" : "-50%";
+          return (
+            <div
+              className="absolute pointer-events-none"
+              style={{ left: `${nowPct}%`, top: 0, bottom: 0, zIndex: 10, overflow: "visible" }}
             >
-              NOW
-            </span>
-            {/* 6px dot */}
-            <div
-              className="absolute"
-              style={{
-                top: 14,
-                left: "50%",
-                transform: "translateX(-50%)",
-                width: DOT_SIZE,
-                height: DOT_SIZE,
-                borderRadius: "50%",
-                backgroundColor: NEEDLE_COLOR,
-              }}
-            />
-            {/* 1.5px hairline through bars */}
-            <div
-              className="absolute"
-              style={{
-                top: 22,
-                left: "50%",
-                transform: "translateX(-50%)",
-                width: 1.5,
-                height: BAR_HEIGHT,
-                backgroundColor: NEEDLE_COLOR,
-              }}
-            />
-          </div>
-        )}
+              {/* NOW label — anchor flips at edges to prevent clipping */}
+              <span
+                className="absolute uppercase whitespace-nowrap"
+                style={{
+                  top: 0,
+                  left: 0,
+                  transform: `translateX(${labelAnchor})`,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  letterSpacing: "0.1em",
+                  fontFamily: "'DM Sans', sans-serif",
+                  color: NEEDLE_COLOR,
+                }}
+              >
+                NOW
+              </span>
+              {/* 6px dot */}
+              <div
+                className="absolute"
+                style={{
+                  top: 14,
+                  left: 0,
+                  transform: "translateX(-50%)",
+                  width: DOT_SIZE,
+                  height: DOT_SIZE,
+                  borderRadius: "50%",
+                  backgroundColor: NEEDLE_COLOR,
+                }}
+              />
+              {/* 1.5px hairline through bars */}
+              <div
+                className="absolute"
+                style={{
+                  top: 22,
+                  left: 0,
+                  transform: "translateX(-50%)",
+                  width: 1.5,
+                  height: BAR_HEIGHT,
+                  backgroundColor: NEEDLE_COLOR,
+                }}
+              />
+            </div>
+          );
+        })()}
 
         {/* Hour axis */}
         <div className="relative h-5 mt-2">
