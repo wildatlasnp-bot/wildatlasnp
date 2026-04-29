@@ -653,27 +653,27 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
               )}
             </motion.button>
 
-            {/* Reassurance micro-row, right under CTA */}
+            {/* Trust row — single line, lock-only icon */}
             {!isPro && !loading && (
               <div
                 style={{
-                  marginTop: 10,
+                  marginTop: 12,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   gap: 8,
                   fontFamily: "'DM Sans', sans-serif",
                   fontSize: 12,
-                  color: "rgba(44,44,44,0.62)",
-                  letterSpacing: "0.04em",
+                  color: "#8A9E8A",
+                  letterSpacing: "0.02em",
                 }}
               >
-                <Lock size={12} style={{ color: "#8C6F3A" }} strokeWidth={2.2} />
-                <span>Secure checkout</span>
-                <span style={{ color: "rgba(140,111,58,0.55)" }}>·</span>
+                <Lock size={12} style={{ color: "#8A9E8A" }} strokeWidth={2.2} />
+                <span>Secure</span>
+                <span style={{ color: "rgba(138,158,138,0.45)" }}>·</span>
+                <span>Cancel anytime</span>
+                <span style={{ color: "rgba(138,158,138,0.45)" }}>·</span>
                 <span>7-day refund</span>
-                <span style={{ color: "rgba(140,111,58,0.55)" }}>·</span>
-                <span>Instant access</span>
               </div>
             )}
           </div>
