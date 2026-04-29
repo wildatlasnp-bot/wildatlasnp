@@ -743,7 +743,12 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
            </p>
         )}
         {/* 32×1px solid amber rule, 32px clearance to first SectionHeader */}
-        <span aria-hidden style={{ display: 'block', width: 32, height: 1, marginTop: 14, marginBottom: 32, backgroundColor: GOLD }} />
+        {/* 32×1px solid amber rule. SectionHeader supplies the 32-36px clearance below. */}
+        <span aria-hidden style={{ display: 'block', width: 32, height: 1, marginTop: 14, backgroundColor: GOLD }} />
+      </div>
+
+      {/* First section sits 32px below the rule (SectionHeader marginTop is 36 globally; tighten only here) */}
+      <div style={{ marginTop: -4 }} aria-hidden />
       </div>
 
       {/* ───────────── MEMBERSHIP ───────────── */}
