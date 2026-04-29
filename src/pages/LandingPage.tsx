@@ -1375,11 +1375,16 @@ const LandingPage = () => {
                     />
                     <span
                       style={{
+                        fontFamily:
+                          "ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace",
                         fontVariantNumeric: "tabular-nums",
+                        fontSize: 11,
+                        letterSpacing: "0.04em",
                         color: "rgba(240, 237, 234, 0.55)",
+                        textTransform: "none",
                       }}
                     >
-                      Sweep {String(secondsSinceSweep).padStart(2, "0")}s
+                      sweep +{String(secondsSinceSweep).padStart(2, "0")}s
                     </span>
                   </>
                 )}
