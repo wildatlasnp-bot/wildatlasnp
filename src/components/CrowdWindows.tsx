@@ -122,183 +122,120 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
 
   const NEEDLE_COLOR = "#1A2F1E";
 
-  // ---- Build intensity curve from forecast key times ----
-  // Maps the day's rhythm to control points (minutes -> intensity 0..100)
-  const curveData = useMemo(() => {
-    const qs = timeToMinutes(f.quiet_start);
-    const qe = timeToMinutes(f.quiet_end);
-    const ps = timeToMinutes(f.peak_start);
-    const pe = timeToMinutes(f.peak_end);
-    const eq = timeToMinutes(f.evening_quiet);
-    const buildSpan = ps - qe;
-    const busyStart = qe + Math.round(buildSpan * 0.6);
-
-    // Anchor points: [minutes, intensity, level]
-    const points: Array<{ m: number; v: number; level: keyof typeof ZONE_HEX }> = ([
-      { m: DAY_START,                v: 8,   level: "quiet" as const },
-      { m: Math.max(qs, DAY_START),  v: 12,  level: "quiet" as const },
-      { m: qe,                       v: 35,  level: "building" as const },
-      { m: busyStart,                v: 65,  level: "busy" as const },
-      { m: ps,                       v: 95,  level: "packed" as const },
-      { m: (ps + pe) / 2,            v: 100, level: "packed" as const },
-      { m: pe,                       v: 70,  level: "busy" as const },
-      { m: eq,                       v: 28,  level: "building" as const },
-      { m: Math.min(eq + 90, DAY_END), v: 14, level: "quiet" as const },
-      { m: DAY_END,                  v: 8,   level: "quiet" as const },
-    ]).filter((p, i, arr) => i === 0 || p.m > arr[i - 1].m);
-
-    return points;
-  }, [f.quiet_start, f.quiet_end, f.peak_start, f.peak_end, f.evening_quiet]);
-
-  // Chart geometry (viewBox uses 1000 x 200 for crisp math, scales to container)
-  const VB_W = 1000;
-  const VB_H = 200;
-  const PAD_TOP = 14;
-  const PAD_BOTTOM = 4;
-  const innerH = VB_H - PAD_TOP - PAD_BOTTOM;
-
-  const xFor = (mins: number) => ((mins - DAY_START) / DAY_SPAN) * VB_W;
-  const yFor = (v: number) => PAD_TOP + (1 - v / 100) * innerH;
-
-  // Catmull-Rom -> cubic bezier for a smooth curve
-  const buildPath = (pts: Array<{ x: number; y: number }>) => {
-    if (pts.length < 2) return "";
-    const tension = 0.5;
-    let d = `M ${pts[0].x.toFixed(2)} ${pts[0].y.toFixed(2)}`;
-    for (let i = 0; i < pts.length - 1; i++) {
-      const p0 = pts[i - 1] ?? pts[i];
-      const p1 = pts[i];
-      const p2 = pts[i + 1];
-      const p3 = pts[i + 2] ?? p2;
-      const c1x = p1.x + ((p2.x - p0.x) / 6) * tension * 2;
-      const c1y = p1.y + ((p2.y - p0.y) / 6) * tension * 2;
-      const c2x = p2.x - ((p3.x - p1.x) / 6) * tension * 2;
-      const c2y = p2.y - ((p3.y - p1.y) / 6) * tension * 2;
-      d += ` C ${c1x.toFixed(2)} ${c1y.toFixed(2)}, ${c2x.toFixed(2)} ${c2y.toFixed(2)}, ${p2.x.toFixed(2)} ${p2.y.toFixed(2)}`;
-    }
-    return d;
-  };
-
-  const pixelPts = curveData.map((p) => ({ x: xFor(p.m), y: yFor(p.v) }));
-  const linePath = buildPath(pixelPts);
-  const areaPath = `${linePath} L ${VB_W} ${VB_H - PAD_BOTTOM} L 0 ${VB_H - PAD_BOTTOM} Z`;
-
-  // Stroke gradient stops mapped to the curve's level colors at each anchor's x
-  const strokeStops = curveData.map((p) => ({
-    offset: ((p.m - DAY_START) / DAY_SPAN) * 100,
-    color: ZONE_HEX[p.level],
-  }));
-
-  // NOW intersection on the curve — find Y at nowMin using linear interp between anchors
-  const nowOnCurve = useMemo(() => {
-    if (nowPct === null) return null;
-    const m = nowMin;
-    for (let i = 0; i < curveData.length - 1; i++) {
-      const a = curveData[i];
-      const b = curveData[i + 1];
-      if (m >= a.m && m <= b.m) {
-        const t = (m - a.m) / (b.m - a.m || 1);
-        const v = a.v + (b.v - a.v) * t;
-        return { x: xFor(m), y: yFor(v), v };
-      }
-    }
-    return null;
-  }, [nowPct, nowMin, curveData]);
-
-  const gradId = `crowd-area-fill-${f.id}`;
-  const strokeId = `crowd-stroke-${f.id}`;
-  const clipId = `crowd-clip-${f.id}`;
+  const BAR_HEIGHT = 44;
+  const BAR_RADIUS = 6;
+  const SEG_GAP = 3;
+  const DOT_SIZE = 6;
 
   return (
     <div>
       {/* Location name */}
       <h3 className="font-semibold text-[13px] text-foreground/70 mb-2">{f.location_name}</h3>
 
-      {/* SVG area chart — sits directly on the outer surface, 24px horizontal pad applied by parent */}
-      <div className="relative" style={{ width: "100%" }}>
-        <svg
+      {/* Segmented bar chart */}
+      <div className="relative" style={{ paddingTop: nowPct !== null ? 22 : 0, overflow: "visible" }}>
+        {/* The bars row */}
+        <div
           key={animationKey}
-          viewBox={`0 0 ${VB_W} ${VB_H}`}
-          preserveAspectRatio="none"
-          style={{ width: "100%", height: 140, display: "block", overflow: "visible" }}
-          aria-hidden="true"
+          className="relative flex"
+          style={{ height: BAR_HEIGHT, alignItems: "stretch", gap: SEG_GAP, overflow: "visible" }}
         >
-          <defs>
-            {/* Vertical fill — softer at quiet (bottom), warmer at peak (top) */}
-            <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%"   stopColor="rgba(192,57,43,0.18)" />
-              <stop offset="55%"  stopColor="rgba(232,147,90,0.10)" />
-              <stop offset="100%" stopColor="rgba(47,111,78,0.06)" />
-            </linearGradient>
-
-            {/* Horizontal stroke gradient — color follows crowd state along X */}
-            <linearGradient id={strokeId} x1="0" y1="0" x2="1" y2="0">
-              {strokeStops.map((s, i) => (
-                <stop key={i} offset={`${s.offset}%`} stopColor={s.color} />
-              ))}
-            </linearGradient>
-
-            {/* Reveal clip — drives the left-to-right draw-in animation */}
-            <clipPath id={clipId}>
-              <rect x="0" y="0" width={VB_W} height={VB_H}>
-                <animate attributeName="width" from="0" to={VB_W} dur="0.7s" begin="0s" fill="freeze" calcMode="spline" keySplines="0.4 0 0.2 1" />
-              </rect>
-            </clipPath>
-          </defs>
-
-          <g clipPath={`url(#${clipId})`}>
-            <path d={areaPath} fill={`url(#${gradId})`} />
-            <path d={linePath} fill="none" stroke={`url(#${strokeId})`} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
-          </g>
-
-          {/* NOW marker — hairline + dot on the curve */}
-          {nowOnCurve && (
-            <g>
-              <line
-                x1={nowOnCurve.x}
-                x2={nowOnCurve.x}
-                y1={nowOnCurve.y}
-                y2={VB_H - PAD_BOTTOM}
-                stroke={NEEDLE_COLOR}
-                strokeWidth={1}
-                vectorEffect="non-scaling-stroke"
-              />
-              <circle cx={nowOnCurve.x} cy={nowOnCurve.y} r={4} fill={NEEDLE_COLOR} />
-            </g>
+          {segments.length > 0 && segments[0].startPct > 0 && (
+            <div style={{ flex: segments[0].startPct }} />
           )}
-        </svg>
+          {segments.map((s, i) => (
+            <div
+              key={i}
+              className="crowd-segment"
+              style={{
+                flex: s.flex,
+                backgroundColor: s.color,
+                minWidth: 0,
+                height: BAR_HEIGHT,
+                borderRadius: BAR_RADIUS,
+                animation: `barGrow 600ms cubic-bezier(0, 0, 0.2, 1) ${i * 40}ms both`,
+              }}
+            />
+          ))}
+        </div>
 
-        {/* NOW label — positioned via percentage so it tracks the curve point */}
-        {nowOnCurve && nowPct !== null && (
+        {/* NOW marker — label, dot, and 1.5px hairline through the bars */}
+        {nowPct !== null && (
           <div
-            className="absolute pointer-events-none uppercase whitespace-nowrap"
-            style={{
-              left: `${nowPct}%`,
-              top: `calc(${(nowOnCurve.y / VB_H) * 100}% - 22px)`,
-              transform: nowPct > 88 ? "translateX(-100%)" : nowPct < 6 ? "translateX(0)" : "translateX(-50%)",
-              fontSize: 12,
-              fontWeight: 700,
-              letterSpacing: "0.1em",
-              fontFamily: "'DM Sans', sans-serif",
-              color: NEEDLE_COLOR,
-            }}
+            className="absolute pointer-events-none"
+            style={{ left: `${nowPct}%`, top: 0, bottom: 0, zIndex: 10, overflow: "visible" }}
           >
-            NOW
+            {/* NOW label directly above dot */}
+            <span
+              className="absolute uppercase whitespace-nowrap"
+              style={{
+                top: 0,
+                left: "50%",
+                transform: "translateX(-50%)",
+                fontSize: 12,
+                fontWeight: 700,
+                letterSpacing: "0.1em",
+                fontFamily: "'DM Sans', sans-serif",
+                color: NEEDLE_COLOR,
+              }}
+            >
+              NOW
+            </span>
+            {/* 6px dot */}
+            <div
+              className="absolute"
+              style={{
+                top: 14,
+                left: "50%",
+                transform: "translateX(-50%)",
+                width: DOT_SIZE,
+                height: DOT_SIZE,
+                borderRadius: "50%",
+                backgroundColor: NEEDLE_COLOR,
+              }}
+            />
+            {/* 1.5px hairline through bars */}
+            <div
+              className="absolute"
+              style={{
+                top: 22,
+                left: "50%",
+                transform: "translateX(-50%)",
+                width: 1.5,
+                height: BAR_HEIGHT,
+                backgroundColor: NEEDLE_COLOR,
+              }}
+            />
           </div>
         )}
 
         {/* Hour axis */}
-        <div className="relative h-5 mt-1">
+        <div className="relative h-5 mt-2">
           {HOUR_TICKS.map((t) => (
             <span
               key={t.label}
               className="absolute -translate-x-1/2"
-              style={{ left: `${pct(t.mins)}%`, color: "#8A9E8A", fontSize: 12, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", whiteSpace: 'nowrap' }}
+              style={{ left: `${pct(t.mins)}%`, color: "#8A9E8A", fontSize: 12, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap" }}
             >
               {t.label}
             </span>
           ))}
         </div>
+      </div>
+
+      {/* Single-line legend */}
+      <div style={{ display: "flex", flexWrap: "nowrap", alignItems: "center", justifyContent: "space-between", gap: 8, marginTop: 14, marginBottom: 8 }}>
+        {[
+          { color: ZONE_HEX.quiet, label: "Quiet" },
+          { color: ZONE_HEX.building, label: "Building" },
+          { color: ZONE_HEX.busy, label: "Busy" },
+          { color: ZONE_HEX.packed, label: "Packed" },
+        ].map((item) => (
+          <div key={item.label} style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
+            <span style={{ width: 8, height: 8, borderRadius: "50%", flexShrink: 0, backgroundColor: item.color }} />
+            <span style={{ fontSize: 12, fontWeight: 400, color: "#8A9E8A", fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap" }}>{item.label}</span>
+          </div>
+        ))}
       </div>
 
 
