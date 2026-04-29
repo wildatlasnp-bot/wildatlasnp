@@ -299,6 +299,75 @@ const LandingPage = () => {
   }, []);
   const heroNotifAgeLabel = heroNotifAge === 0 ? "now" : `${heroNotifAge} min ago`;
 
+  // ───── "Watch a real catch" demo loop ─────
+  // Cycles through a small set of scripted, park-anchored catches above the
+  // fold so signed-out visitors immediately see *what an alert looks like*.
+  // Strictly visual: no real data, no network. Honest framing — labeled as
+  // a demo replay, not a live event. Pauses on reduced-motion.
+  type DemoCatch = {
+    park: string;       // e.g. "Yosemite"
+    permit: string;     // e.g. "Half Dome cables"
+    date: string;       // e.g. "Jul 14"
+    spots: number;      // 1–4
+    closesIn: string;   // "~4 min"
+    caughtAt: string;   // "2:14 AM"
+    accent: string;     // park dot color
+    deepLink: string;   // sample rec.gov path
+  };
+  const demoCatches = useRef<DemoCatch[]>([
+    {
+      park: "Yosemite",
+      permit: "Half Dome cables",
+      date: "Jul 14",
+      spots: 2,
+      closesIn: "~4 min",
+      caughtAt: "2:14 AM",
+      accent: "#A8BDAC",
+      deepLink: "rec.gov/r/permitYOSE",
+    },
+    {
+      park: "Glacier",
+      permit: "Gunsight Pass",
+      date: "Aug 03",
+      spots: 1,
+      closesIn: "~6 min",
+      caughtAt: "5:41 AM",
+      accent: "#B8C9D6",
+      deepLink: "rec.gov/r/permitGLAC",
+    },
+    {
+      park: "Grand Canyon",
+      permit: "Bright Angel · Indian Garden",
+      date: "Oct 22",
+      spots: 3,
+      closesIn: "~9 min",
+      caughtAt: "11:02 PM",
+      accent: "#D4A574",
+      deepLink: "rec.gov/r/permitGRCA",
+    },
+  ]).current;
+  const [demoIdx, setDemoIdx] = useState(0);
+  const [demoPhase, setDemoPhase] = useState<"shown" | "scanning">("shown");
+  useEffect(() => {
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+    let scanT: ReturnType<typeof setTimeout>;
+    let nextT: ReturnType<typeof setTimeout>;
+    // Show current catch for 6s, then 1.2s scanning beat, then advance.
+    scanT = setTimeout(() => setDemoPhase("scanning"), 6000);
+    nextT = setTimeout(() => {
+      setDemoIdx((i) => (i + 1) % demoCatches.length);
+      setDemoPhase("shown");
+    }, 7200);
+    return () => {
+      clearTimeout(scanT);
+      clearTimeout(nextT);
+    };
+  }, [demoIdx, demoCatches.length]);
+  const currentCatch = demoCatches[demoIdx];
+
   // Live ticker for the fleet log. Every 30s we bump a "now" reference so the
   // Recently alerted / Standing by counts and relative timestamps recompute
   // without a page reload (e.g. a park crossing the 7-day boundary, or a
