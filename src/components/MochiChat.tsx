@@ -2196,7 +2196,11 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                             }
                           >
                             {msg.role === "assistant" ? (
-                              <div className="mochi-prose">
+                              <div
+                                /* Briefing crossfades on window change by remounting via content key */
+                                key={isInitialBriefing ? `briefing-${msg.content}` : undefined}
+                                className={`mochi-prose ${isInitialBriefing ? "poko-dispatch-fade" : ""}`}
+                              >
                                 {parseTrailBlocks(msg.content).map((block, bi) =>
                                   block.type === "trails" ? (
                                     <div key={bi} className="space-y-2 -mx-1">
