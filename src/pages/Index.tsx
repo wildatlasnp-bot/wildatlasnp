@@ -171,6 +171,7 @@ const Index = () => {
   }, [searchParams]);
 
   const handleParkChange = useCallback((id: string) => {
+    haptics.medium();
     setParkId(id);
     localStorage.setItem("wildatlas_active_park", id);
   }, []);
@@ -189,6 +190,7 @@ const Index = () => {
   const handleTabChange = useCallback((tab: Tab) => {
     const currentTab = activeTabRef.current;
     if (tab === currentTab) return;
+    haptics.light();
 
     // Save current scroll position
     const currentContainer = tabContainerRefs.current[currentTab];
