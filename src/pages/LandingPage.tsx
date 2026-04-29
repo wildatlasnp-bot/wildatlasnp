@@ -15,6 +15,8 @@ import { useProCtaIntent } from "@/hooks/useProCtaIntent";
 import { useFleetActivity, formatRecency, recencyStyle } from "@/hooks/useFleetActivity";
 import WatchOhOne from "@/components/landing/WatchOhOne";
 import FleetParkPopover from "@/components/landing/FleetParkPopover";
+import PokoSchematic from "@/components/landing/PokoSchematic";
+import QuietHoursTimeline from "@/components/landing/QuietHoursTimeline";
 import "./landing.css";
 
 // Park list for the landing strip — order intentional (signature parks first).
