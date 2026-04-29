@@ -336,11 +336,11 @@ function TypicalPatternsHeader() {
         >
           <button
             onClick={() => setOpen(false)} aria-label="Close"
-            style={{ position: "absolute", top: 8, right: 8, background: "none", border: "none", cursor: "pointer", color: "var(--ranger-parchment-soft)", padding: 2 }}
+            style={{ position: "absolute", top: 8, right: 8, background: "none", border: "none", cursor: "pointer", color: "rgba(26,47,30,0.55)", padding: 2 }}
           >
             <X size={12} />
           </button>
-          <p style={{ margin: 0, fontSize: 12, lineHeight: 1.55, color: "var(--ranger-parchment-body)", paddingRight: 16 }}>
+          <p style={{ margin: 0, fontSize: 12, lineHeight: 1.55, color: "#2C2C2C", paddingRight: 16 }}>
             These times reflect average historical visitor patterns, not live conditions. Check NPS alerts and Recreation.gov for real-time updates.
           </p>
         </div>
