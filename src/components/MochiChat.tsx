@@ -1949,6 +1949,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
             ) : null}
           </div>
 
+          {/* Scanning Ledger — persistent constraint pills.
+              Sits just under the park header so users always see what
+              they've told Poko to filter for. Tapping a pill opens an
+              edit/remove menu — no need to retype constraints in chat. */}
+          <ScanningLedger parkId={selectedParkId ?? null} />
+
           {/* Scrollable area */}
           <div
             ref={setScrollRef}
