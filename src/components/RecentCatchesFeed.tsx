@@ -109,6 +109,15 @@ const RecentCatchesFeed = () => {
           from { opacity: 0; transform: translateY(8px); }
           to { opacity: 1; transform: translateY(0); }
         }
+        @keyframes catchRowEnter {
+          from { opacity: 0; transform: translateY(8px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes catchDotPulse {
+          0%   { box-shadow: 0 0 0 rgba(201, 169, 110, 0); }
+          25%  { box-shadow: 0 0 12px rgba(201, 169, 110, 0.95); }
+          100% { box-shadow: 0 0 0 rgba(201, 169, 110, 0); }
+        }
       `}</style>
 
       <p
@@ -129,6 +138,9 @@ const RecentCatchesFeed = () => {
         {finds.map((find, i) => {
           const parkName = getParkConfig(find.park_id).shortName;
           const parkColor = getParkColor(find.park_id);
+          // Pulse the accent dot on truly fresh catches (< 5 min old) on first render only.
+          const ageMs = Date.now() - new Date(find.found_at).getTime();
+          const isFresh = shouldAnimate && ageMs < 5 * 60_000;
           return (
             <div key={find.id}>
               <div
@@ -139,6 +151,10 @@ const RecentCatchesFeed = () => {
                   padding: "16px 0",
                   borderBottom: i < finds.length - 1 ? "1px solid rgba(0,0,0,0.06)" : "none",
                   cursor: "pointer",
+                  // Staggered entry: 180ms fade + 8px rise, 20ms delay between rows.
+                  ...(shouldAnimate
+                    ? { animation: `catchRowEnter 180ms cubic-bezier(0.4, 0, 0.2, 1) ${i * 20}ms both` }
+                    : {}),
                 }}
               >
                 <span
@@ -148,6 +164,10 @@ const RecentCatchesFeed = () => {
                     borderRadius: "50%",
                     backgroundColor: parkColor,
                     flexShrink: 0,
+                    // One-shot amber glow on fresh catches; non-looping.
+                    ...(isFresh
+                      ? { animation: "catchDotPulse 800ms cubic-bezier(0.4, 0, 0.2, 1) both" }
+                      : {}),
                   }}
                 />
                 <div style={{ flex: 1, minWidth: 0, marginLeft: 12 }}>
