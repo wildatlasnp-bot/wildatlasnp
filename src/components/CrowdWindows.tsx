@@ -192,8 +192,8 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
           </div>
         )}
 
-        {/* The bar — capsule segments with rounded ends */}
-        <div key={animationKey} className="relative flex" style={{ height: "52px", alignItems: "flex-end", overflow: 'visible', gap: 3 }}>
+        {/* The bar — uniform 48px rectangular segments, 4px radius, 3px gaps */}
+        <div key={animationKey} className="relative flex" style={{ height: "48px", alignItems: "stretch", overflow: 'visible', gap: 3 }}>
           {/* Left padding if first segment doesn't start at DAY_START */}
           {segments.length > 0 && segments[0].startPct > 0 && (
             <div style={{ flex: segments[0].startPct }} />
@@ -206,9 +206,8 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
                 flex: s.flex,
                 backgroundColor: s.color,
                 minWidth: 0,
-                height: CROWD_HEIGHTS[s.level] ?? 52,
-                borderRadius: 9999,
-                boxShadow: GLOW_BY_LEVEL[s.level] ?? "none",
+                height: 48,
+                borderRadius: 4,
                 animation: `barGrow 600ms cubic-bezier(0, 0, 0.2, 1) ${i * 40}ms both`,
               }}
             />
