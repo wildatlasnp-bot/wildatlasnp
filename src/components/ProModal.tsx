@@ -570,8 +570,10 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                       <span
                         className="font-heading"
                         style={{
+                          fontFamily: "'Cormorant Garamond', Georgia, serif",
                           fontSize: 72,
                           fontWeight: 300,
+                          fontStyle: "normal",
                           letterSpacing: "-0.03em",
                           lineHeight: 0.95,
                           color: "#F0EDEA",
