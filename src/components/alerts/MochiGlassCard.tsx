@@ -177,38 +177,90 @@ const MochiGlassCard = ({
           pointerEvents: "none",
         }}
       />
-      <div style={{ padding: "16px 18px 14px" }}>
-        <div className="flex items-start gap-3">
-          <motion.img
-            src={mochiImage}
-            alt="Poko"
-            className="shrink-0 object-contain self-start"
-            style={{ width: "auto", height: 60, marginTop: -30, filter: "drop-shadow(0px 6px 14px rgba(0,0,0,0.35))" }}
-            animate={isLoading ? { y: [0, -3, 0] } : { y: 0 }}
-            transition={
-              isLoading
-                ? { duration: 2.8, repeat: Infinity, ease: "easeInOut" }
-                : { duration: 0.3 }
-            }
-          />
+      <div style={{ padding: "18px 20px 16px" }}>
+        <div className="flex items-start gap-4">
+          {/* Cartographer's emblem — engraved compass medallion with breathing pulse */}
+          <motion.div
+            aria-hidden
+            className="shrink-0 self-start"
+            style={{
+              position: "relative",
+              width: 44,
+              height: 44,
+              borderRadius: "50%",
+              background:
+                "radial-gradient(circle at 32% 28%, rgba(255,250,235,0.10) 0%, rgba(0,0,0,0.0) 55%), linear-gradient(160deg, rgba(36,60,42,0.95) 0%, rgba(20,38,26,0.98) 100%)",
+              border: "1px solid rgba(201,169,110,0.45)",
+              boxShadow: [
+                "inset 0 1px 0 rgba(255,255,255,0.10)",
+                "inset 0 -1px 2px rgba(0,0,0,0.45)",
+                "0 2px 6px rgba(0,0,0,0.35)",
+              ].join(", "),
+            }}
+            animate={isLoading ? { scale: [1, 1.02, 1] } : { scale: 1 }}
+            transition={isLoading ? { duration: 3.6, repeat: Infinity, ease: [0.4, 0, 0.2, 1] } : { duration: 0.3 }}
+          >
+            <svg viewBox="0 0 44 44" width="44" height="44" style={{ display: "block" }}>
+              {/* outer ring tick marks */}
+              <g stroke="#C9A96E" strokeOpacity="0.55" strokeWidth="0.6">
+                {Array.from({ length: 16 }).map((_, i) => {
+                  const a = (i * Math.PI * 2) / 16;
+                  const r1 = 17, r2 = i % 4 === 0 ? 14.5 : 15.8;
+                  return (
+                    <line
+                      key={i}
+                      x1={22 + Math.cos(a) * r1}
+                      y1={22 + Math.sin(a) * r1}
+                      x2={22 + Math.cos(a) * r2}
+                      y2={22 + Math.sin(a) * r2}
+                    />
+                  );
+                })}
+              </g>
+              {/* inner hairline ring */}
+              <circle cx="22" cy="22" r="12.5" fill="none" stroke="#C9A96E" strokeOpacity="0.32" strokeWidth="0.5" />
+              {/* compass needle */}
+              <g transform="translate(22 22)">
+                <polygon points="0,-11 2.2,0 0,2 -2.2,0" fill="#C9A96E" opacity="0.95" />
+                <polygon points="0,11 2.2,0 0,-2 -2.2,0" fill="#C9A96E" opacity="0.35" />
+                <circle cx="0" cy="0" r="1.4" fill="#1A2812" stroke="#C9A96E" strokeWidth="0.6" />
+              </g>
+            </svg>
+            {/* live status dot */}
+            <span
+              style={{
+                position: "absolute",
+                bottom: -1,
+                right: -1,
+                width: 8,
+                height: 8,
+                borderRadius: "50%",
+                background: statusDot,
+                boxShadow: `0 0 0 2px rgba(20,38,26,0.95), 0 0 8px ${statusDot}`,
+                animation: isFoundState
+                  ? "pokoCaret 1.1s ease-in-out infinite"
+                  : "pokoDot 2.6s ease-in-out infinite",
+              }}
+            />
+          </motion.div>
           <div className="flex-1 min-w-0">
             <span
               style={{
                 fontFamily: DM_SANS,
-                fontSize: 11,
+                fontSize: 10,
                 fontWeight: 600,
-                letterSpacing: "0.22em",
+                letterSpacing: "0.28em",
                 textTransform: "uppercase" as const,
-                color: "#C9A96E",
-                marginTop: 4,
-                marginBottom: 4,
+                color: "rgba(201,169,110,0.78)",
+                marginBottom: 6,
                 display: "inline-flex",
                 alignItems: "center",
                 gap: 8,
               }}
             >
-              <span style={{ width: 4, height: 4, borderRadius: "50%", background: "#C9A96E", display: "inline-block" }} />
-              {contextualHeadline}
+              {statusKey}
+              <span style={{ width: 14, height: 1, background: "rgba(201,169,110,0.35)", display: "inline-block" }} />
+              <span style={{ color: "rgba(244,241,236,0.55)", letterSpacing: "0.18em" }}>{contextualHeadline}</span>
             </span>
             <div className="flex items-end gap-2">
               <p
