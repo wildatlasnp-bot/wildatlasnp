@@ -217,15 +217,15 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
         style={{
           maxWidth: "min(404px, calc(100vw - 24px))",
           borderRadius: 20,
-          background: "#F0EDEA",
-          color: "#1A2F1E",
+          background: "#0F1610",
+          color: "#F0EDEA",
           zIndex: 1000,
-          // Soft cream paper — gentle ambient + warm rim highlight.
+          // Near-black portal — deep ambient, warm gold rim hint.
           boxShadow: [
-            "0 50px 120px -24px rgba(26,47,30,0.32)",
-            "0 22px 50px -16px rgba(26,47,30,0.22)",
-            "inset 0 1px 0 rgba(255,255,255,0.6)",
-            "inset 0 0 0 1px rgba(201,169,110,0.28)",
+            "0 50px 120px -24px rgba(0,0,0,0.65)",
+            "0 22px 50px -16px rgba(0,0,0,0.45)",
+            "inset 0 1px 0 rgba(255,255,255,0.04)",
+            "inset 0 0 0 1px rgba(201,169,110,0.18)",
           ].join(", "),
           animation: `proModalIn 720ms ${EASE} both`,
           contain: "paint layout style",
