@@ -430,7 +430,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                   borderBottom:
                     i === PILLARS.length - 1
                       ? "none"
-                      : "1px solid rgba(201,169,110,0.10)",
+                      : "1px solid rgba(140,111,58,0.18)",
                   ...revealStyle(STEP.PILLAR_0 + i, "up"),
                 }}
               >
