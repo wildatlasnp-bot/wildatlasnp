@@ -43,6 +43,11 @@ const RecentCatchesFeed = () => {
   const { user } = useAuth();
   const [finds, setFinds] = useState<RecentFind[] | null>(null); // null = loading
   const hasRendered = useRef(false);
+  // IDs we've already seen on a previous render. Anything missing from this
+  // set after the initial paint is a "genuinely new" catch and gets the
+  // entrance + pulse + flash sequence.
+  const seenIdsRef = useRef<Set<string>>(new Set());
+  const [newIds, setNewIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (!user) { setFinds([]); return; }
@@ -87,11 +92,41 @@ const RecentCatchesFeed = () => {
     })();
   }, [user]);
 
+  // Track newly arrived rows AFTER initial paint. The first batch is seeded
+  // into seenIdsRef without animation (page-load is not "new"). Subsequent
+  // additions get marked as new and the marker is cleared after the
+  // sequence finishes so the animation never replays.
+  useEffect(() => {
+    if (!finds) return;
+    if (!hasRendered.current) {
+      // Seed initial set; do not animate anything on first paint.
+      finds.forEach((f) => seenIdsRef.current.add(f.id));
+      hasRendered.current = true;
+      return;
+    }
+    const fresh = finds.filter((f) => !seenIdsRef.current.has(f.id)).map((f) => f.id);
+    if (fresh.length === 0) return;
+    fresh.forEach((id) => seenIdsRef.current.add(id));
+    setNewIds((prev) => {
+      const next = new Set(prev);
+      fresh.forEach((id) => next.add(id));
+      return next;
+    });
+    // Sequence total: row expand (200ms) + flash fade (700ms) ≈ 900ms.
+    // Clear flags after 1000ms so the row settles into its idle state.
+    const t = window.setTimeout(() => {
+      setNewIds((prev) => {
+        if (prev.size === 0) return prev;
+        const next = new Set(prev);
+        fresh.forEach((id) => next.delete(id));
+        return next;
+      });
+    }, 1000);
+    return () => window.clearTimeout(t);
+  }, [finds]);
+
   // Don't render while loading or if empty
   if (finds === null || finds.length === 0) return null;
-
-  const shouldAnimate = !hasRendered.current;
-  hasRendered.current = true;
 
   return (
     <div
@@ -99,24 +134,40 @@ const RecentCatchesFeed = () => {
         padding: "0 20px",
         paddingTop: 24,
         paddingBottom: 16,
-        ...(shouldAnimate
-          ? { animation: "recentCatchesFadeIn 200ms ease-out both" }
-          : {}),
       }}
     >
       <style>{`
-        @keyframes recentCatchesFadeIn {
-          from { opacity: 0; transform: translateY(8px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
+        /* New-catch row sequence — runs once per genuinely new entry.
+           Never on page load, never on scroll. Existing rows shift down
+           naturally as the new row's max-height expands from 0. */
         @keyframes catchRowEnter {
-          from { opacity: 0; transform: translateY(8px); }
-          to { opacity: 1; transform: translateY(0); }
+          0%   { opacity: 0; transform: translateY(-8px); max-height: 0; }
+          67%  { opacity: 1; transform: translateY(0); max-height: 80px; }
+          100% { opacity: 1; transform: translateY(0); max-height: 80px; }
         }
         @keyframes catchDotPulse {
-          0%   { box-shadow: 0 0 0 rgba(201, 169, 110, 0); }
-          25%  { box-shadow: 0 0 12px rgba(201, 169, 110, 0.95); }
-          100% { box-shadow: 0 0 0 rgba(201, 169, 110, 0); }
+          0%    { transform: scale(1); box-shadow: 0 0 0 0 rgba(201,169,110,0); }
+          25%   { transform: scale(1.6); box-shadow: 0 0 0 6px rgba(201,169,110,0.3); }
+          100%  { transform: scale(1); box-shadow: 0 0 0 0 rgba(201,169,110,0); }
+        }
+        @keyframes catchRowFlash {
+          0%   { background-color: rgba(201,169,110,0); }
+          25%  { background-color: rgba(201,169,110,0.08); }
+          100% { background-color: rgba(201,169,110,0); }
+        }
+        .catch-row--new {
+          animation: catchRowEnter 300ms cubic-bezier(0.4, 0, 0.2, 1) both,
+                     catchRowFlash 700ms ease-out 100ms both;
+          overflow: hidden;
+          will-change: opacity, transform, max-height;
+        }
+        .catch-row--new .catch-dot {
+          animation: catchDotPulse 600ms cubic-bezier(0.4, 0, 0.2, 1) 100ms both;
+          will-change: transform, box-shadow;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .catch-row--new,
+          .catch-row--new .catch-dot { animation: none; }
         }
       `}</style>
 
@@ -138,12 +189,11 @@ const RecentCatchesFeed = () => {
         {finds.map((find, i) => {
           const parkName = getParkConfig(find.park_id).shortName;
           const parkColor = getParkColor(find.park_id);
-          // Pulse the accent dot on truly fresh catches (< 5 min old) on first render only.
-          const ageMs = Date.now() - new Date(find.found_at).getTime();
-          const isFresh = shouldAnimate && ageMs < 5 * 60_000;
+          const isNew = newIds.has(find.id);
           return (
             <div key={find.id}>
               <div
+                className={isNew ? "catch-row--new" : undefined}
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -151,23 +201,16 @@ const RecentCatchesFeed = () => {
                   padding: "16px 0",
                   borderBottom: i < finds.length - 1 ? "1px solid rgba(0,0,0,0.06)" : "none",
                   cursor: "pointer",
-                  // Staggered entry: 180ms fade + 8px rise, 20ms delay between rows.
-                  ...(shouldAnimate
-                    ? { animation: `catchRowEnter 180ms cubic-bezier(0.4, 0, 0.2, 1) ${i * 20}ms both` }
-                    : {}),
                 }}
               >
                 <span
+                  className="catch-dot"
                   style={{
                     width: 10,
                     height: 10,
                     borderRadius: "50%",
                     backgroundColor: parkColor,
                     flexShrink: 0,
-                    // One-shot amber glow on fresh catches; non-looping.
-                    ...(isFresh
-                      ? { animation: "catchDotPulse 800ms cubic-bezier(0.4, 0, 0.2, 1) both" }
-                      : {}),
                   }}
                 />
                 <div style={{ flex: 1, minWidth: 0, marginLeft: 12 }}>
