@@ -628,6 +628,14 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedParkId, firstSession, makeGreeting]);
 
+  // Mirror Poko's selected park onto the document root so the --park-accent
+  // atmosphere updates when the user changes parks via the Poko header.
+  // (Index.tsx also pushes the accent on tab/parkId changes — these two
+  // writers stay coherent because they target the same canonical key.)
+  useEffect(() => {
+    applyParkAccent(selectedParkId);
+  }, [selectedParkId]);
+
   // Rebuild greeting when tracked permits load or displayName changes
   const prevNameRef = useRef(displayName);
   const prevTrackedRef = useRef(trackedPermits);
