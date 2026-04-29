@@ -1532,7 +1532,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
       </RevealSection>
 
       {/* ═══════════════════════ X. SEASONAL INSIGHT — gallery plate ═══════════════════════ */}
-      <RevealSection style={{ padding: "36px 20px 4px" }}>
+      <RevealSection style={{ padding: "36px 20px 4px" }} delay={300} resetKey={parkId}>
         <SectionPlate
           numeral="VI"
           eyebrow={`${data.label} · in residence`}
