@@ -61,7 +61,50 @@ export default function SavedSignalsSection({ parkId }: SavedSignalsSectionProps
   if (items.length === 0) return null;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+    <section style={{ padding: "32px 20px 4px" }}>
+      {/* Section plate — mirrors DiscoverTips' SectionPlate visual,
+          with a "user-captured" eyebrow so it's clearly distinct
+          from official ranger guidance. */}
+      <div style={{ marginBottom: 18 }}>
+        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 12, marginBottom: 10 }}>
+          <span
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              color: "var(--ranger-ink-muted, #6B7368)",
+            }}
+          >
+            User intel · saved signals
+          </span>
+          <span
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontStyle: "italic",
+              fontSize: 13,
+              color: "var(--ranger-gold, #C9A96E)",
+            }}
+            aria-hidden="true"
+          >
+            — {String(items.length).padStart(2, "0")}
+          </span>
+        </div>
+        <div style={{ height: 1, background: "var(--ranger-rule-strong, rgba(42,47,42,0.18))" }} />
+        <p
+          className="font-display-italic"
+          style={{
+            fontStyle: "italic", fontWeight: 400, fontSize: 14,
+            color: "var(--ranger-ink-muted, #6B7368)",
+            margin: "10px 0 16px", letterSpacing: "0.01em",
+          }}
+        >
+          What you captured from Poko, kept for the trail.
+        </p>
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
       {items.map((s) => (
         <article
           key={s.id}
