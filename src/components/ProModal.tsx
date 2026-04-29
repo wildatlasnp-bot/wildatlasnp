@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, CSSProperties } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { motion } from "framer-motion";
-import { Crown, ArrowRight, Loader2, Lock, RefreshCw, ShieldCheck } from "lucide-react";
+import { Crown, ArrowRight, Loader2, Lock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
