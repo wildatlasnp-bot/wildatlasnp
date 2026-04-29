@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ALL_PARK_IDS, PARKS, getPermitIcon, getParkConfig } from "@/lib/parks";
 import posthog from "@/lib/posthog";
 import ProModal from "@/components/ProModal";
+import { haptics } from "@/lib/haptics";
 
 interface Props {
   onComplete: (initialTab?: "sniper" | "mochi" | "discover") => void;
@@ -105,6 +106,7 @@ const OnboardingFlow = ({ onComplete, userId, initialStep = 0 }: Props) => {
   const handleContinueParks = () => {
     if (selectedParks.length === 0) return;
     if (selectedParks.length >= 2) {
+      haptics.medium();
       setProModalOpen(true);
       return;
     }

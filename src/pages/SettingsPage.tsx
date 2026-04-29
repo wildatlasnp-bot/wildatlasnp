@@ -13,6 +13,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { toE164, formatPhoneDisplay, isValidUSPhone } from "@/lib/phone";
 import { resetAllTips } from "@/lib/dismissable-tips";
 import EmailPreviewModal from "@/components/EmailPreviewModal";
+import { haptics } from "@/lib/haptics";
 
 import { useScrollFadeHeader } from "@/hooks/useScrollFadeHeader";
 import {
@@ -958,7 +959,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               </p>
 
               <button
-                onClick={() => setProModalOpen(true)}
+                onClick={() => { haptics.medium(); setProModalOpen(true); }}
                 className="tactile-button w-full flex items-center justify-center hover:brightness-110 active:scale-[0.98] transition-all font-body"
                 style={{
                   height: 48,
@@ -1340,6 +1341,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             <Switch
               checked={isPro && phoneVerified ? notifySms : false}
               onCheckedChange={async (checked) => {
+                haptics.light();
                 const prev = notifySms;
                 setNotifySms(checked);
                 const e164Phone = toE164(phone) ?? null;
@@ -1378,6 +1380,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
               Preview
             </button>
             <Switch checked={notifyEmail} onCheckedChange={async (checked) => {
+                haptics.light();
                 const prev = notifyEmail;
                 setNotifyEmail(checked);
                 const ok = await persistProfile({ notify_email: checked });
@@ -1412,11 +1415,13 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                 <Switch
                   checked={isGranted}
                   onCheckedChange={async (checked) => {
+                    haptics.light();
                     if (checked && notifSupported) {
                       const result = await Notification.requestPermission();
                       if (result === "granted") {
                         toast({ title: "Notifications enabled", description: "You'll receive push alerts for permits." });
                       } else {
+                        haptics.error();
                         toast({ title: "Permission denied", description: "Enable notifications in your browser settings." });
                       }
                     }

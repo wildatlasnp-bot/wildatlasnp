@@ -16,6 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { PARKS } from "@/lib/parks";
 import { applyParkAccent } from "@/lib/park-accent";
 import posthog from "@/lib/posthog";
+import { haptics } from "@/lib/haptics";
 import { useScannerStatus } from "@/hooks/useScannerStatus";
 import { useStatusRowOpacity } from "@/hooks/useStatusRowOpacity";
 import {
@@ -985,6 +986,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   const handleSend = async () => {
     const text = input.trim();
     if (!text || isLoading || rateLimited) return;
+    haptics.light();
 
     const now = Date.now();
     sendTimestamps.current = sendTimestamps.current.filter((t) => now - t < 60_000);
@@ -1118,6 +1120,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
         } else {
           errorMsg = "Poko ran into a problem. Wait a moment and try again — if it keeps happening, reload the page.";
         }
+        haptics.error();
         setMessages((prev) => [
           ...prev,
           { id: Date.now() + 2, role: "assistant", content: errorMsg },
@@ -1422,7 +1425,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               ) : (
                 <span
                   style={{ color: '#2F6F4E', cursor: 'pointer' }}
-                  onClick={() => setProModalOpen(true)}
+                  onClick={() => { haptics.medium(); setProModalOpen(true); }}
                   role="button"
                   tabIndex={0}
                 >
@@ -1939,7 +1942,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
             {selectedParkId && PARKS[selectedParkId] ? (
               <ParkSelector
                 activeParkId={selectedParkId}
-                onParkChange={(id) => { setSelectedParkId(id); localStorage.setItem("wildatlas_active_park", id); }}
+                onParkChange={(id) => { haptics.medium(); setSelectedParkId(id); localStorage.setItem("wildatlas_active_park", id); }}
                 variant="overlay"
               />
             ) : null}
@@ -2373,7 +2376,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                       }}
                     >
                       {msg.isRateLimitCard ? (
-                        <RateLimitUpgradeCard onUpgrade={() => setProModalOpen(true)} />
+                        <RateLimitUpgradeCard onUpgrade={() => { haptics.medium(); setProModalOpen(true); }} />
                       ) : (
                         <>
                          {isInitialBriefing && (
@@ -2730,7 +2733,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                         ) : (
                           <span
                             style={{ color: '#A8C4B8', cursor: 'pointer' }}
-                            onClick={() => setProModalOpen(true)}
+                            onClick={() => { haptics.medium(); setProModalOpen(true); }}
                             role="button"
                             tabIndex={0}
                           >
@@ -2790,7 +2793,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   style={{ marginTop, marginBottom: isLastInGroup ? 0 : 0 }}
                 >
                   {msg.isRateLimitCard ? (
-                    <RateLimitUpgradeCard onUpgrade={() => setProModalOpen(true)} />
+                    <RateLimitUpgradeCard onUpgrade={() => { haptics.medium(); setProModalOpen(true); }} />
                   ) : (
                     <>
                       <div

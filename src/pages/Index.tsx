@@ -20,6 +20,7 @@ import { DEFAULT_PARK_ID } from "@/lib/parks";
 import { applyParkAccent } from "@/lib/park-accent";
 import posthog from "@/lib/posthog";
 import { startTabSwitch } from "@/lib/perf-telemetry";
+import { haptics } from "@/lib/haptics";
 
 type Tab = "mochi" | "sniper" | "discover" | "settings";
 
@@ -171,6 +172,7 @@ const Index = () => {
   }, [searchParams]);
 
   const handleParkChange = useCallback((id: string) => {
+    haptics.medium();
     setParkId(id);
     localStorage.setItem("wildatlas_active_park", id);
   }, []);
@@ -189,6 +191,7 @@ const Index = () => {
   const handleTabChange = useCallback((tab: Tab) => {
     const currentTab = activeTabRef.current;
     if (tab === currentTab) return;
+    haptics.light();
 
     // Save current scroll position
     const currentContainer = tabContainerRefs.current[currentTab];

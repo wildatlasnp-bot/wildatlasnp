@@ -10,6 +10,7 @@ import { getParkConfig } from "@/lib/parks";
 import { supabase } from "@/integrations/supabase/client";
 import posthog from "@/lib/posthog";
 import heroImage from "@/assets/landing-halfdome-night.jpg";
+import { haptics } from "@/lib/haptics";
 
 interface ProModalProps {
   open: boolean;
@@ -168,6 +169,7 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
 
   const handleCheckout = async () => {
     if (!user) return;
+    haptics.medium();
     posthog.capture("upgrade_clicked");
     setLoading(true);
 

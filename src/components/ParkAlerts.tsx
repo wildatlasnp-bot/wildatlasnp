@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { ChevronDown, ExternalLink, RefreshCw } from "lucide-react";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { PARKS, getParkColor } from "@/lib/parks";
+import { haptics } from "@/lib/haptics";
 
 /* ─────────────────────────────────────────────────────────────────
    FIELD DISPATCH — Premium Park Alerts
@@ -1009,6 +1010,7 @@ function TelegramCard({
   const handleToggle = () => {
     if (!showChevron && !hasSubstantialDesc) return;
     const willExpand = !expanded;
+    haptics.light();
     setExpanded(willExpand);
     if (willExpand && isUnread) onRead(alert.id);
   };
