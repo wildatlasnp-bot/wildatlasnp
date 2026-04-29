@@ -468,6 +468,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   const briefingChipTotal = useRef(BRIEFING_CHIP_SETS[0].length);
   const scrollRef = useRef<HTMLDivElement>(null);
   const initialMountRef = useRef(true);
+  // Tracks the message-list length as of the previous render. Anything from
+  // this index onward is part of the most recent "burst" and receives the
+  // 80ms-per-bubble entrance stagger. Older messages render with no delay
+  // so re-renders deep in long threads never re-trigger animations.
+  const prevMsgCountRef = useRef(1);
+  const burstStartRef = useRef(1);
   const prevPrimaryParkRef = useRef(selectedParkId);
   const sendTimestamps = useRef<number[]>([]);
   const pendingSendRef = useRef<string | null>(null);
