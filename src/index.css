@@ -1827,6 +1827,19 @@
   z-index: 2;
 }
 
+/* ── Dark dissolve variant ──
+   For photos that sit above dark/cinematic surfaces OR carry white
+   overlay text (e.g. My Parks permit cards). Fades into deep forest
+   ink so the title and odds pill stay legible. */
+.park-photo-dissolve--dark {
+  background: linear-gradient(
+    to bottom,
+    rgba(26, 47, 30, 0) 0%,
+    rgba(26, 47, 30, 0.35) 55%,
+    rgba(26, 47, 30, 0.6) 100%
+  );
+}
+
 /* Scanner banner — gentle flicker for delayed/error states */
 @keyframes scanner-flicker {
   0%, 100% { opacity: 1; }
