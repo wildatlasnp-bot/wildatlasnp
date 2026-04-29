@@ -862,11 +862,12 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
           willChange: 'opacity, transform',
         }}
       >
-        <span aria-hidden="true" style={{
+        <span aria-hidden="true" className={pokoStatus.key === 'ready' ? 'poko-ready-heartbeat' : undefined} style={{
           width: 5, height: 5, borderRadius: '50%',
           background: pokoStatus.dot,
           boxShadow: pokoStatus.pulse ? `0 0 0 0 ${pokoStatus.dot}` : 'none',
-          animation: pokoStatus.pulse ? 'poko-status-pulse 1.6s ease-in-out infinite' : 'none',
+          // Original ripple pulse for scanning/listening; heartbeat for ready.
+          animation: pokoStatus.pulse ? 'poko-status-pulse 1.6s ease-in-out infinite' : undefined,
           transition: 'background 220ms cubic-bezier(0.4, 0, 0.2, 1)',
         }} />
         <span>{pokoStatus.label}</span>
