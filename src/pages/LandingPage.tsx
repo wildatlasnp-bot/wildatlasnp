@@ -975,13 +975,16 @@ const LandingPage = () => {
                 </p>
               </div>
 
-              {/* Pull-quote — desktop only, anchored right with hairline */}
+              {/* Quiet Watchman panel — desktop only.
+                  Replaces the pull-quote with a watchmaker's panel:
+                  a technical Poko schematic over a 24h Quiet Hours
+                  timeline, gold-banded for the Pro window. */}
               {!isMobile && !isNarrow && (
                 <aside
                   data-hero-fade
                   style={{
                     gridColumn: "10 / span 3",
-                    paddingLeft: 20,
+                    paddingLeft: 22,
                     borderLeft: "1px solid rgba(240, 237, 234, 0.28)",
                     animation:
                       "heroFadeUp 1100ms cubic-bezier(0.16, 1, 0.3, 1) both",
@@ -996,24 +999,28 @@ const LandingPage = () => {
                       textTransform: "uppercase",
                       color: "rgba(240, 237, 234, 0.55)",
                       margin: 0,
-                      marginBottom: 12,
+                      marginBottom: 14,
                     }}
                   >
-                    § 01 · The Watcher
+                    § 01 · The Quiet Watchman
                   </p>
+                  <div style={{ marginBottom: 18 }}>
+                    <PokoSchematic size={108} live tone="dark" />
+                  </div>
                   <p
                     style={{
                       fontFamily: "'Cormorant Garamond', serif",
                       fontStyle: "italic",
-                      fontSize: 17,
+                      fontSize: 16,
                       lineHeight: 1.45,
-                      color: "rgba(240, 237, 234, 0.85)",
-                      margin: 0,
+                      color: "rgba(240, 237, 234, 0.82)",
+                      margin: "0 0 18px",
                     }}
                   >
-                    "Cancellations arrive on no schedule. We hold the door
-                    so you needn't."
+                    "Cancellations arrive on no schedule.
+                    We hold the door so you needn't."
                   </p>
+                  <QuietHoursTimeline tone="dark" compact />
                 </aside>
               )}
             </div>
