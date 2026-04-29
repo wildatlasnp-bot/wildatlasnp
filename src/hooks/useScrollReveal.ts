@@ -20,8 +20,8 @@ export function useScrollReveal<T extends HTMLElement = HTMLElement>(opts?: {
 }) {
   const ref = useRef<T | null>(null);
   const [visible, setVisible] = useState(false);
-  const threshold = opts?.threshold ?? 0.12;
-  const rootMargin = opts?.rootMargin ?? "0px 0px -8% 0px";
+  const threshold = opts?.threshold ?? 0.08;
+  const rootMargin = opts?.rootMargin ?? "0px 0px -40px 0px";
   const once = opts?.once ?? true;
 
   useEffect(() => {
