@@ -127,7 +127,7 @@ const SideRailNav = React.memo(function SideRailNav({
                   }}
                 />
 
-                <span style={{ position: "relative", display: "inline-flex" }}>
+                <span data-nav-target={tab.id} style={{ position: "relative", display: "inline-flex" }}>
                   <tab.Icon size={22} strokeWidth={isActive ? 1.5 : 1} color={color} fill="none" />
                   {tab.id === "sniper" && hasUnreadAlerts && (
                     <span
