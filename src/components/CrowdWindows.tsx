@@ -95,12 +95,12 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
     const busyStart = qe + Math.round(buildSpan * 0.6);
 
     const rawSegs = [
-      { startMin: Math.max(qs, DAY_START), endMin: qe, color: CHART_COLORS.quiet,    level: "quiet" },
-      { startMin: qe, endMin: busyStart,  color: CHART_COLORS.building, level: "building" },
-      { startMin: busyStart, endMin: ps,  color: CHART_COLORS.busy,     level: "busy" },
-      { startMin: ps, endMin: pe,         color: CHART_COLORS.packed,   level: "packed" },
-      { startMin: pe, endMin: eq,         color: CHART_COLORS.busy,     level: "busy" },
-      { startMin: eq, endMin: Math.min(DAY_END, 21 * 60), color: CHART_COLORS.quiet, level: "quiet" },
+      { startMin: Math.max(qs, DAY_START), endMin: qe, color: ZONE_HEX.quiet,    level: "quiet" },
+      { startMin: qe, endMin: busyStart,  color: ZONE_HEX.building, level: "building" },
+      { startMin: busyStart, endMin: ps,  color: ZONE_HEX.busy,     level: "busy" },
+      { startMin: ps, endMin: pe,         color: ZONE_HEX.packed,   level: "packed" },
+      { startMin: pe, endMin: eq,         color: ZONE_HEX.busy,     level: "busy" },
+      { startMin: eq, endMin: Math.min(DAY_END, 21 * 60), color: ZONE_HEX.quiet, level: "quiet" },
     ];
     const segs = rawSegs
       .filter((s) => s.endMin > s.startMin)
