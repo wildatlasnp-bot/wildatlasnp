@@ -1111,19 +1111,19 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
           ].map((c, i) => (
             <div key={c.eyebrow} style={{
               textAlign: "center", padding: "0 4px", minWidth: 0,
-              borderLeft: i === 0 ? "none" : "1px solid var(--ranger-rule-night-soft)",
+              borderLeft: i === 0 ? "none" : "1px solid #E5E1DD",
             }}>
               <p style={{
                 fontSize: 12, fontWeight: 600,
                 letterSpacing: "0.18em", textTransform: "uppercase",
-                color: c.dim ? "var(--ranger-parchment-faint)" : "var(--ranger-parchment-soft)",
+                color: c.dim ? "rgba(26,47,30,0.45)" : "rgba(26,47,30,0.65)",
                 margin: 0, marginBottom: 4,
                 overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
               }}>{c.eyebrow}</p>
               <p className="font-display-italic" style={{
                 fontStyle: "italic",
                 fontSize: c.dim ? 14 : 17, fontWeight: 400,
-                color: c.dim ? "var(--ranger-paper-soft)" : "var(--ranger-paper-soft)",
+                color: "#1A2F1E",
                 letterSpacing: "-0.005em", margin: 0, lineHeight: 1.1,
                 overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
               }}>{c.value}</p>
