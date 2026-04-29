@@ -262,13 +262,73 @@ const maskPhone = (phone: string): string => {
   return `(***) ***-${digits.slice(-4)}`;
 };
 
-/** Time-of-day phrase for greeting */
+/** Time-of-day phrase for greeting (legacy — used for non-dispatch copy) */
 const getTimePeriod = (): { label: string; casual: string } => {
   const hour = new Date().getHours();
   if (hour >= 5 && hour < 12) return { label: "Good morning", casual: "this morning" };
   if (hour >= 12 && hour < 17) return { label: "Good afternoon", casual: "this afternoon" };
   if (hour >= 17 && hour < 21) return { label: "Good evening", casual: "tonight" };
   return { label: "Hey", casual: "tonight" };
+};
+
+/** Time-aware dispatch windows for the Poko briefing card.
+    Selects from 5 windows based on the user's local hour. Park name is
+    woven into title/body so the greeting feels like Poko has been paying
+    attention. Returns a stable `key` so callers can detect window changes
+    and crossfade between messages without re-animating identical copy. */
+type DispatchWindow = "early" | "morning" | "midday" | "evening" | "night";
+const getDispatchWindow = (parkName: string | null): {
+  key: DispatchWindow;
+  title: string;
+  body: string;
+} => {
+  const hour = new Date().getHours();
+  const hasPark = !!parkName;
+  // No watched parks → soft CTA, generic across all windows
+  if (!hasPark) {
+    return {
+      key: hour >= 5 && hour < 9 ? "early"
+        : hour >= 9 && hour < 12 ? "morning"
+        : hour >= 12 && hour < 17 ? "midday"
+        : hour >= 17 && hour < 21 ? "evening"
+        : "night",
+      title: "Poko's ready.",
+      body: "Add a park to start watching.",
+    };
+  }
+  if (hour >= 5 && hour < 9) {
+    return {
+      key: "early",
+      title: "Early start.",
+      body: `Best window for ${parkName} cancellations right now. Most hikers are still asleep.`,
+    };
+  }
+  if (hour >= 9 && hour < 12) {
+    return {
+      key: "morning",
+      title: "Peak hours building.",
+      body: `Crowds are filling in around ${parkName}. Poko's scanning every 2 minutes — cancellations still surface.`,
+    };
+  }
+  if (hour >= 12 && hour < 17) {
+    return {
+      key: "midday",
+      title: "Midday watch.",
+      body: `High traffic at ${parkName}. Cancellations happen anytime — often when plans change last minute.`,
+    };
+  }
+  if (hour >= 17 && hour < 21) {
+    return {
+      key: "evening",
+      title: "Evening turnover.",
+      body: `Second quiet window opening at ${parkName}. Cancellations often appear as tomorrow's plans shift.`,
+    };
+  }
+  return {
+    key: "night",
+    title: "Night watch.",
+    body: `Poko's on ${parkName} — won't miss a thing. Early morning is peak cancellation territory.`,
+  };
 };
 type VisitWindow = "weekend" | "2weeks" | "flexible";
 const VISIT_OPTIONS: { key: VisitWindow; label: string }[] = [
@@ -405,43 +465,33 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
 
   const makeGreeting = (): Message => {
     const firstName = displayName?.trim().split(/\s+/)[0] || "";
-    const { label: timeLabel, casual: timeCasual } = getTimePeriod();
-    const parkName = PARKS[selectedParkId]?.shortName || "the parks";
 
     // ── First-session welcome (one-time after onboarding) ──
     if (firstSession && firstSession.permitName) {
       const fs = firstSession;
-      const phoneMasked = fs.phone ? maskPhone(fs.phone) : null;
-      const alertLine = phoneMasked
-        ? `If one becomes available, I'll text you at ${phoneMasked}.`
-        : "If one becomes available, I'll alert you immediately.";
-
       const content = `Watching ${fs.parkName} permits. Ask me anything about your trip.`;
-
       sessionStorage.setItem(SESSION_KEY, "true");
       return { id: 1, role: "assistant", content };
     }
 
-    // ── Standard greeting ──
+    // ── Time-aware dispatch (watched parks → most recent) ──
+    let parkName: string | null = null;
     if (trackedPermits.length > 0) {
-      // Use most recently created watcher
       const sorted = [...trackedPermits].sort((a, b) => {
         const ta = a.created_at ? new Date(a.created_at).getTime() : 0;
         const tb = b.created_at ? new Date(b.created_at).getTime() : 0;
         return tb - ta;
       });
-      const latest = sorted[0];
-      const latestParkName = PARKS[latest.park_id]?.shortName || "your park";
-      const body = `Watching ${latestParkName} permits. Ask me anything about your trip.`;
-      sessionStorage.setItem(SESSION_KEY, "true");
-      return { id: 1, role: "assistant", content: body };
+      parkName = PARKS[sorted[0].park_id]?.shortName || "your park";
     }
 
-    const greeting = firstName
-      ? `Hey ${firstName} — I'm Poko, your park ranger. What park are you planning to visit?`
-      : "Hey — I'm Poko, your park ranger. What park are you planning to visit?";
+    const dispatch = getDispatchWindow(parkName);
     sessionStorage.setItem(SESSION_KEY, "true");
-    return { id: 1, role: "assistant", content: greeting };
+    return {
+      id: 1,
+      role: "assistant",
+      content: `${dispatch.title} ${dispatch.body}`,
+    };
   };
 
   const [messages, setMessages] = useState<Message[]>(() => [makeGreeting()]);
@@ -606,6 +656,77 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
     // name/tracked-permits change fires, never as the trigger.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [displayName, trackedPermits, selectedParkId, firstSession, makeGreeting]);
+
+  // ── Time-aware dispatch refresh ──
+  // Re-evaluates the dispatch window (a) when the user re-focuses the tab and
+  // (b) automatically at the next window boundary while the tab is open.
+  // Only swaps the briefing message — never touches an active conversation.
+  // Crossfade is handled at render time (briefing prose container is keyed
+  // off message content, with a 400ms opacity transition).
+  const dispatchWindowRef = useRef<DispatchWindow | null>(null);
+  useEffect(() => {
+    if (firstSession) return; // first-session welcome is immutable
+
+    const computeParkName = (): string | null => {
+      if (trackedPermits.length === 0) return null;
+      const sorted = [...trackedPermits].sort((a, b) => {
+        const ta = a.created_at ? new Date(a.created_at).getTime() : 0;
+        const tb = b.created_at ? new Date(b.created_at).getTime() : 0;
+        return tb - ta;
+      });
+      return PARKS[sorted[0].park_id]?.shortName || "your park";
+    };
+
+    // Seed the ref the first time so we don't needlessly swap on first focus.
+    if (dispatchWindowRef.current === null) {
+      dispatchWindowRef.current = getDispatchWindow(computeParkName()).key;
+    }
+
+    const evaluate = () => {
+      const isBriefingState = messages.length <= 2 && messages[0]?.id === 1;
+      if (!isBriefingState) return;
+      const dispatch = getDispatchWindow(computeParkName());
+      if (dispatchWindowRef.current === dispatch.key) return;
+      dispatchWindowRef.current = dispatch.key;
+      setMessages([{ id: 1, role: "assistant", content: `${dispatch.title} ${dispatch.body}` }]);
+    };
+
+    // Boundaries: 5, 9, 12, 17, 21 local. After 21 → next 5am tomorrow.
+    const msToNextBoundary = (): number => {
+      const now = new Date();
+      const boundaries = [5, 9, 12, 17, 21];
+      const cur = now.getHours();
+      let nextHour = boundaries.find((h) => h > cur);
+      const next = new Date(now);
+      if (nextHour === undefined) {
+        next.setDate(next.getDate() + 1);
+        nextHour = 5;
+      }
+      next.setHours(nextHour, 0, 0, 50); // tiny slack so getHours() has rolled
+      return Math.max(1000, next.getTime() - now.getTime());
+    };
+
+    let timer = window.setTimeout(function tick() {
+      evaluate();
+      timer = window.setTimeout(tick, msToNextBoundary());
+    }, msToNextBoundary());
+
+    const onVisible = () => {
+      if (document.visibilityState === "visible") evaluate();
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    window.addEventListener("focus", evaluate);
+
+    return () => {
+      window.clearTimeout(timer);
+      document.removeEventListener("visibilitychange", onVisible);
+      window.removeEventListener("focus", evaluate);
+    };
+    // `messages` is intentionally omitted — we read it inside evaluate but
+    // only as a gate; the trigger is the boundary timer or focus event.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [firstSession, trackedPermits]);
+
 
   useEffect(() => {
     if (initialMountRef.current) { initialMountRef.current = false; return; }
@@ -2075,7 +2196,11 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                             }
                           >
                             {msg.role === "assistant" ? (
-                              <div className="mochi-prose">
+                              <div
+                                /* Briefing crossfades on window change by remounting via content key */
+                                key={isInitialBriefing ? `briefing-${msg.content}` : undefined}
+                                className={`mochi-prose ${isInitialBriefing ? "poko-dispatch-fade" : ""}`}
+                              >
                                 {parseTrailBlocks(msg.content).map((block, bi) =>
                                   block.type === "trails" ? (
                                     <div key={bi} className="space-y-2 -mx-1">
