@@ -1805,10 +1805,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   <p style={{
                     fontFamily: "'Cormorant Garamond', serif",
                     fontSize: 38, fontWeight: 400,
-                    letterSpacing: '0.26em',
+                    letterSpacing: '0.3em',
                     color: '#F0EDEA',
                     margin: 0, lineHeight: 1,
-                    textIndent: '0.26em',
+                    textIndent: '0.3em',
                   }}>POKO</p>
                   {/* Hairline + diamond rule (drawn-in) */}
                   <div className="poko-rule-draw" aria-hidden="true" style={{
