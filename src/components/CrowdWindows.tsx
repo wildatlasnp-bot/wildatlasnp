@@ -132,8 +132,8 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
       {/* Location name */}
       <h3 className="font-semibold text-[13px] text-foreground/70 mb-2">{f.location_name}</h3>
 
-      {/* Segmented bar chart */}
-      <div className="relative" style={{ paddingTop: nowPct !== null ? 22 : 0, paddingRight: 32, overflow: "visible" }}>
+      {/* Segmented bar chart — dynamic right padding when NOW marker is near end of day */}
+      <div className="relative" style={{ paddingTop: nowPct !== null ? 22 : 0, paddingRight: nowPct !== null && nowPct > 80 ? 32 : 0, overflow: "visible" }}>
         {/* The bars row */}
         <div
           key={animationKey}
