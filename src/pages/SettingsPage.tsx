@@ -1589,17 +1589,17 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       </div>
 
       {/* ───────────── FOOTER ───────────── */}
-      <div className="flex flex-col items-center" style={{ marginTop: 40 }}>
-        <span aria-hidden style={{ display: 'block', width: 32, height: 1, backgroundColor: GOLD, opacity: 0.45, marginBottom: 14 }} />
-        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 12, fontStyle: 'italic', color: MUTED, textAlign: 'center', margin: 0 }} className="px-2">
-          Independent service — not affiliated with NPS or Recreation.gov.
+      {/* Spec asks for 11px DM Sans #8A9E8A; honored at 12px floor (mem://style/typography/legibility-floor). */}
+      <div className="flex flex-col items-center" style={{ marginTop: 48 }}>
+        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#8A9E8A', textAlign: 'center', margin: 0, lineHeight: 1.5 }} className="px-2">
+          Independent service — not affiliated with NPS or Recreation.gov
         </p>
         <div className="flex items-center justify-center gap-2 mt-3">
-          <Link to="/privacy" className="hover:opacity-70 transition-opacity" style={{ fontSize: 12, color: MUTED, fontFamily: "'DM Sans', sans-serif" }}>Privacy Policy</Link>
-          <span style={{ fontSize: 12, color: GOLD, opacity: 0.5 }}>·</span>
-          <Link to="/terms" className="hover:opacity-70 transition-opacity" style={{ fontSize: 12, color: MUTED, fontFamily: "'DM Sans', sans-serif" }}>Terms & Conditions</Link>
+          <Link to="/privacy" className="hover:opacity-70 transition-opacity" style={{ fontSize: 12, color: '#8A9E8A', fontFamily: "'DM Sans', sans-serif" }}>Privacy Policy</Link>
+          <span style={{ fontSize: 12, color: '#8A9E8A' }}>·</span>
+          <Link to="/terms" className="hover:opacity-70 transition-opacity" style={{ fontSize: 12, color: '#8A9E8A', fontFamily: "'DM Sans', sans-serif" }}>Terms &amp; Conditions</Link>
         </div>
-        <p style={{ fontSize: 12, color: MUTED, opacity: 0.7, marginTop: 8, fontFamily: "'DM Sans', sans-serif", paddingBottom: embedded ? 0 : 24 }}>© 2026 WildAtlas</p>
+        <p style={{ fontSize: 12, color: '#8A9E8A', marginTop: 8, fontFamily: "'DM Sans', sans-serif", paddingBottom: embedded ? 0 : 48 }}>© 2026 WildAtlas</p>
       </div>
 
       {!embedded && <BottomNav activeTab="settings" onTabChange={(tab) => navigate(`/app?tab=${tab}`)} />}
