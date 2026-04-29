@@ -158,14 +158,14 @@ const InlineDisclaimer = () => (
 
 /** Rate limit upgrade card rendered inline in chat */
 const RateLimitUpgradeCard = ({ onUpgrade }: { onUpgrade: () => void }) => (
-  <div style={{
-    background: '#EDE8E1',
-    borderRadius: 14,
-    border: '1.5px solid rgba(47,111,78,0.85)',
-    padding: '16px 18px',
-    maxWidth: '85%',
-    boxShadow: '0 1px 3px rgba(0,0,0,0.07)',
-  }}>
+  <div
+    className="elev-featured elev-poko"
+    style={{
+      background: '#FFFFFF',
+      padding: '16px 18px',
+      maxWidth: '85%',
+    }}
+  >
     {/* RECOMMENDED badge */}
     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
       <span style={{

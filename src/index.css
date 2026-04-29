@@ -192,6 +192,14 @@
     --ranger-shadow-1: 0 1px 2px rgba(26,46,31,0.05);
     --ranger-shadow-2: 0 1px 3px rgba(26,46,31,0.07), 0 1px 2px rgba(26,46,31,0.04);
     --ranger-shadow-3: 0 10px 24px -16px rgba(26,46,31,0.22), 0 1px 3px rgba(26,46,31,0.05);
+    /* Card elevation system (Prompt 6) — consistent depth for cards across the app.
+       --elev-card     : standard cards (alert, ranger note, Poko read)
+       --elev-featured : featured cards (Poko briefing, upgrade)
+       --elev-photo    : park photo cards (My Parks) — hovers above surface */
+    --elev-card:     0 2px 8px rgba(26,47,30,0.06), 0 1px 2px rgba(26,47,30,0.04);
+    --elev-featured: 0 4px 16px rgba(26,47,30,0.10), 0 2px 4px rgba(26,47,30,0.06);
+    --elev-photo:    0 8px 24px rgba(26,47,30,0.15);
+    --elev-poko-tint: rgba(201,169,110,0.30);
     /* Radii */
     --ranger-r-sm: 6px;
     --ranger-r-md: 8px;
@@ -2462,14 +2470,14 @@ button.wa-cluster-head-toggle:hover .wa-cluster-chevron {
   border: 1px solid var(--ranger-rule);
   border-left: 3px solid var(--ranger-night);
   border-radius: var(--ranger-r-lg);
-  box-shadow: none;
+  box-shadow: var(--elev-featured);
   padding: 26px 24px 22px;
 }
 .ranger-card--quiet {
   background: var(--ranger-paper);
   border: 1px solid var(--ranger-rule-night);
   border-radius: 14px;
-  box-shadow: none;
+  box-shadow: var(--elev-card);
   padding: 26px 20px;
   text-align: center;
 }
@@ -2477,7 +2485,7 @@ button.wa-cluster-head-toggle:hover .wa-cluster-chevron {
   background: var(--ranger-paper);
   border: 1px solid var(--ranger-rule-bone);
   border-radius: var(--ranger-r-md);              /* 8px */
-  box-shadow: none;
+  box-shadow: var(--elev-card);
   padding: 10px 12px;
 }
 
@@ -2489,7 +2497,7 @@ button.wa-cluster-head-toggle:hover .wa-cluster-chevron {
   background: var(--ranger-night);
   border: 1px solid var(--ranger-rule-strong);
   border-radius: var(--ranger-r-lg);
-  box-shadow: none;
+  box-shadow: var(--elev-featured);
   padding: var(--ranger-space-card);
   color: var(--ranger-parchment);
 }
@@ -2836,4 +2844,30 @@ a.ranger-card--night:active,
 }
 @media (prefers-reduced-motion: reduce) {
   .wa-nav-ripple { animation: none; opacity: 0; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Card elevation utilities (Prompt 6 — Card Depth System)
+   Apply consistent depth to cards across the app. Use the most
+   specific class for the surface; do not stack elevations.
+   ───────────────────────────────────────────────────────────── */
+.elev-card {
+  background: #FFFFFF;
+  border: 1px solid #E8E4E0;
+  border-radius: 16px;
+  box-shadow: var(--elev-card);
+}
+.elev-featured {
+  background: #FFFFFF;
+  border: 1px solid #E8E4E0;
+  border-radius: 16px;
+  box-shadow: var(--elev-featured);
+}
+/* Amber border tint for Poko-flavored featured cards */
+.elev-featured.elev-poko {
+  border-color: var(--elev-poko-tint);
+}
+/* Park photo cards — feel like they hover above the surface */
+.elev-photo {
+  box-shadow: var(--elev-photo);
 }
