@@ -85,6 +85,37 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
     return pct(nowMin);
   }, [nowMin]);
 
+  // Measure chart container width so the NOW label can be pixel-clamped within bounds.
+  const chartRef = useRef<HTMLDivElement | null>(null);
+  const labelRef = useRef<HTMLSpanElement | null>(null);
+  const [chartWidth, setChartWidth] = useState(0);
+  const [labelWidth, setLabelWidth] = useState(32); // sensible default for "NOW"
+
+  useEffect(() => {
+    if (!chartRef.current || typeof ResizeObserver === "undefined") return;
+    const el = chartRef.current;
+    const ro = new ResizeObserver((entries) => {
+      for (const entry of entries) setChartWidth(entry.contentRect.width);
+    });
+    ro.observe(el);
+    setChartWidth(el.getBoundingClientRect().width);
+    return () => ro.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (labelRef.current) setLabelWidth(labelRef.current.getBoundingClientRect().width);
+  }, [nowPct, chartWidth]);
+
+  // Pixel offset of NOW label's left edge, clamped to [0, chartWidth - labelWidth].
+  // The label is rendered with left:0 + translateX(offsetPx - centerPx), so its center
+  // tracks the marker dot but its bounding box never escapes the chart.
+  const nowCenterPx = nowPct !== null && chartWidth > 0 ? (nowPct / 100) * chartWidth : 0;
+  const labelLeftPx = Math.max(
+    0,
+    Math.min(nowCenterPx - labelWidth / 2, Math.max(0, chartWidth - labelWidth))
+  );
+  const labelTranslatePx = labelLeftPx - nowCenterPx;
+
   const { segments, windowLabels } = useMemo(() => {
     const qs = timeToMinutes(f.quiet_start);
     const qe = timeToMinutes(f.quiet_end);
