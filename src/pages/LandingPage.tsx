@@ -1167,9 +1167,35 @@ const LandingPage = () => {
                       marginTop: 10,
                     }}
                   >
-                    {demoPhase === "scanning"
-                      ? "Scanning next park…"
-                      : `Caught at ${currentCatch.caughtAt} · window closes in ${currentCatch.closesIn}`}
+                    {demoPhase === "scanning" ? (
+                      "Scanning next park…"
+                    ) : (
+                      <>
+                        <span
+                          style={{
+                            fontFamily:
+                              "ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace",
+                            fontVariantNumeric: "tabular-nums",
+                            fontSize: 12,
+                            letterSpacing: "0.02em",
+                          }}
+                        >
+                          {currentCatch.caughtAt}
+                        </span>
+                        {" · window closes in "}
+                        <span
+                          style={{
+                            fontFamily:
+                              "ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace",
+                            fontVariantNumeric: "tabular-nums",
+                            fontSize: 12,
+                            letterSpacing: "0.02em",
+                          }}
+                        >
+                          {currentCatch.closesIn}
+                        </span>
+                      </>
+                    )}
                   </p>
                   <span
                     style={{
