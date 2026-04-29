@@ -533,170 +533,68 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
             );
           })()}
 
-          {/* ============ PRICE — struck-metal embossed artifact ============ */}
+          {/* ============ PRICE — magazine pull-quote ============ */}
           {(() => {
-            // Split price like "$9.99" → symbol "$", whole "9", decimal ".99"
             const raw = displayPrice ?? "";
-            const m = raw.match(/^([^\d]*)(\d+)([.,]\d+)?$/);
+            const m = raw.match(/^([^\d]*)(\d+(?:[.,]\d+)?)$/);
             const sym = m?.[1] ?? "$";
-            const whole = m?.[2] ?? "";
-            const dec = m?.[3] ?? "";
+            const num = m?.[2] ?? "";
             return (
               <div
                 style={{
-                  position: "relative",
-                  marginTop: latestFind ? 14 : 22,
-                  borderRadius: 16,
-                  padding: "20px 22px",
-                  overflow: "hidden",
-                  background:
-                    "linear-gradient(180deg, #FFFFFF 0%, #F7F2EA 55%, #EFE7DA 100%)",
-                  border: "1px solid rgba(201,169,110,0.42)",
-                  // Embossed cream plate
-                  boxShadow: [
-                    "inset 0 1px 0 rgba(255,255,255,0.85)",
-                    "inset 0 -1px 0 rgba(140,111,58,0.18)",
-                    "inset 0 0 0 1px rgba(201,169,110,0.10)",
-                    "0 1px 0 rgba(255,255,255,0.6)",
-                    "0 22px 44px -24px rgba(26,47,30,0.28)",
-                  ].join(", "),
+                  marginTop: latestFind ? 22 : 28,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
                   ...revealStyle(STEP.PRICE, "up"),
                 }}
               >
-                {/* One-shot embossed light sweep across the plate. */}
-                <span aria-hidden className="pro-sheen pro-sheen--plate" />
-
-                {/* Hairline gold corner ticks — top-left & bottom-right */}
-                <span aria-hidden style={{ position: "absolute", top: 8, left: 8, width: 10, height: 10, borderTop: "1px solid rgba(201,169,110,0.55)", borderLeft: "1px solid rgba(201,169,110,0.55)", borderTopLeftRadius: 3 }} />
-                <span aria-hidden style={{ position: "absolute", bottom: 8, right: 8, width: 10, height: 10, borderBottom: "1px solid rgba(201,169,110,0.55)", borderRight: "1px solid rgba(201,169,110,0.55)", borderBottomRightRadius: 3 }} />
-
-                <div style={{ display: "flex", alignItems: "stretch", justifyContent: "space-between", gap: 18 }}>
-                  {/* LEFT — eyebrow + meta */}
-                  <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", paddingTop: 2, paddingBottom: 2 }}>
-                    <div
-                      style={{
-                        fontFamily: "'DM Sans', sans-serif",
-                        fontSize: 12,
-                        fontWeight: 700,
-                        letterSpacing: "0.32em",
-                        textTransform: "uppercase",
-                        // Gold-foil gradient text
-                        background: "linear-gradient(180deg, #E6C887 0%, #C9A96E 55%, #8C6F3A 100%)",
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
-                        backgroundClip: "text",
-                      }}
-                    >
-                      Field Pass
-                    </div>
-                    <div style={{ marginTop: 10 }}>
-                      <div
+                {displayPrice === null ? (
+                  <span className="inline-block w-32 h-16 bg-[rgba(240,237,234,0.06)] animate-pulse rounded" />
+                ) : (
+                  <>
+                    {/* $ 9.99 — symbol top-aligned, numeral as the pull quote */}
+                    <div style={{ display: "inline-flex", alignItems: "flex-start", lineHeight: 1 }}>
+                      <span
                         className="font-heading"
                         style={{
-                          fontStyle: "italic",
-                          fontSize: 14,
-                          fontWeight: 500,
-                          color: "#1A2F1E",
-                          letterSpacing: "-0.005em",
-                          lineHeight: 1.1,
+                          fontSize: 20,
+                          fontWeight: 400,
+                          color: "#C9A96E",
+                          marginTop: 6,
+                          marginRight: 4,
+                          lineHeight: 1,
                         }}
                       >
-                        Monthly subscription
-                      </div>
-                      <div
+                        {sym}
+                      </span>
+                      <span
+                        className="font-heading"
                         style={{
-                          marginTop: 3,
-                          fontFamily: "'DM Sans', sans-serif",
-                          fontSize: 12,
-                          color: "rgba(44,44,44,0.62)",
-                          letterSpacing: "0.04em",
+                          fontSize: 72,
+                          fontWeight: 300,
+                          letterSpacing: "-0.03em",
+                          lineHeight: 0.95,
+                          color: "#F0EDEA",
                         }}
                       >
-                        Cancel anytime · billed via Stripe
-                      </div>
+                        {num}
+                      </span>
                     </div>
-                  </div>
-
-                  {/* Vertical hairline divider */}
-                  <div
-                    aria-hidden
-                    style={{
-                      width: 1,
-                      alignSelf: "stretch",
-                      background: "linear-gradient(180deg, rgba(201,169,110,0) 0%, rgba(201,169,110,0.35) 50%, rgba(201,169,110,0) 100%)",
-                    }}
-                  />
-
-                  {/* RIGHT — engraved numeral */}
-                  <div style={{ textAlign: "right", display: "flex", flexDirection: "column", alignItems: "flex-end", justifyContent: "center", minWidth: 110 }}>
-                    {displayPrice === null ? (
-                      <span className="inline-block w-20 h-10 bg-[rgba(26,47,30,0.08)] animate-pulse rounded" />
-                    ) : (
-                      <>
-                        <div style={{ display: "flex", alignItems: "flex-start", lineHeight: 1 }}>
-                          <span
-                            className="font-heading"
-                            style={{
-                              fontSize: 18,
-                              fontWeight: 500,
-                              color: "#1A2F1E",
-                              marginTop: 6,
-                              marginRight: 2,
-                              opacity: 0.75,
-                            }}
-                          >
-                            {sym}
-                          </span>
-                          <span
-                            className="font-heading"
-                            style={{
-                              fontSize: 52,
-                              fontWeight: 500,
-                              letterSpacing: "-0.035em",
-                              lineHeight: 0.9,
-                              color: "#1A2F1E",
-                              textShadow: [
-                                "0 1px 0 rgba(255,255,255,0.6)",
-                                "0 2px 14px rgba(26,47,30,0.10)",
-                              ].join(", "),
-                            }}
-                          >
-                            {whole}
-                          </span>
-                          {dec && (
-                            <span
-                              className="font-heading"
-                              style={{
-                                fontStyle: "italic",
-                                fontSize: 22,
-                                fontWeight: 500,
-                                color: "#8C6F3A",
-                                marginTop: 6,
-                                marginLeft: 1,
-                                letterSpacing: "-0.01em",
-                              }}
-                            >
-                              {dec}
-                            </span>
-                          )}
-                        </div>
-                        <div
-                          style={{
-                            marginTop: 4,
-                            fontFamily: "'DM Sans', sans-serif",
-                            fontSize: 12,
-                            fontWeight: 600,
-                            letterSpacing: "0.22em",
-                            textTransform: "uppercase",
-                            color: "rgba(44,44,44,0.55)",
-                          }}
-                        >
-                          USD / month
-                        </div>
-                      </>
-                    )}
-                  </div>
-                </div>
+                    {/* /mo — DM Sans 13, baseline-aligned below numeral */}
+                    <span
+                      style={{
+                        marginTop: 6,
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 13,
+                        color: "#8A9E8A",
+                        letterSpacing: "0.02em",
+                      }}
+                    >
+                      /mo
+                    </span>
+                  </>
+                )}
               </div>
             );
           })()}
