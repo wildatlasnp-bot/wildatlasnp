@@ -540,18 +540,17 @@ const ProModal = ({ open, onOpenChange }: ProModalProps) => {
                   marginTop: latestFind ? 14 : 22,
                   borderRadius: 16,
                   padding: "20px 22px",
-                  // Clip the sheen sweep to the plate's rounded rect.
                   overflow: "hidden",
                   background:
-                    "linear-gradient(180deg, rgba(245,235,211,0.07) 0%, rgba(201,169,110,0.045) 48%, rgba(0,0,0,0.18) 100%)",
-                  border: "1px solid rgba(201,169,110,0.32)",
-                  // Deep inset rim + outer drop = struck/embossed feel
+                    "linear-gradient(180deg, #FFFFFF 0%, #F7F2EA 55%, #EFE7DA 100%)",
+                  border: "1px solid rgba(201,169,110,0.42)",
+                  // Embossed cream plate
                   boxShadow: [
-                    "inset 0 1px 0 rgba(245,235,211,0.14)",
-                    "inset 0 -1px 0 rgba(0,0,0,0.45)",
-                    "inset 0 0 0 1px rgba(201,169,110,0.08)",
-                    "0 1px 0 rgba(245,235,211,0.04)",
-                    "0 22px 44px -24px rgba(0,0,0,0.7)",
+                    "inset 0 1px 0 rgba(255,255,255,0.85)",
+                    "inset 0 -1px 0 rgba(140,111,58,0.18)",
+                    "inset 0 0 0 1px rgba(201,169,110,0.10)",
+                    "0 1px 0 rgba(255,255,255,0.6)",
+                    "0 22px 44px -24px rgba(26,47,30,0.28)",
                   ].join(", "),
                   ...revealStyle(STEP.PRICE, "up"),
                 }}
