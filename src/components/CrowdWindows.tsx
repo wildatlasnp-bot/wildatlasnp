@@ -42,8 +42,8 @@ const formatTime12 = (totalMins: number): string => {
   return `${h12}:${m.toString().padStart(2, "0")} ${ampm}`;
 };
 
-// Timeline spans 6 AM – 9 PM
-const DAY_START = 6 * 60;
+// Timeline spans 5 AM – 9 PM
+const DAY_START = 5 * 60;
 const DAY_END = 21 * 60;
 const DAY_SPAN = DAY_END - DAY_START;
 const pct = (mins: number) => Math.max(0, Math.min(100, ((mins - DAY_START) / DAY_SPAN) * 100));
@@ -57,22 +57,21 @@ const CHART_COLORS = {
   base: "hsl(var(--muted) / 0.35)",
 };
 
-// Bar height per crowd level — keyed by level name, aligns to bottom baseline
-const CROWD_HEIGHTS: Record<string, number> = {
-  quiet:    36,
-  building: 44,
-  busy:     48,
-  packed:   52,
+const ZONE_HEX = {
+  quiet: "#2F6F4E",
+  building: "#C9A96E",
+  busy: "#E8935A",
+  packed: "#C0392B",
 };
 
 // Hour axis labels
 const HOUR_TICKS = [
-  { mins: 6 * 60, label: "a" },
-  { mins: 9 * 60, label: "9a" },
+  { mins: 5 * 60,  label: "5a" },
+  { mins: 9 * 60,  label: "9a" },
   { mins: 12 * 60, label: "12p" },
   { mins: 15 * 60, label: "3p" },
   { mins: 18 * 60, label: "6p" },
-  { mins: 21 * 60, label: "8" },
+  { mins: 21 * 60, label: "9p" },
 ];
 
 const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Forecast; animationKey?: number }) => {
