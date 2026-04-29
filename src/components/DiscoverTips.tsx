@@ -26,6 +26,8 @@ import TodayParkAdvice from "@/components/TodayParkAdvice";
 import { useRecentFinds } from "@/hooks/useRecentFinds";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useSettlingSkeleton } from "@/hooks/useSettlingSkeleton";
+import FieldNotesModal from "@/components/FieldNotesModal";
+import { haptics } from "@/lib/haptics";
 
 import yosemiteHero from "@/assets/yosemite-hero.jpg";
 import rainierHero from "@/assets/rainier-hero.jpg";
@@ -371,6 +373,20 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
   const stableParkChange = onParkChange ?? NOOP_PARK_CHANGE;
   const { user } = useAuth();
   const { toast } = useToast();
+
+  // ── Field Notes easter egg — triple-tap WildAtlas wordmark to open ──
+  const [fieldNotesOpen, setFieldNotesOpen] = useState(false);
+  const wordmarkTapsRef = useRef<number[]>([]);
+  const handleWordmarkTap = useCallback(() => {
+    const now = Date.now();
+    wordmarkTapsRef.current = wordmarkTapsRef.current.filter((t) => now - t < 600);
+    wordmarkTapsRef.current.push(now);
+    if (wordmarkTapsRef.current.length >= 3) {
+      wordmarkTapsRef.current = [];
+      haptics.light();
+      setFieldNotesOpen(true);
+    }
+  }, []);
 
   // ── Watched parks for the selector dropdown indicators ──
   const [watchedParkIds, setWatchedParkIds] = useState<Set<string>>(new Set());
@@ -891,10 +907,15 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
       >
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
           <div style={{ display: "flex", alignItems: "baseline", gap: 10, minWidth: 0 }}>
-            <span className="font-display-italic"
+            <span
+              className="font-display-italic"
+              onClick={handleWordmarkTap}
               style={{
                 fontStyle: "italic", fontWeight: 500, fontSize: 18,
                 color: "#1A2F1E", letterSpacing: "-0.01em", lineHeight: 1,
+                cursor: "default",
+                userSelect: "none",
+                WebkitTapHighlightColor: "transparent",
               }}
             >
               WildAtlas
@@ -2033,6 +2054,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
         initialDate={arrivalDate}
         isEditMode={!!arrivalDate}
       />
+      <FieldNotesModal open={fieldNotesOpen} onClose={() => setFieldNotesOpen(false)} />
     </div>
   );
 });
