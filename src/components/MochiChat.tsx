@@ -2073,20 +2073,19 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                       style={{ marginTop: 12 }}
                     >
                       <div style={{
-                        background: 'rgba(232,228,220,0.88)',
-                        backdropFilter: 'blur(20px)',
-                        WebkitBackdropFilter: 'blur(20px)',
+                        background: '#FDFBF8',
                         border: 'none',
-                        borderRadius: '18px 18px 18px 4px',
+                        borderLeft: '2px solid rgba(201,169,110,0.35)',
+                        borderRadius: '16px 16px 16px 4px',
                         padding: '14px 18px',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: 4,
-                        boxShadow: '0 1px 3px rgba(0,0,0,0.10), 0 8px 20px rgba(0,0,0,0.16), 0 24px 48px rgba(0,0,0,0.10)',
+                        gap: 5,
+                        boxShadow: '0 2px 8px rgba(26,47,30,0.06)',
                       }}>
-                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(26,47,30,0.45)', display: 'inline-block', animation: 'poko-dot-bounce 400ms ease-in-out infinite', animationDelay: '0ms' }} />
-                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(26,47,30,0.45)', display: 'inline-block', animation: 'poko-dot-bounce 400ms ease-in-out infinite', animationDelay: '80ms' }} />
-                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(26,47,30,0.45)', display: 'inline-block', animation: 'poko-dot-bounce 400ms ease-in-out infinite', animationDelay: '160ms' }} />
+                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(26,47,30,0.55)', display: 'inline-block', animation: 'poko-typing-wave 900ms ease-in-out infinite', animationDelay: '0ms' }} />
+                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(26,47,30,0.55)', display: 'inline-block', animation: 'poko-typing-wave 900ms ease-in-out infinite', animationDelay: '300ms' }} />
+                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(26,47,30,0.55)', display: 'inline-block', animation: 'poko-typing-wave 900ms ease-in-out infinite', animationDelay: '600ms' }} />
                       </div>
                     </motion.div>
                   )}
