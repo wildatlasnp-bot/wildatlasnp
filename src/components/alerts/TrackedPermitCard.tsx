@@ -133,8 +133,8 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
                 boxShadow: expanded
                   ? "none"
                   : hovered
-                    ? "0 4px 12px rgba(28,56,40,0.14), 0 10px 28px rgba(28,56,40,0.12)"
-                    : "0 2px 8px rgba(28,56,40,0.10), 0 8px 24px rgba(28,56,40,0.08)",
+                    ? "0 4px 12px rgba(26,47,30,0.14), 0 12px 32px rgba(26,47,30,0.18)"
+                    : "var(--elev-photo)",
                 border: expanded ? "1px solid var(--rule2)" : "1px solid transparent",
                 transform: hovered && !expanded ? "translateY(-1px)" : "translateY(0)",
                 transition: "transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease",
