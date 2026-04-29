@@ -737,9 +737,12 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
   }
 
   return (
-    <div className={`bg-background max-w-lg mx-auto px-5 py-6 ${embedded ? 'h-full min-h-0 overflow-y-auto pb-[104px]' : 'min-h-screen pb-[80px]'}`} {...(embedded ? { 'data-tab-scroll': '' } : {})}>
-      {/* Header */}
-      <div style={{ marginTop: 36 }} ref={headerFadeRef}>
+    <div data-settings-root className={`bg-background max-w-lg mx-auto px-5 py-6 ${embedded ? 'h-full min-h-0 overflow-y-auto pb-[104px]' : 'min-h-screen pb-[80px]'}`} {...(embedded ? { 'data-tab-scroll': '' } : {})}>
+      {/* Settings-scoped Switch tones — warmer off-state per editorial spec */}
+      <style>{`
+        [data-settings-root] [role="switch"][data-state="unchecked"] { background-color: #E5E1DD !important; }
+        [data-settings-root] [role="switch"][data-state="checked"] { background-color: #2F6F4E !important; }
+      `}</style>
         <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 52, fontWeight: 300, letterSpacing: '-0.02em', color: FOREST, lineHeight: 1.05, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>Settings</h1>
         {displayName && (
            <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontStyle: 'italic', fontWeight: 400, color: SAGE_ITALIC, marginTop: 8, opacity: "var(--header-opacity, 1)" as any, willChange: "opacity" }}>
