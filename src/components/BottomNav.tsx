@@ -9,16 +9,9 @@ interface BottomNavProps {
   hasUnreadAlerts?: boolean;
 }
 
-const INACTIVE = "rgba(26, 47, 30, 0.55)";
-const INACTIVE_LABEL = "rgba(26, 47, 30, 0.55)";
-const ACTIVE = "#1A2F1E";
-
-const ACTIVE_COLOR: Record<Tab, string> = {
-  mochi: ACTIVE,
-  discover: ACTIVE,
-  sniper: ACTIVE,
-  settings: ACTIVE,
-};
+const ACTIVE_INK = "#1A2F1E";
+const INACTIVE_INK = "#8A9E8A";
+const ACCENT_DOT = "#2F6F4E";
 
 type LucideIcon = React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
 
@@ -35,30 +28,35 @@ const tabs: {
 ];
 
 const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false }: BottomNavProps) => {
-  const [popTab, setPopTab] = useState<Tab | null>(null);
   const [pressedTab, setPressedTab] = useState<Tab | null>(null);
   // Ripple keys per tab — incrementing key forces a fresh element per tap
   const [ripples, setRipples] = useState<Record<Tab, number>>({
     mochi: 0, sniper: 0, discover: 0, settings: 0,
   });
-  const popTimer = useRef<number | null>(null);
+  const releaseTimer = useRef<number | null>(null);
 
   useEffect(() => {
-    return () => { if (popTimer.current) clearTimeout(popTimer.current); };
+    return () => { if (releaseTimer.current) clearTimeout(releaseTimer.current); };
   }, []);
 
   const handleTabClick = (tab: Tab) => {
-    // Fire ripple on every tap (even on the active tab) for feedback
     setRipples((r) => ({ ...r, [tab]: r[tab] + 1 }));
     if (tab === activeTab) return;
-    setPopTab(tab);
-    if (popTimer.current) clearTimeout(popTimer.current);
-    popTimer.current = window.setTimeout(() => setPopTab(null), 150);
     onTabChange(tab);
   };
 
-  const handlePressStart = useCallback((tab: Tab) => setPressedTab(tab), []);
-  const handlePressEnd = useCallback(() => setPressedTab(null), []);
+  const handlePressStart = useCallback((tab: Tab) => {
+    setPressedTab(tab);
+    if (releaseTimer.current) clearTimeout(releaseTimer.current);
+  }, []);
+  const handlePressEnd = useCallback(() => {
+    // Brief delay so the spring-back is perceptible even on quick taps
+    if (releaseTimer.current) clearTimeout(releaseTimer.current);
+    releaseTimer.current = window.setTimeout(() => setPressedTab(null), 60);
+  }, []);
+
+  const activeIndex = Math.max(0, tabs.findIndex((t) => t.id === activeTab));
+  const N = tabs.length;
 
   return (
     <nav
@@ -74,15 +72,32 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
         paddingBottom: "env(safe-area-inset-bottom, 0px)",
         background: "#F0EDEA",
         borderTop: "1px solid #E5E1DD",
-        boxShadow: "0 -1px 0 rgba(255,255,255,0.6) inset, 0 -8px 24px -8px rgba(26,47,30,0.10), 0 -2px 8px -2px rgba(26,47,30,0.06)",
+        boxShadow: "none",
         zIndex: 50,
       }}
     >
+      {/* Sliding active indicator dot */}
+      <span
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          bottom: `calc(env(safe-area-inset-bottom, 0px) + 6px)`,
+          left: `${(activeIndex + 0.5) * (100 / N)}%`,
+          transform: "translateX(-50%)",
+          width: 3,
+          height: 3,
+          borderRadius: "50%",
+          background: ACCENT_DOT,
+          transition: "left 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+          pointerEvents: "none",
+          zIndex: 2,
+        }}
+      />
+
       {tabs.map((tab) => {
         const isActive = activeTab === tab.id;
-        const isPop = popTab === tab.id;
         const isPressed = pressedTab === tab.id;
-        const color = isActive ? ACTIVE_COLOR[tab.id] : INACTIVE;
+        const color = isActive ? ACTIVE_INK : INACTIVE_INK;
         const rippleKey = ripples[tab.id];
 
         return (
@@ -107,8 +122,6 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
               padding: 0,
               WebkitTapHighlightColor: "transparent",
               width: 60,
-              transform: isPressed ? "scale(0.94)" : "scale(1)",
-              transition: "transform 120ms cubic-bezier(0.4, 0, 0.2, 1)",
             }}
           >
             <div
@@ -122,7 +135,6 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
                 overflow: "visible",
               }}
             >
-              {/* Ripple — re-mounts on each tap via changing key */}
               {rippleKey > 0 && (
                 <span
                   key={rippleKey}
@@ -132,17 +144,23 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
               )}
               <div
                 style={{
-                  transform: isPop ? "scale(1.1)" : "scale(1)",
-                  transition: "transform 150ms cubic-bezier(0.4, 0, 0.2, 1)",
+                  transform: isPressed ? "scale(0.88)" : "scale(1)",
+                  transition: isPressed
+                    ? "transform 60ms cubic-bezier(0.4, 0, 0.2, 1)"
+                    : "transform 100ms cubic-bezier(0.34, 1.56, 0.64, 1)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  opacity: isActive ? 1 : 0.85,
                   position: "relative",
                   zIndex: 1,
                 }}
               >
-                <tab.Icon size={22} strokeWidth={isActive ? 1.75 : 1.4} color={color} />
+                <tab.Icon
+                  size={22}
+                  strokeWidth={isActive ? 1.5 : 1}
+                  color={color}
+                  fill="none"
+                />
               </div>
               {tab.id === "sniper" && hasUnreadAlerts && (
                 <span
@@ -153,8 +171,8 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
                     width: 7,
                     height: 7,
                     borderRadius: "50%",
-                    background: "#1A2F1E",
-                    border: "1.5px solid rgba(240,237,234,0.95)",
+                    background: ACCENT_DOT,
+                    border: "1.5px solid #F0EDEA",
                     pointerEvents: "none",
                     zIndex: 2,
                   }}
@@ -165,10 +183,10 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
               style={{
                 fontFamily: "'DM Sans', sans-serif",
                 fontSize: 12,
-                fontWeight: isActive ? 600 : 500,
-                letterSpacing: "0.10em",
+                fontWeight: isActive ? 500 : 400,
+                letterSpacing: "0.08em",
                 textTransform: "uppercase",
-                color: isActive ? ACTIVE : INACTIVE_LABEL,
+                color: isActive ? ACTIVE_INK : INACTIVE_INK,
                 lineHeight: 1,
                 transition: "color 200ms cubic-bezier(0.4, 0, 0.2, 1)",
               }}
