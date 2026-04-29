@@ -185,6 +185,7 @@ export default function SavedSignalsSection({ parkId }: SavedSignalsSectionProps
           </p>
         </article>
       ))}
-    </div>
+      </div>
+    </section>
   );
 }
