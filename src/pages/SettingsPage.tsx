@@ -1482,38 +1482,39 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
       {/* ───────────── ACCOUNT ───────────── */}
       <SectionHeader label="Account" />
       <div className="mb-2">
-        {/* Editorial utility links */}
-        <div className="flex flex-col" style={{ gap: 2 }}>
+        {/* Editorial utility links — full-width tappable rows with → chevron */}
+        <div className="flex flex-col">
           <button
             onClick={handleSignOut}
-            className="w-full flex items-center justify-start transition-opacity hover:opacity-70"
+            className="w-full flex items-center justify-between transition-opacity hover:opacity-70"
             style={{
               minHeight: 44,
               background: 'none',
               border: 'none',
               fontFamily: "'DM Sans', sans-serif",
-              fontSize: 14,
-              fontWeight: 500,
-              color: '#4A5568',
+              fontSize: 15,
+              fontWeight: 400,
+              color: FOREST,
               cursor: 'pointer',
-              padding: '6px 0',
+              padding: '10px 0',
+              textAlign: 'left',
             }}
           >
-            <span style={{ color: GOLD, opacity: 0.6, marginRight: 10 }}>·</span>
-            Sign out
+            <span>Sign out</span>
+            <ArrowRight size={14} style={{ color: MUTED }} aria-hidden="true" />
           </button>
 
           <DownloadDataButton user={user} />
         </div>
 
-        {/* Delete Account */}
-        <div className="flex flex-col items-start" style={{ marginTop: 20 }}>
+        {/* Delete Account — separated by 24px spacer + 1px hairline */}
+        <div className="flex flex-col items-start" style={{ marginTop: 24, paddingTop: 24, borderTop: `1px solid ${IVORY_BORDER}` }}>
           {scheduledDeletionAt ? (
-            <div className="w-full px-4 py-3.5" style={{ ...CARD_SURFACE, borderLeft: '3px solid #E24B4A' }}>
+            <div className="w-full px-4 py-3.5" style={{ ...CARD_SURFACE, borderLeft: '3px solid #C0392B' }}>
               <div className="flex items-start gap-2.5">
                 <AlertTriangle size={16} className="text-destructive shrink-0 mt-0.5" />
                 <div className="flex-1">
-                  <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontStyle: 'italic', fontWeight: 500, color: '#E24B4A' }}>
+                  <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontStyle: 'italic', fontWeight: 500, color: '#C0392B' }}>
                     Account deletion scheduled
                   </p>
                   <p className="text-[12px] text-muted-foreground mt-1 leading-relaxed">
@@ -1541,12 +1542,11 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
             </div>
           ) : (
             <>
-              <span aria-hidden style={{ display: 'block', width: 24, height: 1, backgroundColor: GOLD, opacity: 0.45, marginBottom: 10 }} />
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <button
                     className="transition-opacity hover:opacity-70"
-                    style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 16, fontStyle: 'italic', fontWeight: 500, color: '#E24B4A', background: 'none', border: 'none', cursor: 'pointer', padding: '4px 0' }}
+                    style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontStyle: 'italic', fontWeight: 500, color: '#C0392B', background: 'none', border: 'none', cursor: 'pointer', padding: '4px 0' }}
                   >
                     Delete account
                   </button>
@@ -1576,7 +1576,7 @@ const SettingsPage = ({ embedded }: { embedded?: boolean }) => {
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
-              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 12, fontStyle: 'italic', color: MUTED, marginTop: 4 }}>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: MUTED, marginTop: 6 }}>
                 Permanent. Cannot be undone after 7 days.
               </p>
             </>
