@@ -14,6 +14,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
 import { supabase } from "@/integrations/supabase/client";
 import { PARKS } from "@/lib/parks";
+import { applyParkAccent } from "@/lib/park-accent";
 import posthog from "@/lib/posthog";
 import { useScannerStatus } from "@/hooks/useScannerStatus";
 import { useStatusRowOpacity } from "@/hooks/useStatusRowOpacity";
