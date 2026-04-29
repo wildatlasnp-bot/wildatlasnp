@@ -1956,11 +1956,16 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   );
                   const marginTop = idx === 0 ? 0 : 12;
 
-                  const isNew = msg.id > 2;
+                  const isNew = idx >= burstStartRef.current && msg.id > 2;
                   const isInitialBriefing =
                     msg.role === "assistant" &&
                     idx === 0 &&
                     !messages.some((m) => m.role === "user");
+
+                  // Per-bubble entrance stagger — relative to the burst start,
+                  // capped so a long single-burst paste can't run past ~640ms.
+                  const burstOffset = Math.max(0, idx - burstStartRef.current);
+                  const staggerMs = isNew ? Math.min(burstOffset * 80, 640) : 0;
 
                   return (
                     <div
@@ -1972,6 +1977,18 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                         alignItems: msg.role === "assistant" ? 'flex-start' : 'flex-end',
                         width: isInitialBriefing ? '100%' : 'auto',
                         minWidth: 0,
+                        // Isolate layout/paint so a new bubble's animation
+                        // can't trigger reflow on bubbles above it.
+                        contain: 'layout paint',
+                        ...(isNew
+                          ? {
+                              animationDelay: `${staggerMs}ms`,
+                              willChange: 'opacity, transform',
+                              // Start invisible so the delay window doesn't
+                              // flash the final-state bubble before animating.
+                              opacity: 0,
+                            }
+                          : null),
                       }}
                     >
                       {msg.isRateLimitCard ? (
