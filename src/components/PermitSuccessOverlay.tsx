@@ -145,9 +145,10 @@ const PermitSuccessOverlay = ({
             {/* Close */}
             <button
               onClick={onClose}
+              aria-label="Close"
               className="absolute top-4 right-4 z-10 p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
             >
-              <X size={16} />
+              <X size={16} aria-hidden="true" />
             </button>
 
             <div className="px-6 pt-7 pb-6">
