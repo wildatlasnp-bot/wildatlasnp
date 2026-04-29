@@ -123,23 +123,33 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
 
   const NEEDLE_COLOR = "#1A2F1E";
 
+  // Build a smooth, data-driven gradient from the segment list.
+  // Each segment contributes a color stop at its midpoint; ends anchor edges.
+  const gradientCss = useMemo(() => {
+    if (segments.length === 0) return "transparent";
+    const stops: string[] = [];
+    let cursor = segments[0].startPct;
+    stops.push(`${segments[0].color} ${cursor.toFixed(2)}%`);
+    segments.forEach((s) => {
+      const mid = s.startPct + (s.flex / DAY_SPAN) * 100 / 2;
+      stops.push(`${s.color} ${mid.toFixed(2)}%`);
+    });
+    const last = segments[segments.length - 1];
+    const end = last.startPct + (last.flex / DAY_SPAN) * 100;
+    stops.push(`${last.color} ${end.toFixed(2)}%`);
+    return `linear-gradient(to right, ${stops.join(", ")})`;
+  }, [segments]);
+
   return (
-    <div
-      style={{
-        background: "#FFFFFF",
-        border: "1px solid #E5E1DD",
-        borderRadius: 16,
-        padding: 24,
-      }}
-    >
+    <div>
       {/* Location name */}
       <h3 className="font-semibold text-[13px] text-foreground/70 mb-2">{f.location_name}</h3>
 
-      {/* Day chart with gauge-style NOW marker */}
-      <div className="relative" style={{ paddingTop: nowPct !== null ? "28px" : "0", paddingLeft: 8, paddingRight: 8, overflow: 'visible' }}>
-        {/* NOW gauge marker — hairline + dot */}
+      {/* Gradient timeline with NOW marker */}
+      <div className="relative" style={{ paddingTop: nowPct !== null ? "26px" : "0", overflow: 'visible' }}>
+        {/* NOW marker — white knife with dot */}
         {nowPct !== null && (
-          <div className="absolute z-20" style={{ left: `${nowPct}%`, top: 0, bottom: 0, overflow: 'visible' }}>
+          <div className="absolute z-20 pointer-events-none" style={{ left: `${nowPct}%`, top: 0, bottom: 0, overflow: 'visible' }}>
             {/* NOW label */}
             <span
               className="absolute uppercase whitespace-nowrap"
@@ -147,72 +157,64 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
                 top: "0px",
                 fontSize: "12px",
                 fontWeight: 700,
-                letterSpacing: "0.05em",
+                letterSpacing: "0.08em",
+                fontFamily: "'DM Sans', sans-serif",
                 color: NEEDLE_COLOR,
-                overflow: 'visible',
                 ...(nowPct > 80
-                  ? { right: '50%', transform: 'translateX(4px)' }
+                  ? { right: '50%', transform: 'translateX(6px)' }
                   : { left: '50%', transform: 'translateX(-50%)' }
                 ),
               }}
             >
               NOW
             </span>
-            {/* 6px filled circle dot at top */}
+            {/* 10px white filled dot at top edge */}
             <div
               className="absolute left-1/2 -translate-x-1/2"
               style={{
-                top: "20px",
-                width: "6px",
-                height: "6px",
+                top: "16px",
+                width: "10px",
+                height: "10px",
                 borderRadius: "50%",
-                backgroundColor: NEEDLE_COLOR,
+                backgroundColor: "#FFFFFF",
+                boxShadow: "0 0 8px rgba(0,0,0,0.4)",
                 zIndex: 3,
               }}
             />
-            {/* 1px hairline from dot down through bar */}
+            {/* 2px white knife line through gradient band */}
             <div
               className="absolute left-1/2 -translate-x-1/2"
               style={{
                 top: "26px",
-                bottom: 0,
-                width: "1px",
-                backgroundColor: NEEDLE_COLOR,
+                height: "56px",
+                width: "2px",
+                backgroundColor: "#FFFFFF",
+                boxShadow: "0 0 6px rgba(0,0,0,0.35)",
                 zIndex: 2,
               }}
             />
           </div>
         )}
 
-        {/* The bar — uniform 48px rectangular segments, 4px radius, 3px gaps */}
-        <div key={animationKey} className="relative flex" style={{ height: "48px", alignItems: "stretch", overflow: 'visible', gap: 3 }}>
-          {/* Left padding if first segment doesn't start at DAY_START */}
-          {segments.length > 0 && segments[0].startPct > 0 && (
-            <div style={{ flex: segments[0].startPct }} />
-          )}
-          {segments.map((s, i) => (
-            <div
-              key={i}
-              className="crowd-segment"
-              style={{
-                flex: s.flex,
-                backgroundColor: s.color,
-                minWidth: 0,
-                height: 48,
-                borderRadius: 4,
-                animation: `barGrow 600ms cubic-bezier(0, 0, 0.2, 1) ${i * 40}ms both`,
-              }}
-            />
-          ))}
-        </div>
+        {/* Continuous gradient band */}
+        <div
+          key={animationKey}
+          className="relative crowd-gradient-band"
+          style={{
+            height: "56px",
+            borderRadius: "28px",
+            background: gradientCss,
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.08)",
+          }}
+        />
 
         {/* Hour axis */}
-        <div className="relative h-5 mt-1">
+        <div className="relative h-5 mt-2">
           {HOUR_TICKS.map((t) => (
             <span
               key={t.label}
               className="absolute -translate-x-1/2"
-              style={{ left: `${pct(t.mins)}%`, color: "var(--wa-ink-gray)", fontSize: 12, fontWeight: 600, fontFamily: "'DM Sans', sans-serif", overflow: 'visible', whiteSpace: 'nowrap' }}
+              style={{ left: `${pct(t.mins)}%`, color: "#8A9E8A", fontSize: 12, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", whiteSpace: 'nowrap' }}
             >
               {t.label}
             </span>
@@ -220,29 +222,29 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
         </div>
       </div>
 
-      {/* Color legend — immediately below hour axis, before window labels */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 20px', marginTop: 12, marginBottom: 12 }}>
+      {/* Single-line legend */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '6px 16px', marginTop: 14, marginBottom: 12 }}>
         {[
           { color: CHART_COLORS.quiet, label: "Quiet" },
           { color: CHART_COLORS.building, label: "Building" },
           { color: CHART_COLORS.busy, label: "Busy" },
           { color: CHART_COLORS.packed, label: "Packed" },
         ].map((item) => (
-          <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-            <span style={{ width: 7, height: 7, borderRadius: '50%', flexShrink: 0, backgroundColor: item.color }} />
-            <span style={{ fontSize: 12, fontWeight: 400, color: 'var(--color-text-secondary)' }}>{item.label}</span>
+          <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ width: 8, height: 8, borderRadius: '50%', flexShrink: 0, backgroundColor: item.color }} />
+            <span style={{ fontSize: 12, fontWeight: 400, color: '#8A9E8A', fontFamily: "'DM Sans', sans-serif" }}>{item.label}</span>
           </div>
         ))}
       </div>
 
-      {/* Window summary labels — tight 8px gap to chart */}
+      {/* Window summary labels */}
       <div className="flex items-center gap-5 flex-wrap" style={{ marginTop: "8px" }}>
         {windowLabels.map((w, i) => (
           <div
             key={`${animationKey}-${w.label}`}
             className="flex items-center gap-1.5"
             style={{
-              animation: `labelFadeUp 320ms cubic-bezier(0.4,0,0.2,1) ${600 + i * 80}ms both`,
+              animation: `labelFadeUp 320ms cubic-bezier(0.4,0,0.2,1) ${500 + i * 80}ms both`,
             }}
           >
             <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: w.dot }} />
