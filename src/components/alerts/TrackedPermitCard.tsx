@@ -369,8 +369,7 @@ const TrackedPermitCard = ({ permit, onRemove }: TrackedPermitCardProps) => {
           <div
             style={{
               background: "var(--cream-d)",
-              padding: "13px 16px 4px",
-              borderTop: "1px solid var(--rule)",
+              padding: "0 16px 4px",
             }}
             onClick={(e) => e.stopPropagation()}
           >
