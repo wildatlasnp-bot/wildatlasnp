@@ -1386,7 +1386,7 @@ const DiscoverTips = forwardRef<HTMLDivElement, DiscoverProps>(({
       </RevealSection>
 
       {/* ═══════════════════════ IX. PLAN YOUR VISIT ═══════════════════════ */}
-      <section style={{ padding: "32px 20px 4px" }}>
+      <RevealSection style={{ padding: "32px 20px 4px" }} delay={240} resetKey={parkId}>
         <SectionPlate
           numeral="V"
           eyebrow="Your trip"
