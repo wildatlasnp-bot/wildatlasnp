@@ -1608,8 +1608,10 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   50% { transform: translateY(-4px); }
                 }
                 @keyframes poko-typing-wave {
-                  0%, 100% { transform: scale(1); opacity: 0.4; }
-                  33%      { transform: scale(1.4); opacity: 1; }
+                  0%      { transform: scale(1);   opacity: 0.4; }
+                  16.66%  { transform: scale(1.4); opacity: 1;   }
+                  33.33%  { transform: scale(1);   opacity: 0.4; }
+                  100%    { transform: scale(1);   opacity: 0.4; }
                 }
                 @keyframes mochi-glow-pulse {
                   0%, 100% { opacity: 0.05; }
