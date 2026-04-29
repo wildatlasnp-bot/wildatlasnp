@@ -1920,6 +1920,15 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
             <div style={{ margin: '28px 0 0', padding: '0 24px', minWidth: 0 }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: 0, minWidth: 0 }} aria-live="polite" aria-atomic="false" aria-relevant="additions">
                 <style>{`.mochi-prose ⚠, .mochi-prose [data-emoji="⚠️"] { filter: grayscale(1) brightness(1.3); }`}</style>
+                {(() => {
+                  // Compute the burst window once per render: any message at
+                  // index ≥ burstStart is "newly arrived" and gets a stagger.
+                  // If the list shrank or didn't grow, the window stays empty.
+                  const grew = messages.length > prevMsgCountRef.current;
+                  if (grew) burstStartRef.current = prevMsgCountRef.current;
+                  prevMsgCountRef.current = messages.length;
+                  return null;
+                })()}
                 {messages.map((msg, idx) => {
                   if (msg.isSystem) {
                     return (
