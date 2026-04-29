@@ -123,13 +123,6 @@ const DayChart = React.memo(({ forecast: f, animationKey = 0 }: { forecast: Fore
 
   const NEEDLE_COLOR = "#1A2F1E";
 
-  const GLOW_BY_LEVEL: Record<string, string> = {
-    quiet: "none",
-    building: "none",
-    busy: "0 0 8px rgba(232,147,90,0.3)",
-    packed: "0 0 12px rgba(192,57,43,0.35)",
-  };
-
   return (
     <div
       style={{
