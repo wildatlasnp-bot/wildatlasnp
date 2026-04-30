@@ -374,6 +374,7 @@ serve(async (req) => {
           const userId = await resolveUser(subscription.customer as string);
           if (userId) {
             await syncProStatus(userId, false, null);
+            await setPaymentStatus(userId, "canceled");
           } else {
             logStep("Could not resolve user — skipping sync", { customerId: subscription.customer });
           }
