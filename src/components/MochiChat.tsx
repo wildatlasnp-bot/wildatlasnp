@@ -2058,116 +2058,14 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
         <div className="flex-1 min-h-0 flex flex-col">
           <div ref={setScrollRef} onScroll={handleChatScroll} className="flex-1 min-h-0 overflow-y-auto" data-tab-scroll style={{ position: 'relative' }}>
             <div style={{ padding: '16px 16px 0' }} aria-live="polite" aria-atomic="false" aria-relevant="additions">
-              {messages.map((msg, idx) => {
-                if (msg.isSystem) {
-                  return (
-                    <motion.div
-                      key={msg.id}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      style={{ display: 'flex', justifyContent: 'center', margin: '8px auto', maxWidth: 260 }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--wa-ink-muted)', display: 'inline-block', animation: 'pulse 1.5s ease-in-out infinite' }} />
-                        <p style={{ fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink-muted)', fontStyle: 'italic', margin: 0, lineHeight: 1.5 }}>{msg.content}</p>
-                      </div>
-                    </motion.div>
-                  );
-                }
-
-                // Detect consecutive messages from same role for grouping
-                const prevMsg = idx > 0 ? messages[idx - 1] : null;
-                const isFirstInGroup = !prevMsg || prevMsg.role !== msg.role || prevMsg.isSystem;
-                const nextMsg = idx < messages.length - 1 ? messages[idx + 1] : null;
-                const isLastInGroup = !nextMsg || nextMsg.role !== msg.role || nextMsg.isSystem;
-
-                // Detect info-dense Mochi response
-                const isDense = msg.role === "assistant" && (
-                  /^#{2,3}\s/m.test(msg.content) ||
-                  (msg.content.match(/^[-*•]\s/gm) || []).length >= 3
-                );
-
-                // Spacing: 2px within group, 8px between groups
-                const marginTop = idx === 0 ? 0 : isFirstInGroup ? 8 : 2;
-
-                return (
-                <motion.div
-                  key={msg.id}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.28, ease: [0.2, 0.8, 0.4, 1] }}
-                  className={`flex flex-col ${msg.role === "assistant" ? "items-start" : "items-end"}`}
-                  style={{ marginTop, marginBottom: isLastInGroup ? 0 : 0 }}
-                >
-                  {msg.isRateLimitCard ? (
-                    <RateLimitUpgradeCard onUpgrade={() => { haptics.medium(); setProModalOpen(true); }} />
-                  ) : (
-                    <>
-                      <div
-                        style={
-                          msg.role === "assistant"
-                            ? {
-                                maxWidth: '84%',
-                                background: 'rgba(244, 238, 228, 0.94)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
-                                border: '0.5px solid rgba(195, 178, 152, 0.45)',
-                                borderLeft: isDense ? '2px solid var(--wa-green-light)' : '0.5px solid rgba(195, 178, 152, 0.45)',
-                                borderRadius: isFirstInGroup ? '12px 18px 18px 18px' : '18px 18px 18px 18px',
-                                padding: '11px 15px',
-                                fontSize: 13,
-                                fontWeight: 300,
-                                fontFamily: "'DM Sans', sans-serif",
-                                color: 'rgba(28,24,18,.8)',
-                                lineHeight: 1.6,
-                              }
-                            : {
-                                maxWidth: '84%',
-                                 background: 'rgba(47, 111, 78, 0.85)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
-                                color: 'var(--wa-cream)',
-                                borderRadius: '18px 10px 18px 18px',
-                                padding: '11px 15px',
-                                fontSize: 13,
-                                fontWeight: 300,
-                                fontFamily: "'DM Sans', sans-serif",
-                                lineHeight: 1.6,
-                              }
-                        }
-                      >
-                        {msg.role === "assistant" ? (
-                          <div className="mochi-prose">
-                            {parseTrailBlocks(msg.content).map((block, bi) =>
-                              block.type === "trails" ? (
-                                <div key={bi} className="space-y-2 -mx-1">
-                                  {block.value.map((trail, ti) => (
-                                    <MochiTrailCard key={ti} trail={trail} />
-                                  ))}
-                                </div>
-                              ) : (
-                                <div key={bi}>
-                                  {parseMapBlocks(block.value).map((sub, si) =>
-                                    sub.type === "map" ? (
-                                      <div key={si} style={{ margin: "10px 0" }}>
-                                        <PokoMapCard map={sub.value} />
-                                      </div>
-                                    ) : (
-                                      <ReactMarkdown key={si} components={MARKDOWN_NO_TABLES}>
-                                        {formatInlineBullets(stripMarkdownTables(sub.value))}
-                                      </ReactMarkdown>
-                                    ),
-                                  )}
-                                </div>
-                              )
-                            )}
-                          </div>
-                        ) : (
-                          msg.content
-                        )}
-                      </div>
-                      {msg.role === "assistant" && msg.hasDisclaimer && <InlineDisclaimer />}
-                    </>
-                  )}
-                </motion.div>
-                );
-              })}
+              <MochiMessageList
+                tone="conversation"
+                messages={messages}
+                burstStart={0}
+                selectedParkId={selectedParkId ?? null}
+                firstSession={!!firstSession}
+                onUpgradeClick={() => setProModalOpen(true)}
+              />
 
               <AnimatePresence>
                 {isLoading && messages[messages.length - 1]?.role === "user" && (
