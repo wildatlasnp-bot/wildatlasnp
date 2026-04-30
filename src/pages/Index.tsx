@@ -306,6 +306,9 @@ const Index = () => {
             onCancelDeletion={clearDeletionSchedule}
           />
         )}
+        {isPro && paymentStatus === "past_due" && (
+          <PaymentIssueBanner paymentStatusSince={paymentStatusSince} />
+        )}
         <main id="main-content" className="flex-1 min-h-0 pb-0 flex flex-col relative">
           {TAB_ORDER.map((tab) => {
             const isActive = activeTab === tab;
