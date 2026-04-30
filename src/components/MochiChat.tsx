@@ -15,6 +15,7 @@ import AssistantBubbleShell from "@/components/poko/AssistantBubbleShell";
 import InlineDisclaimer from "@/components/mochi/InlineDisclaimer";
 import RateLimitUpgradeCard from "@/components/mochi/RateLimitUpgradeCard";
 import VisitWindowCard from "@/components/mochi/VisitWindowCard";
+import MochiHeader from "@/components/mochi/MochiHeader";
 import {
   PERMIT_KEYWORDS,
   stripMarkdownTables,
