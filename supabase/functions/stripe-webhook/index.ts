@@ -245,6 +245,54 @@ serve(async (req) => {
       }
     };
 
+    /**
+     * Set the user's payment_status flag. We don't immediately revoke Pro on a single
+     * failed charge — we mark `past_due` so the UI can prompt them to update their card,
+     * and the nightly `enforce-payment-grace` job will revoke after the grace period
+     * if Stripe never fires `customer.subscription.deleted`.
+     *
+     * Setting `ok` clears `payment_status_since`. Setting `past_due` only stamps
+     * `payment_status_since` if the user wasn't already in `past_due` (so the grace
+     * clock starts at the FIRST failure, not the latest retry).
+     */
+    const setPaymentStatus = async (
+      userId: string,
+      status: "ok" | "past_due" | "canceled"
+    ) => {
+      try {
+        if (status === "ok") {
+          const { error } = await supabaseClient
+            .from("profiles")
+            .update({ payment_status: "ok", payment_status_since: null })
+            .eq("user_id", userId);
+          if (error) logStep("setPaymentStatus(ok) failed", { userId, message: error.message });
+          else logStep("Cleared payment_status", { userId });
+          return;
+        }
+
+        // For past_due / canceled: only stamp `since` on the first transition.
+        const { data: existing } = await supabaseClient
+          .from("profiles")
+          .select("payment_status, payment_status_since")
+          .eq("user_id", userId)
+          .maybeSingle();
+
+        const updates: Record<string, unknown> = { payment_status: status };
+        if (existing?.payment_status !== status || !existing?.payment_status_since) {
+          updates.payment_status_since = new Date().toISOString();
+        }
+        const { error } = await supabaseClient
+          .from("profiles")
+          .update(updates)
+          .eq("user_id", userId);
+        if (error) logStep("setPaymentStatus failed", { userId, status, message: error.message });
+        else logStep("Set payment_status", { userId, status });
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        logStep("setPaymentStatus error (non-fatal)", { userId, status, message: msg });
+      }
+    };
+
     // ── Event handlers ──────────────────────────────────────────────────
 
     try {
