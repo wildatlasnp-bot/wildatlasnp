@@ -13,6 +13,27 @@ import ProModal from "@/components/ProModal";
 import ParkSelector from "@/components/ParkSelector";
 import ScanningLedger from "@/components/poko/ScanningLedger";
 import AssistantBubbleShell from "@/components/poko/AssistantBubbleShell";
+import InlineDisclaimer from "@/components/mochi/InlineDisclaimer";
+import RateLimitUpgradeCard from "@/components/mochi/RateLimitUpgradeCard";
+import VisitWindowCard from "@/components/mochi/VisitWindowCard";
+import {
+  PERMIT_KEYWORDS,
+  stripMarkdownTables,
+  sanitizeMochiResponse,
+  shouldShowDisclaimer,
+  formatInlineBullets,
+  MARKDOWN_NO_TABLES,
+} from "@/components/mochi/mochi-formatting";
+import {
+  type DispatchWindow,
+  maskPhone,
+  getTimePeriod,
+  getDispatchWindow,
+  IDLE_MESSAGES,
+  RETURNING_MESSAGES,
+  getSeasonalSubtitle,
+  PERSONALITY_MARKER,
+} from "@/components/mochi/mochi-greeting";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
 import { supabase } from "@/integrations/supabase/client";
