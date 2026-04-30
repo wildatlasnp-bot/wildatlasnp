@@ -841,6 +841,8 @@ export type Database = {
           notify_sms: boolean
           onboarded_at: string | null
           onboarding_step_reached: number
+          payment_status: string
+          payment_status_since: string | null
           phone_number: string | null
           phone_verified: boolean
           scheduled_deletion_at: string | null
@@ -862,6 +864,8 @@ export type Database = {
           notify_sms?: boolean
           onboarded_at?: string | null
           onboarding_step_reached?: number
+          payment_status?: string
+          payment_status_since?: string | null
           phone_number?: string | null
           phone_verified?: boolean
           scheduled_deletion_at?: string | null
@@ -883,6 +887,8 @@ export type Database = {
           notify_sms?: boolean
           onboarded_at?: string | null
           onboarding_step_reached?: number
+          payment_status?: string
+          payment_status_since?: string | null
           phone_number?: string | null
           phone_verified?: boolean
           scheduled_deletion_at?: string | null
@@ -1195,6 +1201,8 @@ export type Database = {
           is_pro: boolean
           onboarded_at: string
           onboarding_step_reached: number
+          payment_status: string
+          payment_status_since: string
           phone_verified: boolean
           stripe_customer_id: string
           subscription_end: string
