@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 
 import OfflineBanner from "@/components/OfflineBanner";
 import DeletionBanner from "@/components/DeletionBanner";
+import PaymentIssueBanner from "@/components/PaymentIssueBanner";
 import BottomNav from "@/components/BottomNav";
 import SideRailNav from "@/components/SideRailNav";
 import MochiChat from "@/components/MochiChat";
