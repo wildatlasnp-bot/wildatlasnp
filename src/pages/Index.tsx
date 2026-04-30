@@ -91,7 +91,7 @@ const Index = () => {
   // Once the dashboard has rendered, lock it — never fall back to loading/onboarding
   // screens due to background profile refetches or auth token refreshes.
   const dashboardRenderedRef = useRef(false);
-  const { refreshProStatus } = useProStatus();
+  const { refreshProStatus, paymentStatus, paymentStatusSince, isPro } = useProStatus();
   const { hasUnread: hasUnreadAlerts, markAllRead: markAlertsRead } = useUnreadAlerts();
   const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
