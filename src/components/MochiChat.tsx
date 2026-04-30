@@ -15,6 +15,9 @@ import AssistantBubbleShell from "@/components/poko/AssistantBubbleShell";
 import InlineDisclaimer from "@/components/mochi/InlineDisclaimer";
 import RateLimitUpgradeCard from "@/components/mochi/RateLimitUpgradeCard";
 import VisitWindowCard from "@/components/mochi/VisitWindowCard";
+import MochiHeader from "@/components/mochi/MochiHeader";
+import MochiComposer from "@/components/mochi/MochiComposer";
+import MochiMessageList from "@/components/mochi/MochiMessageList";
 import {
   PERMIT_KEYWORDS,
   stripMarkdownTables,
@@ -916,181 +919,21 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   }: {
     tone: "dark" | "light";
     showDisclaimer?: boolean;
-  }) => {
-    const isDark = tone === "dark";
-
-    // Single source of truth for screen-edge inset. The briefing bubble
-    // container uses `padding: '0 24px'`; we mirror it here so any future
-    // change cascades to the composer wrapper AND the disclaimer.
-    const BRIEFING_CARD_INSET = 24;
-    const wrapperPaddingX = isDark ? 16 : 20;
-    // Disclaimer adds whatever's missing to reach the briefing inset.
-    // Math.max guards against the wrapper ever exceeding the target inset.
-    const disclaimerPaddingX = Math.max(0, BRIEFING_CARD_INSET - wrapperPaddingX);
-
-    return (
-      <div
-        style={{
-          flexShrink: 0,
-          background: isDark ? "transparent" : "var(--wa-cream)",
-          borderTop: isDark ? undefined : "1px solid var(--wa-rule)",
-          paddingTop: isDark ? 8 : 10,
-          paddingLeft: wrapperPaddingX,
-          paddingRight: wrapperPaddingX,
-          paddingBottom: isDark ? 8 : 8,
-        }}
-      >
-        <div
-          className={`flex items-center ${isDark ? '' : 'mochi-light-composer'}`}
-          style={
-            isDark
-              ? {
-                  borderRadius: 20,
-                  background: "hsl(145 22% 14%)",
-                  border: "1px solid hsl(0 0% 100% / 0.10)",
-                  borderTop: "1px solid hsl(0 0% 100% / 0.15)",
-                  padding: "10px 10px 10px 20px",
-                  boxShadow: "0 8px 32px hsl(0 0% 0% / 0.30)",
-                }
-              : {
-                  borderRadius: 28,
-                  background: "rgba(252,248,242,0.96)",
-                  border: "0.5px solid rgba(180,162,136,0.42)",
-                  padding: "8px 8px 8px 16px",
-                  position: "relative" as const,
-                }
-          }
-        >
-          <input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleInputKeyDown}
-            placeholder="Ask about any park or permit..."
-            aria-label="Ask Poko anything"
-            className={isDark ? "mochi-dark-input" : "mochi-light-input"}
-            style={
-              isDark
-                ? {
-                    flex: 1,
-                    background: "transparent",
-                    fontSize: 15,
-                    fontFamily: "'DM Sans', sans-serif",
-                    color: "hsl(39 33% 96%)",
-                    outline: "none",
-                    border: "none",
-                    minWidth: 0,
-                  }
-                : {
-                    flex: 1,
-                    background: "transparent",
-                    fontSize: 14,
-                    fontWeight: 300,
-                    fontFamily: "'DM Sans', sans-serif",
-                    color: "var(--wa-ink)",
-                    outline: "none",
-                    border: "none",
-                    minWidth: 0,
-                  }
-            }
-            disabled={isLoading}
-          />
-          <style>{`
-            .mochi-light-composer:focus-within {
-              border-color: var(--wa-green) !important;
-              transition: border-color 0.18s ease;
-            }
-            .mochi-light-composer input::placeholder {
-              color: var(--wa-ink-placeholder);
-            }
-            .mochi-light-composer input:focus {
-              outline: none;
-              box-shadow: none;
-            }
-          `}</style>
-          <style>{`
-            .poko-send-gold { transition: background 220ms ease, border-color 220ms ease, transform 120ms ease, opacity 220ms ease; }
-            .poko-send-gold:not(:disabled):hover { background: #C9A96E; border-color: #C9A96E; }
-            .poko-send-gold:not(:disabled):active { transform: scale(0.94); }
-          `}</style>
-          <button
-            type="button"
-            onClick={handleSend}
-            disabled={isLoading || !input.trim()}
-            aria-label={isLoading ? "Sending message" : "Send message"}
-            aria-busy={isLoading}
-            aria-disabled={isLoading || !input.trim()}
-            className="poko-send-gold shrink-0 flex items-center justify-center"
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: '50%',
-              padding: 0,
-              background: (!input.trim() || isLoading)
-                ? (isDark ? 'rgba(240,237,234,0.06)' : 'rgba(201,169,110,0.18)')
-                : 'rgba(201,169,110,0.95)',
-              border: `1px solid ${(!input.trim() || isLoading)
-                ? (isDark ? 'rgba(240,237,234,0.18)' : 'rgba(201,169,110,0.35)')
-                : 'transparent'}`,
-              color: (!input.trim() || isLoading)
-                ? (isDark ? 'rgba(240,237,234,0.45)' : 'rgba(60,50,30,0.55)')
-                : '#1A2F1E',
-              cursor: (!input.trim() || isLoading) ? 'default' : 'pointer',
-            }}
-          >
-            {isLoading ? (
-              <Loader2 size={16} className="animate-spin" aria-hidden="true" />
-            ) : (
-              <ArrowUp size={18} strokeWidth={2} aria-hidden="true" />
-            )}
-          </button>
-        </div>
-
-        {renderStatusRow({ tone: isDark ? 'dark' : 'light' })}
-
-        {showDisclaimer && (
-          <p style={{
-            fontSize: 12,
-            fontWeight: 400,
-            fontFamily: "'DM Sans', sans-serif",
-            color: isDark ? 'rgba(240,237,234,0.62)' : 'rgba(26,47,30,0.58)',
-            textAlign: 'center',
-            // Derived from BRIEFING_CARD_INSET above so the disclaimer text
-            // always aligns to the same screen inset as the briefing card,
-            // regardless of how the composer wrapper padding evolves.
-            paddingTop: 10,
-            paddingBottom: 14,
-            paddingLeft: disclaimerPaddingX,
-            paddingRight: disclaimerPaddingX,
-            lineHeight: 1.55,
-            letterSpacing: '0.01em',
-            margin: 0,
-          }}>
-            Poko can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
-          </p>
-        )}
-        {!isPro && (() => {
-          const remaining = 5 - questionsUsed;
-          if (remaining > 3 || remaining < 0) return null;
-          return (
-            <p style={{ fontSize: 12, fontFamily: "'DM Sans', sans-serif", textAlign: 'center', margin: '2px 20px 8px', lineHeight: 1.4 }}>
-              {remaining > 0 ? (
-                <span style={{ color: '#C9A96E' }}>{remaining} question{remaining !== 1 ? 's' : ''} remaining today</span>
-              ) : (
-                <span
-                  style={{ color: '#2F6F4E', cursor: 'pointer' }}
-                  onClick={() => { haptics.medium(); setProModalOpen(true); }}
-                  role="button"
-                  tabIndex={0}
-                >
-                  Upgrade to Pro for unlimited questions
-                </span>
-              )}
-            </p>
-          );
-        })()}
-      </div>
-    );
-  };
+  }) => (
+    <MochiComposer
+      tone={tone}
+      showDisclaimer={showDisclaimer}
+      input={input}
+      setInput={setInput}
+      onInputKeyDown={handleInputKeyDown}
+      onSend={handleSend}
+      isLoading={isLoading}
+      renderStatusRow={renderStatusRow}
+      isPro={isPro}
+      questionsUsed={questionsUsed}
+      onUpgradeClick={() => setProModalOpen(true)}
+    />
+  );
 
   const handleChipTap = useCallback((chipLabel: string) => {
     setChipsHidden(true);
@@ -1372,26 +1215,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
       }}
     >
       {/* Header — briefing: none / conversation: Mochi avatar */}
-      {isBriefing ? null : (
-        <div className="px-5 pt-4 pb-2 flex items-center gap-3" style={{ borderBottom: '1px solid var(--wa-rule)' }}>
-          <div className="w-10 h-10 rounded-full border border-border/40 flex items-center justify-center overflow-hidden" style={{ background: 'var(--wa-cream)' }}>
-            <motion.img
-              key={mochiPose}
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.2 }}
-              src={mochiPose === "scanning" ? MOCHI_SCANNING : mochiPose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE}
-              alt=""
-              aria-hidden="true"
-              className="w-8 h-8 object-contain object-center"
-            />
-          </div>
-          <div>
-            <p style={{ fontSize: 15, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink)', margin: 0 }}>Poko</p>
-            <p style={{ fontSize: 12, fontWeight: 300, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink-muted)', margin: 0 }}>your park companion</p>
-          </div>
-        </div>
-      )}
+      {isBriefing ? null : <MochiHeader pose={mochiPose} />}
 
 
 
@@ -1962,211 +1786,22 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                 truncated the FOLLOW UP / ASK ABOUT hairline rules. */}
             <div style={{ margin: '28px 0 0', padding: '0 24px', minWidth: 0 }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: 0, minWidth: 0 }} aria-live="polite" aria-atomic="false" aria-relevant="additions">
-                <style>{`.mochi-prose ⚠, .mochi-prose [data-emoji="⚠️"] { filter: grayscale(1) brightness(1.3); }`}</style>
                 {(() => {
                   // Compute the burst window once per render: any message at
                   // index ≥ burstStart is "newly arrived" and gets a stagger.
-                  // If the list shrank or didn't grow, the window stays empty.
                   const grew = messages.length > prevMsgCountRef.current;
                   if (grew) burstStartRef.current = prevMsgCountRef.current;
                   prevMsgCountRef.current = messages.length;
                   return null;
                 })()}
-                {messages.map((msg, idx) => {
-                  if (msg.isSystem) {
-                    return (
-                      <motion.div
-                        key={msg.id}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        style={{ display: 'flex', justifyContent: 'center', margin: '8px auto', maxWidth: 260 }}
-                      >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                          <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(240,237,234,0.4)', display: 'inline-block', animation: 'pulse 1.5s ease-in-out infinite' }} />
-                          <p style={{ fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.5)', fontStyle: 'italic', margin: 0, lineHeight: 1.5 }}>{msg.content}</p>
-                        </div>
-                      </motion.div>
-                    );
-                  }
-
-                  const prevMsg = idx > 0 ? messages[idx - 1] : null;
-                  const isFirstInGroup = !prevMsg || prevMsg.role !== msg.role || prevMsg.isSystem;
-                  const nextMsg = idx < messages.length - 1 ? messages[idx + 1] : null;
-                  const isLastInGroup = !nextMsg || nextMsg.role !== msg.role || nextMsg.isSystem;
-                  const isDense = msg.role === "assistant" && (
-                    /^#{2,3}\s/m.test(msg.content) ||
-                    (msg.content.match(/^[-*•]\s/gm) || []).length >= 3
-                  );
-                  const marginTop = idx === 0 ? 0 : 12;
-
-                  const isNew = idx >= burstStartRef.current && msg.id > 2;
-                  const isInitialBriefing =
-                    msg.role === "assistant" &&
-                    idx === 0 &&
-                    !messages.some((m) => m.role === "user");
-
-                  // Per-bubble entrance stagger — relative to the burst start,
-                  // capped so a long single-burst paste can't run past ~640ms.
-                  const burstOffset = Math.max(0, idx - burstStartRef.current);
-                  const staggerMs = isNew ? Math.min(burstOffset * 80, 640) : 0;
-
-                  return (
-                    <div
-                      key={msg.id}
-                      className={isNew ? (msg.role === "assistant" ? "poko-bubble-in-left" : "poko-bubble-in-right") : undefined}
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: msg.role === "assistant" ? 'flex-start' : 'flex-end',
-                        width: isInitialBriefing ? '100%' : 'auto',
-                        minWidth: 0,
-                        // Isolate layout/paint so a new bubble's animation
-                        // can't trigger reflow on bubbles above it.
-                        contain: 'layout paint',
-                        ...(isNew
-                          ? {
-                              animationDelay: `${staggerMs}ms`,
-                              willChange: 'opacity, transform',
-                              // Start invisible so the delay window doesn't
-                              // flash the final-state bubble before animating.
-                              opacity: 0,
-                            }
-                          : null),
-                      }}
-                    >
-                      {msg.isRateLimitCard ? (
-                        <RateLimitUpgradeCard onUpgrade={() => { haptics.medium(); setProModalOpen(true); }} />
-                      ) : (
-                        <>
-                         {isInitialBriefing && (
-                            <div style={{
-                              alignSelf: 'stretch',
-                              display: 'flex', alignItems: 'baseline', gap: 12,
-                              margin: '2px 2px 14px',
-                              fontFamily: "'DM Sans', sans-serif",
-                              fontSize: 12, fontWeight: 600,
-                              letterSpacing: '0.26em', textTransform: 'uppercase',
-                              color: 'rgba(240,237,234,0.62)',
-                              lineHeight: 1,
-                              maxWidth: '100%',
-                              minWidth: 0,
-                              overflow: 'hidden',
-                            }}>
-                              <span style={{ flexShrink: 0 }}>Dispatch</span>
-                              <span style={{
-                                flex: 1,
-                                height: 1,
-                                transform: 'translateY(-2px)',
-                                background: 'linear-gradient(to right, rgba(240,237,234,0.28) 0%, rgba(240,237,234,0.10) 55%, transparent 100%)',
-                              }} />
-                              <span style={{
-                                flexShrink: 0,
-                                color: 'rgba(201,169,110,0.85)',
-                                fontStyle: 'italic',
-                                fontFamily: "'Cormorant Garamond', serif",
-                                fontSize: 12,
-                                fontWeight: 400,
-                                letterSpacing: '0.04em',
-                                textTransform: 'none',
-                                transform: 'translateY(1px)',
-                              }}>
-                                today
-                              </span>
-                            </div>
-                          )}
-                          {msg.role === "assistant" ? (
-                            <AssistantBubbleShell
-                              className="mochi-prose-container"
-                              parkId={selectedParkId ?? null}
-                              captureText={
-                                msg.content.startsWith(PERSONALITY_MARKER)
-                                  ? msg.content.slice(PERSONALITY_MARKER.length)
-                                  : msg.content
-                              }
-                              // No capture button on the initial dispatch /
-                              // briefing — it's a greeting, not field intel.
-                              enableCapture={!isInitialBriefing && !msg.isSystem}
-                              bubbleStyle={{
-                                maxWidth: isInitialBriefing ? '100%' : '85%',
-                                width: isInitialBriefing ? '100%' : 'auto',
-                                alignSelf: 'flex-start',
-                                marginRight: 'auto',
-                                marginLeft: 0,
-                                fontSize: isInitialBriefing ? 16 : 15,
-                                fontWeight: 400,
-                                fontFamily: isInitialBriefing ? "'Cormorant Garamond', serif" : "'DM Sans', sans-serif",
-                                fontStyle: isInitialBriefing ? 'italic' : 'normal',
-                                ...pokoBubbleStyle(isInitialBriefing ? 'briefing' : 'default'),
-                                lineHeight: isInitialBriefing ? 1.55 : 1.6,
-                              }}
-                            >
-                              {(() => {
-                                const isPersonality = isInitialBriefing && msg.content.startsWith(PERSONALITY_MARKER);
-                                const cleaned = isPersonality ? msg.content.slice(PERSONALITY_MARKER.length) : msg.content;
-                                return (
-                                  <div
-                                    key={isInitialBriefing ? `briefing-${cleaned}` : undefined}
-                                    className={`mochi-prose ${isInitialBriefing ? "poko-dispatch-fade" : ""}`}
-                                  >
-                                    {parseTrailBlocks(cleaned).map((block, bi) =>
-                                      block.type === "trails" ? (
-                                        <div key={bi} className="space-y-2 -mx-1">
-                                          {block.value.map((trail, ti) => (
-                                            <MochiTrailCard key={ti} trail={trail} />
-                                          ))}
-                                        </div>
-                                      ) : (
-                                        <div key={bi}>
-                                          {parseMapBlocks(block.value).map((sub, si) =>
-                                            sub.type === "map" ? (
-                                              <div key={si} style={{ margin: "10px 0" }}>
-                                                <PokoMapCard map={sub.value} />
-                                              </div>
-                                            ) : (
-                                              <ReactMarkdown key={si} components={MARKDOWN_NO_TABLES}>
-                                                {formatInlineBullets(stripMarkdownTables(sub.value))}
-                                              </ReactMarkdown>
-                                            ),
-                                          )}
-                                        </div>
-                                      )
-                                    )}
-                                    {isInitialBriefing && !isPersonality && !firstSession && (
-                                      <p style={{
-                                        marginTop: 8, marginBottom: 0,
-                                        fontFamily: "'DM Sans', sans-serif",
-                                        fontSize: 12, fontStyle: 'italic',
-                                        color: '#8A9E8A', lineHeight: 1.5,
-                                      }}>{getSeasonalSubtitle()}</p>
-                                    )}
-                                  </div>
-                                );
-                              })()}
-                            </AssistantBubbleShell>
-                          ) : (
-                            <div
-                              className="mochi-prose-container"
-                              style={{
-                                width: 'fit-content',
-                                maxWidth: '72%',
-                                alignSelf: 'flex-end',
-                                marginLeft: 'auto',
-                                marginRight: 0,
-                                fontSize: 15,
-                                fontWeight: 400,
-                                fontFamily: "'DM Sans', sans-serif",
-                                ...userBubbleStyle,
-                              }}
-                            >
-                              {msg.content}
-                            </div>
-                          )}
-                          {msg.role === "assistant" && msg.hasDisclaimer && <InlineDisclaimer />}
-                        </>
-                      )}
-                    </div>
-                  );
-                })}
+                <MochiMessageList
+                  tone="briefing"
+                  messages={messages}
+                  burstStart={burstStartRef.current}
+                  selectedParkId={selectedParkId ?? null}
+                  firstSession={!!firstSession}
+                  onUpgradeClick={() => setProModalOpen(true)}
+                />
 
                 <AnimatePresence>
                   {isLoading && messages[messages.length - 1]?.role === "user" && (
@@ -2423,116 +2058,14 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
         <div className="flex-1 min-h-0 flex flex-col">
           <div ref={setScrollRef} onScroll={handleChatScroll} className="flex-1 min-h-0 overflow-y-auto" data-tab-scroll style={{ position: 'relative' }}>
             <div style={{ padding: '16px 16px 0' }} aria-live="polite" aria-atomic="false" aria-relevant="additions">
-              {messages.map((msg, idx) => {
-                if (msg.isSystem) {
-                  return (
-                    <motion.div
-                      key={msg.id}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      style={{ display: 'flex', justifyContent: 'center', margin: '8px auto', maxWidth: 260 }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--wa-ink-muted)', display: 'inline-block', animation: 'pulse 1.5s ease-in-out infinite' }} />
-                        <p style={{ fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'var(--wa-ink-muted)', fontStyle: 'italic', margin: 0, lineHeight: 1.5 }}>{msg.content}</p>
-                      </div>
-                    </motion.div>
-                  );
-                }
-
-                // Detect consecutive messages from same role for grouping
-                const prevMsg = idx > 0 ? messages[idx - 1] : null;
-                const isFirstInGroup = !prevMsg || prevMsg.role !== msg.role || prevMsg.isSystem;
-                const nextMsg = idx < messages.length - 1 ? messages[idx + 1] : null;
-                const isLastInGroup = !nextMsg || nextMsg.role !== msg.role || nextMsg.isSystem;
-
-                // Detect info-dense Mochi response
-                const isDense = msg.role === "assistant" && (
-                  /^#{2,3}\s/m.test(msg.content) ||
-                  (msg.content.match(/^[-*•]\s/gm) || []).length >= 3
-                );
-
-                // Spacing: 2px within group, 8px between groups
-                const marginTop = idx === 0 ? 0 : isFirstInGroup ? 8 : 2;
-
-                return (
-                <motion.div
-                  key={msg.id}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.28, ease: [0.2, 0.8, 0.4, 1] }}
-                  className={`flex flex-col ${msg.role === "assistant" ? "items-start" : "items-end"}`}
-                  style={{ marginTop, marginBottom: isLastInGroup ? 0 : 0 }}
-                >
-                  {msg.isRateLimitCard ? (
-                    <RateLimitUpgradeCard onUpgrade={() => { haptics.medium(); setProModalOpen(true); }} />
-                  ) : (
-                    <>
-                      <div
-                        style={
-                          msg.role === "assistant"
-                            ? {
-                                maxWidth: '84%',
-                                background: 'rgba(244, 238, 228, 0.94)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
-                                border: '0.5px solid rgba(195, 178, 152, 0.45)',
-                                borderLeft: isDense ? '2px solid var(--wa-green-light)' : '0.5px solid rgba(195, 178, 152, 0.45)',
-                                borderRadius: isFirstInGroup ? '12px 18px 18px 18px' : '18px 18px 18px 18px',
-                                padding: '11px 15px',
-                                fontSize: 13,
-                                fontWeight: 300,
-                                fontFamily: "'DM Sans', sans-serif",
-                                color: 'rgba(28,24,18,.8)',
-                                lineHeight: 1.6,
-                              }
-                            : {
-                                maxWidth: '84%',
-                                 background: 'rgba(47, 111, 78, 0.85)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
-                                color: 'var(--wa-cream)',
-                                borderRadius: '18px 10px 18px 18px',
-                                padding: '11px 15px',
-                                fontSize: 13,
-                                fontWeight: 300,
-                                fontFamily: "'DM Sans', sans-serif",
-                                lineHeight: 1.6,
-                              }
-                        }
-                      >
-                        {msg.role === "assistant" ? (
-                          <div className="mochi-prose">
-                            {parseTrailBlocks(msg.content).map((block, bi) =>
-                              block.type === "trails" ? (
-                                <div key={bi} className="space-y-2 -mx-1">
-                                  {block.value.map((trail, ti) => (
-                                    <MochiTrailCard key={ti} trail={trail} />
-                                  ))}
-                                </div>
-                              ) : (
-                                <div key={bi}>
-                                  {parseMapBlocks(block.value).map((sub, si) =>
-                                    sub.type === "map" ? (
-                                      <div key={si} style={{ margin: "10px 0" }}>
-                                        <PokoMapCard map={sub.value} />
-                                      </div>
-                                    ) : (
-                                      <ReactMarkdown key={si} components={MARKDOWN_NO_TABLES}>
-                                        {formatInlineBullets(stripMarkdownTables(sub.value))}
-                                      </ReactMarkdown>
-                                    ),
-                                  )}
-                                </div>
-                              )
-                            )}
-                          </div>
-                        ) : (
-                          msg.content
-                        )}
-                      </div>
-                      {msg.role === "assistant" && msg.hasDisclaimer && <InlineDisclaimer />}
-                    </>
-                  )}
-                </motion.div>
-                );
-              })}
+              <MochiMessageList
+                tone="conversation"
+                messages={messages}
+                burstStart={0}
+                selectedParkId={selectedParkId ?? null}
+                firstSession={!!firstSession}
+                onUpgradeClick={() => setProModalOpen(true)}
+              />
 
               <AnimatePresence>
                 {isLoading && messages[messages.length - 1]?.role === "user" && (
