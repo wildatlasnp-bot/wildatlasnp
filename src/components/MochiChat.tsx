@@ -917,181 +917,21 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   }: {
     tone: "dark" | "light";
     showDisclaimer?: boolean;
-  }) => {
-    const isDark = tone === "dark";
-
-    // Single source of truth for screen-edge inset. The briefing bubble
-    // container uses `padding: '0 24px'`; we mirror it here so any future
-    // change cascades to the composer wrapper AND the disclaimer.
-    const BRIEFING_CARD_INSET = 24;
-    const wrapperPaddingX = isDark ? 16 : 20;
-    // Disclaimer adds whatever's missing to reach the briefing inset.
-    // Math.max guards against the wrapper ever exceeding the target inset.
-    const disclaimerPaddingX = Math.max(0, BRIEFING_CARD_INSET - wrapperPaddingX);
-
-    return (
-      <div
-        style={{
-          flexShrink: 0,
-          background: isDark ? "transparent" : "var(--wa-cream)",
-          borderTop: isDark ? undefined : "1px solid var(--wa-rule)",
-          paddingTop: isDark ? 8 : 10,
-          paddingLeft: wrapperPaddingX,
-          paddingRight: wrapperPaddingX,
-          paddingBottom: isDark ? 8 : 8,
-        }}
-      >
-        <div
-          className={`flex items-center ${isDark ? '' : 'mochi-light-composer'}`}
-          style={
-            isDark
-              ? {
-                  borderRadius: 20,
-                  background: "hsl(145 22% 14%)",
-                  border: "1px solid hsl(0 0% 100% / 0.10)",
-                  borderTop: "1px solid hsl(0 0% 100% / 0.15)",
-                  padding: "10px 10px 10px 20px",
-                  boxShadow: "0 8px 32px hsl(0 0% 0% / 0.30)",
-                }
-              : {
-                  borderRadius: 28,
-                  background: "rgba(252,248,242,0.96)",
-                  border: "0.5px solid rgba(180,162,136,0.42)",
-                  padding: "8px 8px 8px 16px",
-                  position: "relative" as const,
-                }
-          }
-        >
-          <input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleInputKeyDown}
-            placeholder="Ask about any park or permit..."
-            aria-label="Ask Poko anything"
-            className={isDark ? "mochi-dark-input" : "mochi-light-input"}
-            style={
-              isDark
-                ? {
-                    flex: 1,
-                    background: "transparent",
-                    fontSize: 15,
-                    fontFamily: "'DM Sans', sans-serif",
-                    color: "hsl(39 33% 96%)",
-                    outline: "none",
-                    border: "none",
-                    minWidth: 0,
-                  }
-                : {
-                    flex: 1,
-                    background: "transparent",
-                    fontSize: 14,
-                    fontWeight: 300,
-                    fontFamily: "'DM Sans', sans-serif",
-                    color: "var(--wa-ink)",
-                    outline: "none",
-                    border: "none",
-                    minWidth: 0,
-                  }
-            }
-            disabled={isLoading}
-          />
-          <style>{`
-            .mochi-light-composer:focus-within {
-              border-color: var(--wa-green) !important;
-              transition: border-color 0.18s ease;
-            }
-            .mochi-light-composer input::placeholder {
-              color: var(--wa-ink-placeholder);
-            }
-            .mochi-light-composer input:focus {
-              outline: none;
-              box-shadow: none;
-            }
-          `}</style>
-          <style>{`
-            .poko-send-gold { transition: background 220ms ease, border-color 220ms ease, transform 120ms ease, opacity 220ms ease; }
-            .poko-send-gold:not(:disabled):hover { background: #C9A96E; border-color: #C9A96E; }
-            .poko-send-gold:not(:disabled):active { transform: scale(0.94); }
-          `}</style>
-          <button
-            type="button"
-            onClick={handleSend}
-            disabled={isLoading || !input.trim()}
-            aria-label={isLoading ? "Sending message" : "Send message"}
-            aria-busy={isLoading}
-            aria-disabled={isLoading || !input.trim()}
-            className="poko-send-gold shrink-0 flex items-center justify-center"
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: '50%',
-              padding: 0,
-              background: (!input.trim() || isLoading)
-                ? (isDark ? 'rgba(240,237,234,0.06)' : 'rgba(201,169,110,0.18)')
-                : 'rgba(201,169,110,0.95)',
-              border: `1px solid ${(!input.trim() || isLoading)
-                ? (isDark ? 'rgba(240,237,234,0.18)' : 'rgba(201,169,110,0.35)')
-                : 'transparent'}`,
-              color: (!input.trim() || isLoading)
-                ? (isDark ? 'rgba(240,237,234,0.45)' : 'rgba(60,50,30,0.55)')
-                : '#1A2F1E',
-              cursor: (!input.trim() || isLoading) ? 'default' : 'pointer',
-            }}
-          >
-            {isLoading ? (
-              <Loader2 size={16} className="animate-spin" aria-hidden="true" />
-            ) : (
-              <ArrowUp size={18} strokeWidth={2} aria-hidden="true" />
-            )}
-          </button>
-        </div>
-
-        {renderStatusRow({ tone: isDark ? 'dark' : 'light' })}
-
-        {showDisclaimer && (
-          <p style={{
-            fontSize: 12,
-            fontWeight: 400,
-            fontFamily: "'DM Sans', sans-serif",
-            color: isDark ? 'rgba(240,237,234,0.62)' : 'rgba(26,47,30,0.58)',
-            textAlign: 'center',
-            // Derived from BRIEFING_CARD_INSET above so the disclaimer text
-            // always aligns to the same screen inset as the briefing card,
-            // regardless of how the composer wrapper padding evolves.
-            paddingTop: 10,
-            paddingBottom: 14,
-            paddingLeft: disclaimerPaddingX,
-            paddingRight: disclaimerPaddingX,
-            lineHeight: 1.55,
-            letterSpacing: '0.01em',
-            margin: 0,
-          }}>
-            Poko can make mistakes. Always verify permits and trail conditions at nps.gov and recreation.gov.
-          </p>
-        )}
-        {!isPro && (() => {
-          const remaining = 5 - questionsUsed;
-          if (remaining > 3 || remaining < 0) return null;
-          return (
-            <p style={{ fontSize: 12, fontFamily: "'DM Sans', sans-serif", textAlign: 'center', margin: '2px 20px 8px', lineHeight: 1.4 }}>
-              {remaining > 0 ? (
-                <span style={{ color: '#C9A96E' }}>{remaining} question{remaining !== 1 ? 's' : ''} remaining today</span>
-              ) : (
-                <span
-                  style={{ color: '#2F6F4E', cursor: 'pointer' }}
-                  onClick={() => { haptics.medium(); setProModalOpen(true); }}
-                  role="button"
-                  tabIndex={0}
-                >
-                  Upgrade to Pro for unlimited questions
-                </span>
-              )}
-            </p>
-          );
-        })()}
-      </div>
-    );
-  };
+  }) => (
+    <MochiComposer
+      tone={tone}
+      showDisclaimer={showDisclaimer}
+      input={input}
+      setInput={setInput}
+      onInputKeyDown={handleInputKeyDown}
+      onSend={handleSend}
+      isLoading={isLoading}
+      renderStatusRow={renderStatusRow}
+      isPro={isPro}
+      questionsUsed={questionsUsed}
+      onUpgradeClick={() => setProModalOpen(true)}
+    />
+  );
 
   const handleChipTap = useCallback((chipLabel: string) => {
     setChipsHidden(true);
