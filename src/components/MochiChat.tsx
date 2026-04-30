@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import mochiWaveImg from "@/assets/mochi-wave.png";
 
 import { Send, Loader2, BarChart3, Leaf, Clock, ArrowUp } from "lucide-react";
 import { getSuggestedChips, type UserWatch } from "@/components/mochi/ChatInterface";
@@ -13,6 +12,25 @@ import ProModal from "@/components/ProModal";
 import ParkSelector from "@/components/ParkSelector";
 import ScanningLedger from "@/components/poko/ScanningLedger";
 import AssistantBubbleShell from "@/components/poko/AssistantBubbleShell";
+import InlineDisclaimer from "@/components/mochi/InlineDisclaimer";
+import RateLimitUpgradeCard from "@/components/mochi/RateLimitUpgradeCard";
+import VisitWindowCard from "@/components/mochi/VisitWindowCard";
+import {
+  PERMIT_KEYWORDS,
+  stripMarkdownTables,
+  sanitizeMochiResponse,
+  shouldShowDisclaimer,
+  formatInlineBullets,
+  MARKDOWN_NO_TABLES,
+} from "@/components/mochi/mochi-formatting";
+import {
+  type DispatchWindow,
+  getDispatchWindow,
+  IDLE_MESSAGES,
+  RETURNING_MESSAGES,
+  getSeasonalSubtitle,
+  PERSONALITY_MARKER,
+} from "@/components/mochi/mochi-greeting";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProStatus } from "@/hooks/useProStatus";
 import { supabase } from "@/integrations/supabase/client";
@@ -31,202 +49,13 @@ import {
 
 
 
-// Mochi pose assets (public directory)
+// Mochi pose assets (public directory) — referenced by inline header avatar
 const MOCHI_IDLE = "/mochi-neutral.png";
-const MOCHI_POINTING = "/mochi-pointing.png";
 const MOCHI_SCANNING = "/mochi-compass.png";
 const MOCHI_CELEBRATING = "/mochi-celebrate.png";
 
 type MochiPose = "idle" | "scanning" | "celebrating";
 
-const MOCHI_ENTRANCE_KEY = "mochi_hero_entrance_done";
-
-/**
- * Mochi hero illustration — standardized wrapper.
- *
- * Every pose renders inside a fixed 180×180 box with object-fit: contain so
- * intrinsic PNG canvas dimensions never affect perceived size or position.
- * A single UI-generated ground shadow is drawn identically for all poses.
- *
- * Long-term fix: re-export PNGs with center-of-mass padding so no
- * translateX hack is needed.
- */
-const HERO_SIZE = 80;
-
-const MochiHeroImage = ({ pose, size = HERO_SIZE }: { pose: MochiPose; size?: number }) => {
-  const src = pose === "scanning" ? MOCHI_SCANNING : pose === "celebrating" ? MOCHI_CELEBRATING : MOCHI_IDLE;
-  const prefersReducedMotion = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const hasPlayedEntrance = useRef(sessionStorage.getItem(MOCHI_ENTRANCE_KEY) === "1");
-
-  const imgStyle: React.CSSProperties = {
-    width: size,
-    height: size,
-    objectFit: "contain",
-    objectPosition: "center bottom",
-  };
-
-  const groundShadow = (
-    <div
-      className="absolute left-1/2 -translate-x-1/2 rounded-[50%] bg-foreground/[0.06] blur-[6px]"
-      style={{ bottom: 2, width: size * 0.5, height: 6 }}
-      aria-hidden="true"
-    />
-  );
-
-  if (prefersReducedMotion) {
-    return (
-      <div className="relative inline-flex items-end justify-center" style={{ width: size, height: size }}>
-        <img src={src} alt="Poko" className="drop-shadow-md" style={imgStyle} loading="lazy" />
-        {groundShadow}
-      </div>
-    );
-  }
-
-  return (
-    <div className="relative inline-flex items-end justify-center" style={{ width: size, height: size }}>
-      <motion.img
-        src={src}
-        alt="Poko"
-        className="drop-shadow-md"
-        style={imgStyle}
-        initial={hasPlayedEntrance.current ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={hasPlayedEntrance.current ? { duration: 0 } : { duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-        onAnimationComplete={() => {
-          if (!hasPlayedEntrance.current) {
-            sessionStorage.setItem(MOCHI_ENTRANCE_KEY, "1");
-            hasPlayedEntrance.current = true;
-          }
-        }}
-      />
-      {groundShadow}
-    </div>
-  );
-};
-
-const PERMIT_KEYWORDS = [
-  "available", "found", "open", "cancellation", "permit found",
-  "spot open", "booking available", "just opened", "grab it",
-];
-
-/** Strip markdown table syntax before rendering — removes any line containing | */
-const stripMarkdownTables = (text: string): string => {
-  const lines = text.split('\n');
-  const cleaned = lines.filter(line => {
-    const trimmed = line.trim();
-    return !trimmed.includes('|') && !/^[-:\s]+$/.test(trimmed);
-  });
-  return cleaned.join('\n').replace(/\n{3,}/g, '\n\n').trim();
-};
-
-/**
- * Post-process Mochi responses to append safety disclaimers
- * for permit dates and trail conditions when appropriate.
- */
-/**
- * Post-process Mochi responses. Returns cleaned text WITHOUT appending disclaimers.
- * Use shouldShowDisclaimer() to check if the inline disclaimer badge should render.
- */
-function sanitizeMochiResponse(text: string): string {
-  if (!text) return text;
-  // No longer appending disclaimer text — rendered as separate component
-  return text;
-}
-
-const DISCLAIMER_PERMIT_KW = [
-  "lottery", "opens march", "opens april", "permit dates",
-  "reservation window", "recreation.gov", "weeks in advance",
-  "daily lottery", "pre-season", "walk-up",
-];
-const DISCLAIMER_TRAIL_KW = [
-  "trail is open", "trails are open", "cables are up", "road is open",
-  "currently open", "currently closed", "trail conditions", "snow conditions",
-];
-
-function shouldShowDisclaimer(text: string): boolean {
-  if (!text) return false;
-  const wordCount = text.split(/\s+/).filter(Boolean).length;
-  if (wordCount < 20) return false;
-  const lower = text.toLowerCase();
-  return DISCLAIMER_PERMIT_KW.some((kw) => lower.includes(kw)) ||
-    DISCLAIMER_TRAIL_KW.some((kw) => lower.includes(kw));
-}
-
-/** Inline disclaimer rendered below bubbles that triggered it */
-const InlineDisclaimer = () => (
-  <p style={{
-    fontFamily: "'Cormorant Garamond', serif",
-    fontStyle: 'italic',
-    fontSize: 12,
-    color: 'rgba(240,237,234,0.38)',
-    textAlign: 'center',
-    margin: '6px 0 0',
-    lineHeight: 1.4,
-  }}>
-    Cross-reference with official NPS sources.
-  </p>
-);
-
-/** Rate limit upgrade card rendered inline in chat */
-const RateLimitUpgradeCard = ({ onUpgrade }: { onUpgrade: () => void }) => (
-  <div
-    className="elev-featured elev-poko"
-    style={{
-      background: '#FFFFFF',
-      padding: '16px 18px',
-      maxWidth: '85%',
-    }}
-  >
-    {/* RECOMMENDED badge */}
-    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-      <span style={{
-        fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 700, letterSpacing: '0.14em',
-        textTransform: 'uppercase', color: '#FFFFFF', background: '#2F6F4E', borderRadius: 99, padding: '3px 10px',
-      }}>Recommended</span>
-    </div>
-    <img src="/mochi-worried.png" alt="Poko worried" style={{ width: 48, height: 48, objectFit: 'contain', marginBottom: 10 }} />
-    <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontStyle: 'italic', fontWeight: 500, color: '#1A2E1F', margin: '0 0 4px', lineHeight: 1.25 }}>
-      You've reached your daily limit.
-    </p>
-    <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: 'rgba(28,24,18,0.5)', margin: '0 0 14px', lineHeight: 1.4 }}>
-      Pro users get unlimited Poko · 2-min scans · SMS alerts
-    </p>
-    <button
-      onClick={onUpgrade}
-      style={{
-        width: '100%',
-        height: 44,
-        borderRadius: 10,
-        background: '#2F6F4E',
-        color: '#F0EDEA',
-        fontFamily: "'DM Sans', sans-serif",
-        fontSize: 13,
-        fontWeight: 600,
-        border: 'none',
-        cursor: 'pointer',
-      }}
-    >
-      Upgrade — $9.99/mo
-    </button>
-    <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: 'rgba(26,24,20,0.35)', textAlign: 'center', marginTop: 8 }}>
-      Cancel anytime · 7-day refund
-    </p>
-  </div>
-);
-
-/** Convert inline and line-start bullet patterns using • into proper markdown lists */
-const formatInlineBullets = (text: string): string => {
-  let result = text.replace(
-    /^(.+?:)\s*•\s*(.+)$/gm,
-    (_match, label: string, rest: string) => {
-      const items = rest.split(/\s*•\s*/).filter(Boolean);
-      if (items.length < 2) return _match;
-      return `${label}\n${items.map((item) => `- ${item.trim()}`).join("\n")}`;
-    }
-  );
-  result = result.replace(/^•\s+/gm, "- ");
-  return result;
-};
 
 interface Message {
   id: number;
@@ -260,185 +89,6 @@ const BRIEFING_CHIP_SETS: string[][] = [
 const FIRST_SESSION_KEY = "wildatlas_first_session";
 const PARK_CONTEXT_PREFIX = "mochi_park_greeted_";
 
-const maskPhone = (phone: string): string => {
-  if (!phone) return "your phone";
-  const digits = phone.replace(/\D/g, "");
-  if (digits.length < 4) return "(***) ***-****";
-  return `(***) ***-${digits.slice(-4)}`;
-};
-
-/** Time-of-day phrase for greeting (legacy — used for non-dispatch copy) */
-const getTimePeriod = (): { label: string; casual: string } => {
-  const hour = new Date().getHours();
-  if (hour >= 5 && hour < 12) return { label: "Good morning", casual: "this morning" };
-  if (hour >= 12 && hour < 17) return { label: "Good afternoon", casual: "this afternoon" };
-  if (hour >= 17 && hour < 21) return { label: "Good evening", casual: "tonight" };
-  return { label: "Hey", casual: "tonight" };
-};
-
-/** Time-aware dispatch windows for the Poko briefing card.
-    Selects from 5 windows based on the user's local hour. Park name is
-    woven into title/body so the greeting feels like Poko has been paying
-    attention. Returns a stable `key` so callers can detect window changes
-    and crossfade between messages without re-animating identical copy. */
-type DispatchWindow = "early" | "morning" | "midday" | "evening" | "night";
-const getDispatchWindow = (parkName: string | null): {
-  key: DispatchWindow;
-  title: string;
-  body: string;
-} => {
-  const hour = new Date().getHours();
-  const hasPark = !!parkName;
-  // No watched parks → soft CTA, generic across all windows
-  if (!hasPark) {
-    return {
-      key: hour >= 5 && hour < 9 ? "early"
-        : hour >= 9 && hour < 12 ? "morning"
-        : hour >= 12 && hour < 17 ? "midday"
-        : hour >= 17 && hour < 21 ? "evening"
-        : "night",
-      title: "Poko's ready.",
-      body: "Add a park to start watching.",
-    };
-  }
-  if (hour >= 5 && hour < 9) {
-    return {
-      key: "early",
-      title: "Early start.",
-      body: `Best window for ${parkName} cancellations right now. Most hikers are still asleep.`,
-    };
-  }
-  if (hour >= 9 && hour < 12) {
-    return {
-      key: "morning",
-      title: "Peak hours building.",
-      body: `Crowds are filling in around ${parkName}. Poko's scanning every 2 minutes — cancellations still surface.`,
-    };
-  }
-  if (hour >= 12 && hour < 17) {
-    return {
-      key: "midday",
-      title: "Midday watch.",
-      body: `High traffic at ${parkName}. Cancellations happen anytime — often when plans change last minute.`,
-    };
-  }
-  if (hour >= 17 && hour < 21) {
-    return {
-      key: "evening",
-      title: "Evening turnover.",
-      body: `Second quiet window opening at ${parkName}. Cancellations often appear as tomorrow's plans shift.`,
-    };
-  }
-  return {
-    key: "night",
-    title: "Night watch.",
-    body: `Poko's on ${parkName} — won't miss a thing. Early morning is peak cancellation territory.`,
-  };
-};
-type VisitWindow = "weekend" | "2weeks" | "flexible";
-const VISIT_OPTIONS: { key: VisitWindow; label: string }[] = [
-  { key: "weekend", label: "This weekend" },
-  { key: "2weeks", label: "Next 2 weeks" },
-  { key: "flexible", label: "Flexible" },
-];
-
-const VisitWindowCard = () => {
-  const [selected, setSelected] = useState<VisitWindow>("weekend");
-  return (
-    <div
-      className="bg-card border border-border/50 rounded-2xl px-5 py-4 mb-4"
-      style={{ boxShadow: "var(--card-shadow)" }}
-    >
-      <p className="text-[13px] font-semibold text-foreground/80 mb-3">Select your visit window</p>
-      <div className="flex gap-2">
-        {VISIT_OPTIONS.map((opt) => {
-          const isSelected = selected === opt.key;
-          return (
-            <button
-              key={opt.key}
-              type="button"
-              onClick={() => setSelected(opt.key)}
-              className={`px-3.5 py-1.5 rounded-full text-[12px] font-medium transition-all duration-150 ${
-                isSelected
-                  ? "bg-status-scanning/20 text-foreground/85 border border-status-scanning/40"
-                  : "bg-muted/40 text-muted-foreground/60 border border-transparent hover:bg-muted/60"
-              }`}
-            >
-              {opt.label}
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
-
-/* ── POKO PERSONALITY LAYER ─────────────────────────────────────────
-   Idle dispatch rotation: after 3 minutes of dwelling on the Poko tab
-   without sending, the briefing prose cycles through these one-liners.
-   Cycle is non-repeating until exhausted, then reshuffles. Stored on
-   sessionStorage so it survives tab switches within a session.
-   Copy is FINAL — do not paraphrase per spec. */
-const IDLE_MESSAGES = [
-  "Still here. Still watching.",
-  "Quiet out there. Good time to plan.",
-  "Poko hasn't blinked.",
-  "Permits move fast. So does Poko.",
-  "No news is Poko working.",
-  "The trail is patient. So is Poko.",
-  "Watching. Always watching.",
-  "Every scan is another chance.",
-];
-
-/* Returning-user greetings — shown for 4s when last_seen_at > 24h ago,
-   then crossfade to the standard time-aware dispatch. Selected at random;
-   spec is final copy. */
-const RETURNING_MESSAGES = [
-  "Welcome back. Poko kept watch.",
-  "You were gone. Poko wasn't.",
-  "Back on the trail.",
-  "Poko's been busy while you were away.",
-];
-
-/* Seasonal subtitle — appears as a quiet 12px italic line beneath the
-   standard time-aware greeting. Hidden during idle / returning / first-
-   session states so it never competes with personality moments. */
-const getSeasonalSubtitle = (now: Date = new Date()): string => {
-  const m = now.getMonth(); // 0-11
-  const d = now.getDate();
-  // Spring: Mar 20 – Jun 20
-  if ((m === 2 && d >= 20) || m === 3 || m === 4 || (m === 5 && d <= 20)) {
-    return "Spring permits move fast. Peak season is weeks away.";
-  }
-  // Summer: Jun 21 – Sep 22
-  if ((m === 5 && d >= 21) || m === 6 || m === 7 || (m === 8 && d <= 22)) {
-    return "Peak season. Every cancellation matters.";
-  }
-  // Fall: Sep 23 – Dec 20
-  if ((m === 8 && d >= 23) || m === 9 || m === 10 || (m === 11 && d <= 20)) {
-    return "Fall shoulder season. Hidden gems opening up.";
-  }
-  // Winter: Dec 21 – Mar 19
-  return "Off-season. Plan now, beat the spring rush.";
-};
-
-/* Marker prefix used in the briefing message content so the renderer
-   knows to suppress the seasonal subtitle and treat the body as a
-   personality moment (idle / returning). The marker is stripped before
-   display. Using a non-printable sentinel keeps it invisible to AI. */
-const PERSONALITY_MARKER = "\u200BPOKO_PERSONALITY\u200B";
-
-
-/** Strip table elements from markdown — render their text content as inline spans */
-const MARKDOWN_NO_TABLES = {
-  table: ({ children }: any) => <span style={{ display: 'block' }}>{children}</span>,
-  thead: () => null,
-  tbody: ({ children }: any) => <span style={{ display: 'block' }}>{children}</span>,
-  tr: ({ children }: any) => <span style={{ display: 'block', marginBottom: '2px' }}>{children}</span>,
-  th: ({ children }: any) => <strong>{children} </strong>,
-  td: ({ children }: any) => <span>{children} </span>,
-  hr: () => null,
-};
 
 const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: { onNavigateToDiscover?: (parkId: string) => void; onNavigateToAlerts?: () => void; initialQuery?: string | null }) => {
   const { displayName, user } = useAuth();
