@@ -1799,7 +1799,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                   messages={messages}
                   burstStart={burstStartRef.current}
                   selectedParkId={selectedParkId ?? null}
-                  firstSession={firstSession}
+                  firstSession={!!firstSession}
                   onUpgradeClick={() => setProModalOpen(true)}
                 />
 
