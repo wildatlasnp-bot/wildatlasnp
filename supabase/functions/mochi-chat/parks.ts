@@ -521,6 +521,5 @@ export const PARK_META: Record<string, ParkMeta> = {
   },
 };
 
-const DEFAULT_PARK = "yosemite";
 
 export const DEFAULT_PARK = "yosemite";
