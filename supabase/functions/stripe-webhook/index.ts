@@ -326,12 +326,22 @@ serve(async (req) => {
         case "customer.subscription.created":
         case "customer.subscription.updated": {
           const subscription = event.data.object as Stripe.Subscription;
-          const isActive = subscription.status === "active" || subscription.status === "trialing";
-          logStep(`Processing ${event.type}`, { customerId: subscription.customer, status: subscription.status, isActive });
+          const status = subscription.status;
+          // Pro access is granted while the subscription is active, trialing, OR past_due
+          // (we explicitly keep Pro on during the dunning grace period).
+          const isPro = status === "active" || status === "trialing" || status === "past_due";
+          logStep(`Processing ${event.type}`, { customerId: subscription.customer, status, isPro });
 
           const userId = await resolveUser(subscription.customer as string);
           if (userId) {
-            await syncProStatus(userId, isActive, subscription.current_period_end);
+            await syncProStatus(userId, isPro, subscription.current_period_end);
+            if (status === "past_due") {
+              await setPaymentStatus(userId, "past_due");
+            } else if (status === "active" || status === "trialing") {
+              await setPaymentStatus(userId, "ok");
+            } else if (status === "canceled" || status === "unpaid" || status === "incomplete_expired") {
+              await setPaymentStatus(userId, "canceled");
+            }
           } else {
             logStep("Could not resolve user — skipping sync", { customerId: subscription.customer });
           }
