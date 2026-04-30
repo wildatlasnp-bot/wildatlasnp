@@ -5,11 +5,15 @@ import { supabase } from "@/integrations/supabase/client";
 
 const FREE_WATCH_LIMIT = 1;
 
+export type PaymentStatus = "ok" | "past_due" | "canceled";
+
 interface ProStatusContextType {
   isPro: boolean;
   loading: boolean;
   FREE_WATCH_LIMIT: number;
   subscriptionEnd: string | null;
+  paymentStatus: PaymentStatus;
+  paymentStatusSince: string | null;
   refreshProStatus: () => Promise<void>;
 }
 
