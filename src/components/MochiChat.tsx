@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import mochiWaveImg from "@/assets/mochi-wave.png";
 
 import { Send, Loader2, BarChart3, Leaf, Clock, ArrowUp } from "lucide-react";
 import { getSuggestedChips, type UserWatch } from "@/components/mochi/ChatInterface";
@@ -26,8 +25,6 @@ import {
 } from "@/components/mochi/mochi-formatting";
 import {
   type DispatchWindow,
-  maskPhone,
-  getTimePeriod,
   getDispatchWindow,
   IDLE_MESSAGES,
   RETURNING_MESSAGES,
