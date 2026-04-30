@@ -245,6 +245,54 @@ serve(async (req) => {
       }
     };
 
+    /**
+     * Set the user's payment_status flag. We don't immediately revoke Pro on a single
+     * failed charge — we mark `past_due` so the UI can prompt them to update their card,
+     * and the nightly `enforce-payment-grace` job will revoke after the grace period
+     * if Stripe never fires `customer.subscription.deleted`.
+     *
+     * Setting `ok` clears `payment_status_since`. Setting `past_due` only stamps
+     * `payment_status_since` if the user wasn't already in `past_due` (so the grace
+     * clock starts at the FIRST failure, not the latest retry).
+     */
+    const setPaymentStatus = async (
+      userId: string,
+      status: "ok" | "past_due" | "canceled"
+    ) => {
+      try {
+        if (status === "ok") {
+          const { error } = await supabaseClient
+            .from("profiles")
+            .update({ payment_status: "ok", payment_status_since: null })
+            .eq("user_id", userId);
+          if (error) logStep("setPaymentStatus(ok) failed", { userId, message: error.message });
+          else logStep("Cleared payment_status", { userId });
+          return;
+        }
+
+        // For past_due / canceled: only stamp `since` on the first transition.
+        const { data: existing } = await supabaseClient
+          .from("profiles")
+          .select("payment_status, payment_status_since")
+          .eq("user_id", userId)
+          .maybeSingle();
+
+        const updates: Record<string, unknown> = { payment_status: status };
+        if (existing?.payment_status !== status || !existing?.payment_status_since) {
+          updates.payment_status_since = new Date().toISOString();
+        }
+        const { error } = await supabaseClient
+          .from("profiles")
+          .update(updates)
+          .eq("user_id", userId);
+        if (error) logStep("setPaymentStatus failed", { userId, status, message: error.message });
+        else logStep("Set payment_status", { userId, status });
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        logStep("setPaymentStatus error (non-fatal)", { userId, status, message: msg });
+      }
+    };
+
     // ── Event handlers ──────────────────────────────────────────────────
 
     try {
@@ -278,12 +326,22 @@ serve(async (req) => {
         case "customer.subscription.created":
         case "customer.subscription.updated": {
           const subscription = event.data.object as Stripe.Subscription;
-          const isActive = subscription.status === "active" || subscription.status === "trialing";
-          logStep(`Processing ${event.type}`, { customerId: subscription.customer, status: subscription.status, isActive });
+          const status = subscription.status;
+          // Pro access is granted while the subscription is active, trialing, OR past_due
+          // (we explicitly keep Pro on during the dunning grace period).
+          const isPro = status === "active" || status === "trialing" || status === "past_due";
+          logStep(`Processing ${event.type}`, { customerId: subscription.customer, status, isPro });
 
           const userId = await resolveUser(subscription.customer as string);
           if (userId) {
-            await syncProStatus(userId, isActive, subscription.current_period_end);
+            await syncProStatus(userId, isPro, subscription.current_period_end);
+            if (status === "past_due") {
+              await setPaymentStatus(userId, "past_due");
+            } else if (status === "active" || status === "trialing") {
+              await setPaymentStatus(userId, "ok");
+            } else if (status === "canceled" || status === "unpaid" || status === "incomplete_expired") {
+              await setPaymentStatus(userId, "canceled");
+            }
           } else {
             logStep("Could not resolve user — skipping sync", { customerId: subscription.customer });
           }
@@ -316,6 +374,7 @@ serve(async (req) => {
           const userId = await resolveUser(subscription.customer as string);
           if (userId) {
             await syncProStatus(userId, false, null);
+            await setPaymentStatus(userId, "canceled");
           } else {
             logStep("Could not resolve user — skipping sync", { customerId: subscription.customer });
           }
@@ -334,6 +393,8 @@ serve(async (req) => {
             const userId = await resolveUser(invoice.customer as string);
             if (userId) {
               await syncProStatus(userId, isActive, subscription.current_period_end);
+              // Successful payment → clear any past_due flag immediately.
+              await setPaymentStatus(userId, "ok");
 
               // Send Pro confirmation email — non-blocking, does not affect webhook response
               if (invoice.amount_paid > 0) {
@@ -398,26 +459,20 @@ serve(async (req) => {
           const invoice = event.data.object as Stripe.Invoice;
           logStep(`Processing ${event.type}`, { customerId: invoice.customer, subscriptionId: invoice.subscription });
 
-          // Only revoke Pro for subscription-related invoice failures, not one-time charges.
+          // Subscription invoice failure → mark past_due but DO NOT revoke Pro yet.
+          // We give the user a grace period (handled by `enforce-payment-grace` cron)
+          // so a single declined card doesn't immediately disable the product they're
+          // paying for. The UI surfaces a banner prompting them to update their card.
           if (invoice.customer && invoice.subscription) {
-            const subscription = await stripe.subscriptions.retrieve(
-              invoice.subscription as string
-            );
-            if (subscription.status === "active" || subscription.status === "trialing") {
-              logStep("Skipping Pro revoke — subscription still active during payment retry", {
-                status: subscription.status,
-              });
-              break;
-            }
             const userId = await resolveUser(invoice.customer as string);
             if (userId) {
-              await syncProStatus(userId, false, null);
-              logStep("Revoked Pro status on payment failure", { userId });
+              await setPaymentStatus(userId, "past_due");
+              logStep("Flagged past_due (Pro retained during grace period)", { userId });
             } else {
-              logStep("Could not resolve user — skipping revoke", { customerId: invoice.customer });
+              logStep("Could not resolve user — skipping flag", { customerId: invoice.customer });
             }
           } else if (invoice.customer && !invoice.subscription) {
-            logStep("Payment failed on non-subscription invoice — skipping Pro revoke", { customerId: invoice.customer });
+            logStep("Payment failed on non-subscription invoice — ignoring", { customerId: invoice.customer });
           }
           logStep("processed invoice.payment_failed successfully");
           break;

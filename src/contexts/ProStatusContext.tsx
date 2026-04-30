@@ -5,11 +5,15 @@ import { supabase } from "@/integrations/supabase/client";
 
 const FREE_WATCH_LIMIT = 1;
 
+export type PaymentStatus = "ok" | "past_due" | "canceled";
+
 interface ProStatusContextType {
   isPro: boolean;
   loading: boolean;
   FREE_WATCH_LIMIT: number;
   subscriptionEnd: string | null;
+  paymentStatus: PaymentStatus;
+  paymentStatusSince: string | null;
   refreshProStatus: () => Promise<void>;
 }
 
@@ -18,6 +22,8 @@ const ProStatusContext = createContext<ProStatusContextType>({
   loading: true,
   FREE_WATCH_LIMIT,
   subscriptionEnd: null,
+  paymentStatus: "ok",
+  paymentStatusSince: null,
   refreshProStatus: async () => {},
 });
 
@@ -28,22 +34,28 @@ export const ProStatusProvider = ({ children }: { children: ReactNode }) => {
   const [isPro, setIsPro] = useState(false);
   const [loading, setLoading] = useState(true);
   const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(null);
+  const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>("ok");
+  const [paymentStatusSince, setPaymentStatusSince] = useState<string | null>(null);
 
   const fetchProFromProfile = useCallback(async () => {
     if (!user) {
       setIsPro(false);
       setSubscriptionEnd(null);
+      setPaymentStatus("ok");
+      setPaymentStatusSince(null);
       setLoading(false);
       return;
     }
     try {
       const { data } = await supabase
         .from("profiles")
-        .select("is_pro, subscription_end")
+        .select("is_pro, subscription_end, payment_status, payment_status_since")
         .eq("user_id", user.id)
         .maybeSingle();
       setIsPro(data?.is_pro ?? false);
       setSubscriptionEnd(data?.subscription_end ?? null);
+      setPaymentStatus(((data as any)?.payment_status as PaymentStatus) ?? "ok");
+      setPaymentStatusSince((data as any)?.payment_status_since ?? null);
     } catch (e) {
       console.error("Failed to read pro status:", e);
       setIsPro(false);
@@ -78,9 +90,16 @@ export const ProStatusProvider = ({ children }: { children: ReactNode }) => {
           filter: `user_id=eq.${user.id}`,
         },
         (payload) => {
-          const row = payload.new as { is_pro?: boolean; subscription_end?: string | null };
+          const row = payload.new as {
+            is_pro?: boolean;
+            subscription_end?: string | null;
+            payment_status?: PaymentStatus | null;
+            payment_status_since?: string | null;
+          };
           setIsPro(row.is_pro ?? false);
           setSubscriptionEnd(row.subscription_end ?? null);
+          setPaymentStatus((row.payment_status as PaymentStatus) ?? "ok");
+          setPaymentStatusSince(row.payment_status_since ?? null);
         }
       )
       .subscribe();
@@ -102,7 +121,17 @@ export const ProStatusProvider = ({ children }: { children: ReactNode }) => {
   }, [refreshProStatus]);
 
   return (
-    <ProStatusContext.Provider value={{ isPro, loading, FREE_WATCH_LIMIT, subscriptionEnd, refreshProStatus }}>
+    <ProStatusContext.Provider
+      value={{
+        isPro,
+        loading,
+        FREE_WATCH_LIMIT,
+        subscriptionEnd,
+        paymentStatus,
+        paymentStatusSince,
+        refreshProStatus,
+      }}
+    >
       {children}
     </ProStatusContext.Provider>
   );

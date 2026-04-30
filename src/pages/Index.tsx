@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 
 import OfflineBanner from "@/components/OfflineBanner";
 import DeletionBanner from "@/components/DeletionBanner";
+import PaymentIssueBanner from "@/components/PaymentIssueBanner";
 import BottomNav from "@/components/BottomNav";
 import SideRailNav from "@/components/SideRailNav";
 import MochiChat from "@/components/MochiChat";
@@ -90,7 +91,7 @@ const Index = () => {
   // Once the dashboard has rendered, lock it — never fall back to loading/onboarding
   // screens due to background profile refetches or auth token refreshes.
   const dashboardRenderedRef = useRef(false);
-  const { refreshProStatus } = useProStatus();
+  const { refreshProStatus, paymentStatus, paymentStatusSince, isPro } = useProStatus();
   const { hasUnread: hasUnreadAlerts, markAllRead: markAlertsRead } = useUnreadAlerts();
   const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -304,6 +305,9 @@ const Index = () => {
             scheduledDeletionAt={scheduledDeletionAt}
             onCancelDeletion={clearDeletionSchedule}
           />
+        )}
+        {isPro && paymentStatus === "past_due" && (
+          <PaymentIssueBanner paymentStatusSince={paymentStatusSince} />
         )}
         <main id="main-content" className="flex-1 min-h-0 pb-0 flex flex-col relative">
           {TAB_ORDER.map((tab) => {
