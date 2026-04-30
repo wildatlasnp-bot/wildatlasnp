@@ -393,6 +393,8 @@ serve(async (req) => {
             const userId = await resolveUser(invoice.customer as string);
             if (userId) {
               await syncProStatus(userId, isActive, subscription.current_period_end);
+              // Successful payment → clear any past_due flag immediately.
+              await setPaymentStatus(userId, "ok");
 
               // Send Pro confirmation email — non-blocking, does not affect webhook response
               if (invoice.amount_paid > 0) {
