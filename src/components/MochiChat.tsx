@@ -16,6 +16,7 @@ import InlineDisclaimer from "@/components/mochi/InlineDisclaimer";
 import RateLimitUpgradeCard from "@/components/mochi/RateLimitUpgradeCard";
 import VisitWindowCard from "@/components/mochi/VisitWindowCard";
 import MochiHeader from "@/components/mochi/MochiHeader";
+import MochiComposer from "@/components/mochi/MochiComposer";
 import {
   PERMIT_KEYWORDS,
   stripMarkdownTables,
