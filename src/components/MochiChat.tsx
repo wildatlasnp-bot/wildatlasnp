@@ -1785,211 +1785,22 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                 truncated the FOLLOW UP / ASK ABOUT hairline rules. */}
             <div style={{ margin: '28px 0 0', padding: '0 24px', minWidth: 0 }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: 0, minWidth: 0 }} aria-live="polite" aria-atomic="false" aria-relevant="additions">
-                <style>{`.mochi-prose ⚠, .mochi-prose [data-emoji="⚠️"] { filter: grayscale(1) brightness(1.3); }`}</style>
                 {(() => {
                   // Compute the burst window once per render: any message at
                   // index ≥ burstStart is "newly arrived" and gets a stagger.
-                  // If the list shrank or didn't grow, the window stays empty.
                   const grew = messages.length > prevMsgCountRef.current;
                   if (grew) burstStartRef.current = prevMsgCountRef.current;
                   prevMsgCountRef.current = messages.length;
                   return null;
                 })()}
-                {messages.map((msg, idx) => {
-                  if (msg.isSystem) {
-                    return (
-                      <motion.div
-                        key={msg.id}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        style={{ display: 'flex', justifyContent: 'center', margin: '8px auto', maxWidth: 260 }}
-                      >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                          <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(240,237,234,0.4)', display: 'inline-block', animation: 'pulse 1.5s ease-in-out infinite' }} />
-                          <p style={{ fontSize: 12, fontWeight: 400, fontFamily: "'DM Sans', sans-serif", color: 'rgba(240,237,234,0.5)', fontStyle: 'italic', margin: 0, lineHeight: 1.5 }}>{msg.content}</p>
-                        </div>
-                      </motion.div>
-                    );
-                  }
-
-                  const prevMsg = idx > 0 ? messages[idx - 1] : null;
-                  const isFirstInGroup = !prevMsg || prevMsg.role !== msg.role || prevMsg.isSystem;
-                  const nextMsg = idx < messages.length - 1 ? messages[idx + 1] : null;
-                  const isLastInGroup = !nextMsg || nextMsg.role !== msg.role || nextMsg.isSystem;
-                  const isDense = msg.role === "assistant" && (
-                    /^#{2,3}\s/m.test(msg.content) ||
-                    (msg.content.match(/^[-*•]\s/gm) || []).length >= 3
-                  );
-                  const marginTop = idx === 0 ? 0 : 12;
-
-                  const isNew = idx >= burstStartRef.current && msg.id > 2;
-                  const isInitialBriefing =
-                    msg.role === "assistant" &&
-                    idx === 0 &&
-                    !messages.some((m) => m.role === "user");
-
-                  // Per-bubble entrance stagger — relative to the burst start,
-                  // capped so a long single-burst paste can't run past ~640ms.
-                  const burstOffset = Math.max(0, idx - burstStartRef.current);
-                  const staggerMs = isNew ? Math.min(burstOffset * 80, 640) : 0;
-
-                  return (
-                    <div
-                      key={msg.id}
-                      className={isNew ? (msg.role === "assistant" ? "poko-bubble-in-left" : "poko-bubble-in-right") : undefined}
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: msg.role === "assistant" ? 'flex-start' : 'flex-end',
-                        width: isInitialBriefing ? '100%' : 'auto',
-                        minWidth: 0,
-                        // Isolate layout/paint so a new bubble's animation
-                        // can't trigger reflow on bubbles above it.
-                        contain: 'layout paint',
-                        ...(isNew
-                          ? {
-                              animationDelay: `${staggerMs}ms`,
-                              willChange: 'opacity, transform',
-                              // Start invisible so the delay window doesn't
-                              // flash the final-state bubble before animating.
-                              opacity: 0,
-                            }
-                          : null),
-                      }}
-                    >
-                      {msg.isRateLimitCard ? (
-                        <RateLimitUpgradeCard onUpgrade={() => { haptics.medium(); setProModalOpen(true); }} />
-                      ) : (
-                        <>
-                         {isInitialBriefing && (
-                            <div style={{
-                              alignSelf: 'stretch',
-                              display: 'flex', alignItems: 'baseline', gap: 12,
-                              margin: '2px 2px 14px',
-                              fontFamily: "'DM Sans', sans-serif",
-                              fontSize: 12, fontWeight: 600,
-                              letterSpacing: '0.26em', textTransform: 'uppercase',
-                              color: 'rgba(240,237,234,0.62)',
-                              lineHeight: 1,
-                              maxWidth: '100%',
-                              minWidth: 0,
-                              overflow: 'hidden',
-                            }}>
-                              <span style={{ flexShrink: 0 }}>Dispatch</span>
-                              <span style={{
-                                flex: 1,
-                                height: 1,
-                                transform: 'translateY(-2px)',
-                                background: 'linear-gradient(to right, rgba(240,237,234,0.28) 0%, rgba(240,237,234,0.10) 55%, transparent 100%)',
-                              }} />
-                              <span style={{
-                                flexShrink: 0,
-                                color: 'rgba(201,169,110,0.85)',
-                                fontStyle: 'italic',
-                                fontFamily: "'Cormorant Garamond', serif",
-                                fontSize: 12,
-                                fontWeight: 400,
-                                letterSpacing: '0.04em',
-                                textTransform: 'none',
-                                transform: 'translateY(1px)',
-                              }}>
-                                today
-                              </span>
-                            </div>
-                          )}
-                          {msg.role === "assistant" ? (
-                            <AssistantBubbleShell
-                              className="mochi-prose-container"
-                              parkId={selectedParkId ?? null}
-                              captureText={
-                                msg.content.startsWith(PERSONALITY_MARKER)
-                                  ? msg.content.slice(PERSONALITY_MARKER.length)
-                                  : msg.content
-                              }
-                              // No capture button on the initial dispatch /
-                              // briefing — it's a greeting, not field intel.
-                              enableCapture={!isInitialBriefing && !msg.isSystem}
-                              bubbleStyle={{
-                                maxWidth: isInitialBriefing ? '100%' : '85%',
-                                width: isInitialBriefing ? '100%' : 'auto',
-                                alignSelf: 'flex-start',
-                                marginRight: 'auto',
-                                marginLeft: 0,
-                                fontSize: isInitialBriefing ? 16 : 15,
-                                fontWeight: 400,
-                                fontFamily: isInitialBriefing ? "'Cormorant Garamond', serif" : "'DM Sans', sans-serif",
-                                fontStyle: isInitialBriefing ? 'italic' : 'normal',
-                                ...pokoBubbleStyle(isInitialBriefing ? 'briefing' : 'default'),
-                                lineHeight: isInitialBriefing ? 1.55 : 1.6,
-                              }}
-                            >
-                              {(() => {
-                                const isPersonality = isInitialBriefing && msg.content.startsWith(PERSONALITY_MARKER);
-                                const cleaned = isPersonality ? msg.content.slice(PERSONALITY_MARKER.length) : msg.content;
-                                return (
-                                  <div
-                                    key={isInitialBriefing ? `briefing-${cleaned}` : undefined}
-                                    className={`mochi-prose ${isInitialBriefing ? "poko-dispatch-fade" : ""}`}
-                                  >
-                                    {parseTrailBlocks(cleaned).map((block, bi) =>
-                                      block.type === "trails" ? (
-                                        <div key={bi} className="space-y-2 -mx-1">
-                                          {block.value.map((trail, ti) => (
-                                            <MochiTrailCard key={ti} trail={trail} />
-                                          ))}
-                                        </div>
-                                      ) : (
-                                        <div key={bi}>
-                                          {parseMapBlocks(block.value).map((sub, si) =>
-                                            sub.type === "map" ? (
-                                              <div key={si} style={{ margin: "10px 0" }}>
-                                                <PokoMapCard map={sub.value} />
-                                              </div>
-                                            ) : (
-                                              <ReactMarkdown key={si} components={MARKDOWN_NO_TABLES}>
-                                                {formatInlineBullets(stripMarkdownTables(sub.value))}
-                                              </ReactMarkdown>
-                                            ),
-                                          )}
-                                        </div>
-                                      )
-                                    )}
-                                    {isInitialBriefing && !isPersonality && !firstSession && (
-                                      <p style={{
-                                        marginTop: 8, marginBottom: 0,
-                                        fontFamily: "'DM Sans', sans-serif",
-                                        fontSize: 12, fontStyle: 'italic',
-                                        color: '#8A9E8A', lineHeight: 1.5,
-                                      }}>{getSeasonalSubtitle()}</p>
-                                    )}
-                                  </div>
-                                );
-                              })()}
-                            </AssistantBubbleShell>
-                          ) : (
-                            <div
-                              className="mochi-prose-container"
-                              style={{
-                                width: 'fit-content',
-                                maxWidth: '72%',
-                                alignSelf: 'flex-end',
-                                marginLeft: 'auto',
-                                marginRight: 0,
-                                fontSize: 15,
-                                fontWeight: 400,
-                                fontFamily: "'DM Sans', sans-serif",
-                                ...userBubbleStyle,
-                              }}
-                            >
-                              {msg.content}
-                            </div>
-                          )}
-                          {msg.role === "assistant" && msg.hasDisclaimer && <InlineDisclaimer />}
-                        </>
-                      )}
-                    </div>
-                  );
-                })}
+                <MochiMessageList
+                  tone="briefing"
+                  messages={messages}
+                  burstStart={burstStartRef.current}
+                  selectedParkId={selectedParkId ?? null}
+                  firstSession={firstSession}
+                  onUpgradeClick={() => setProModalOpen(true)}
+                />
 
                 <AnimatePresence>
                   {isLoading && messages[messages.length - 1]?.role === "user" && (
