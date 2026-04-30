@@ -459,26 +459,20 @@ serve(async (req) => {
           const invoice = event.data.object as Stripe.Invoice;
           logStep(`Processing ${event.type}`, { customerId: invoice.customer, subscriptionId: invoice.subscription });
 
-          // Only revoke Pro for subscription-related invoice failures, not one-time charges.
+          // Subscription invoice failure → mark past_due but DO NOT revoke Pro yet.
+          // We give the user a grace period (handled by `enforce-payment-grace` cron)
+          // so a single declined card doesn't immediately disable the product they're
+          // paying for. The UI surfaces a banner prompting them to update their card.
           if (invoice.customer && invoice.subscription) {
-            const subscription = await stripe.subscriptions.retrieve(
-              invoice.subscription as string
-            );
-            if (subscription.status === "active" || subscription.status === "trialing") {
-              logStep("Skipping Pro revoke — subscription still active during payment retry", {
-                status: subscription.status,
-              });
-              break;
-            }
             const userId = await resolveUser(invoice.customer as string);
             if (userId) {
-              await syncProStatus(userId, false, null);
-              logStep("Revoked Pro status on payment failure", { userId });
+              await setPaymentStatus(userId, "past_due");
+              logStep("Flagged past_due (Pro retained during grace period)", { userId });
             } else {
-              logStep("Could not resolve user — skipping revoke", { customerId: invoice.customer });
+              logStep("Could not resolve user — skipping flag", { customerId: invoice.customer });
             }
           } else if (invoice.customer && !invoice.subscription) {
-            logStep("Payment failed on non-subscription invoice — skipping Pro revoke", { customerId: invoice.customer });
+            logStep("Payment failed on non-subscription invoice — ignoring", { customerId: invoice.customer });
           }
           logStep("processed invoice.payment_failed successfully");
           break;
