@@ -1845,17 +1845,30 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
 
                 {/* Wordmark stack — shares baseline with emblem */}
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', minWidth: 0 }}>
-                  {/* POKO wordmark — letterpress: deboss above (highlight) +
-                      below (shadow) creates the impression of ink pressed
-                      into heavy paper. The two textShadows must stay paired. */}
+                  {/* POKO wordmark — true letterpress deboss.
+                      Layered shadows simulate ink pressed into heavy cream stock:
+                      • top inner highlight (light catching the upper rim of the impression)
+                      • bottom inner shadow (darkness pooling in the lower rim)
+                      • a faint warm inner glow (paper fiber catching the gilt)
+                      • a soft outer gilt halo (light bouncing off the embossed edge)
+                      The fill itself is muted (slightly desaturated cream-on-cream)
+                      so the letters read as recessed rather than printed. Keep all
+                      five shadow layers paired — removing any breaks the illusion. */}
                   <p style={{
                     fontFamily: "'Cormorant Garamond', serif",
                     fontSize: 38, fontWeight: 400,
                     letterSpacing: '0.3em',
-                    color: '#F0EDEA',
+                    color: 'rgba(232, 226, 217, 0.78)',
                     margin: 0, lineHeight: 1,
                     textIndent: '0.3em',
-                    textShadow: '0 1px 0 rgba(255,255,255,0.06), 0 -1px 0 rgba(0,0,0,0.45), 0 0 18px rgba(201,169,110,0.10)',
+                    textShadow: [
+                      '0 1px 0 rgba(255, 250, 240, 0.55)',           // top highlight rim
+                      '0 -1px 0 rgba(40, 28, 16, 0.55)',             // bottom shadow rim
+                      '0 0 1px rgba(60, 40, 22, 0.35)',              // hairline edge darkening
+                      '0 2px 3px rgba(40, 28, 16, 0.22)',            // inner shadow pool
+                      '0 0 22px rgba(201, 169, 110, 0.12)',          // soft gilt halo
+                    ].join(', '),
+                    mixBlendMode: 'multiply',
                   }}>POKO</p>
                   {/* Hairline + diamond rule (drawn-in) — accent shifts with active park */}
                   <div className="poko-rule-draw poko-park-rule" aria-hidden="true" style={{
