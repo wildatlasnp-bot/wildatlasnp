@@ -32,23 +32,24 @@ const CG = "'Cormorant Garamond', serif";
 const DM = "'DM Sans', sans-serif";
 const MONO = "'JetBrains Mono', ui-monospace, monospace";
 
-const INK = "#1A2F1E";
-const INK_MUTED = "#6B7B6B";
-const INK_FAINT = "#8A9E8A";
+/* Editorial neutral palette — green removed, charcoal + gold only */
+const INK = "#1C1C1A";
+const INK_MUTED = "#5C5A55";
+const INK_FAINT = "#8A8780";
 const CREAM = "#F5F0E8";
 const CREAM_DEEP = "#F0EDEA";
 const PAPER = "#FFFFFF";
-const RULE = "rgba(26,47,30,0.10)";
-const RULE_STRONG = "rgba(26,47,30,0.18)";
+const RULE = "rgba(28,28,26,0.10)";
+const RULE_STRONG = "rgba(28,28,26,0.20)";
 const GOLD = "#B58A3F";
 const GOLD_SOFT = "rgba(181,138,63,0.32)";
 
-/* Severity colors — restrained, editorial */
+/* Severity colors — restrained editorial; info is now slate ink, not green */
 const SEV_INK: Record<Severity, string> = {
   critical: "#8B0000",
-  closure:  "#C0392B",
-  caution:  "#B5830A",
-  info:     "#2F6F4E",
+  closure:  "#A8421C",
+  caution:  "#9C6B14",
+  info:     "#2A2A28",
 };
 const SEV_LABEL: Record<Severity, string> = {
   critical: "Emergency",
@@ -391,8 +392,8 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
         )}
       </AnimatePresence>
 
-      {/* ── Cards ── */}
-      <div style={{ padding: "18px 20px 4px", display: "flex", flexDirection: "column", gap: 14 }}>
+      {/* ── Cards (grouped by severity into chapters when no severity filter) ── */}
+      <div style={{ padding: "10px 20px 4px", display: "flex", flexDirection: "column", gap: 0 }}>
         {visibleAlerts.length === 0 && (
           <p style={{ fontFamily: CG, fontStyle: "italic", fontSize: 17, color: INK_MUTED, textAlign: "center", padding: "32px 0", letterSpacing: "0.005em" }}>
             Nothing matches that filter.
@@ -400,15 +401,53 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
         )}
 
         <AnimatePresence initial={false}>
-          {visibleAlerts.map((alert, i) => (
-            <JournalCard
-              key={alert.id}
-              alert={alert}
-              index={i}
-              isUnread={!readAlertIds.has(alert.id)}
-              onRead={handleRead}
-            />
-          ))}
+          {(() => {
+            // If a severity filter is active, render flat. Otherwise, group into chapters.
+            if (activeTypeFilter) {
+              return (
+                <div style={{ display: "flex", flexDirection: "column", gap: 14, paddingTop: 8 }}>
+                  {visibleAlerts.map((alert, i) => (
+                    <JournalCard
+                      key={alert.id}
+                      alert={alert}
+                      index={i}
+                      isUnread={!readAlertIds.has(alert.id)}
+                      onRead={handleRead}
+                    />
+                  ))}
+                </div>
+              );
+            }
+
+            const order: Severity[] = ["critical", "closure", "caution", "info"];
+            const groups: Record<Severity, ParkAlert[]> = { critical: [], closure: [], caution: [], info: [] };
+            for (const a of visibleAlerts) groups[severityOf(a.category)].push(a);
+            const ROMAN = ["I", "II", "III", "IV"];
+            let chapterIdx = 0;
+            let cardIdx = 0;
+
+            return order
+              .filter((sev) => groups[sev].length > 0)
+              .map((sev) => {
+                const numeral = ROMAN[chapterIdx++];
+                return (
+                  <section key={sev} style={{ marginTop: chapterIdx === 1 ? 4 : 24 }}>
+                    <ChapterHead numeral={numeral} label={SEV_LABEL[sev]} count={groups[sev].length} ink={SEV_INK[sev]} />
+                    <div style={{ display: "flex", flexDirection: "column", gap: 14, marginTop: 12 }}>
+                      {groups[sev].map((alert) => (
+                        <JournalCard
+                          key={alert.id}
+                          alert={alert}
+                          index={cardIdx++}
+                          isUnread={!readAlertIds.has(alert.id)}
+                          onRead={handleRead}
+                        />
+                      ))}
+                    </div>
+                  </section>
+                );
+              });
+          })()}
         </AnimatePresence>
 
         {/* Archive toggle */}
@@ -630,6 +669,42 @@ function Stat({ numeral, label, mono }: { numeral: string; label: string; mono?:
         color: INK_FAINT,
       }}>
         {label}
+      </span>
+    </div>
+  );
+}
+
+/* ═════════════════════════════════════════════════════════════════
+   CHAPTER HEAD — Roman numeral severity divider
+   ═════════════════════════════════════════════════════════════════ */
+
+function ChapterHead({ numeral, label, count, ink }: { numeral: string; label: string; count: number; ink: string }) {
+  return (
+    <div style={{
+      display: "flex", alignItems: "baseline", gap: 12,
+      paddingTop: 18, paddingBottom: 6,
+      borderTop: `1px solid ${RULE}`,
+    }}>
+      <span style={{
+        fontFamily: CG, fontStyle: "italic", fontWeight: 400,
+        fontSize: 13, color: GOLD, letterSpacing: "0.04em",
+        minWidth: 24, fontVariantNumeric: "tabular-nums",
+      }}>
+        {numeral}.
+      </span>
+      <span style={{
+        fontFamily: DM, fontSize: 11, fontWeight: 600,
+        letterSpacing: "0.24em", textTransform: "uppercase",
+        color: ink,
+      }}>
+        {label}
+      </span>
+      <span style={{ flex: 1, height: 1, background: RULE, alignSelf: "center" }} />
+      <span style={{
+        fontFamily: MONO, fontSize: 11, color: INK_FAINT,
+        letterSpacing: "0.04em", fontVariantNumeric: "tabular-nums",
+      }}>
+        {String(count).padStart(2, "0")}
       </span>
     </div>
   );
