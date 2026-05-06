@@ -6,9 +6,9 @@ import { PARKS, getParkColor } from "@/lib/parks";
 import { haptics } from "@/lib/haptics";
 
 /* ─────────────────────────────────────────────────────────────────
-   FIELD DISPATCH — Premium Park Alerts
-   "An editorial telegram from the backcountry."
-   Cinematic dark hero, parchment telegram cards, sliding filter rail.
+   FIELD DISPATCH — Park Alerts (editorial redesign)
+   Cream masthead, hairline rules, journal-entry cards.
+   Quiet Luxury: less chrome, more whitespace, mono on timestamps.
    ───────────────────────────────────────────────────────────────── */
 
 interface ParkAlert {
@@ -30,8 +30,37 @@ type Severity = "critical" | "caution" | "closure" | "info";
 
 const CG = "'Cormorant Garamond', serif";
 const DM = "'DM Sans', sans-serif";
+const MONO = "'JetBrains Mono', ui-monospace, monospace";
 
-/* ── Severity mapping (from NPS category strings) ── */
+const INK = "#1A2F1E";
+const INK_MUTED = "#6B7B6B";
+const INK_FAINT = "#8A9E8A";
+const CREAM = "#F5F0E8";
+const CREAM_DEEP = "#F0EDEA";
+const PAPER = "#FFFFFF";
+const RULE = "rgba(26,47,30,0.10)";
+const RULE_STRONG = "rgba(26,47,30,0.18)";
+const GOLD = "#B58A3F";
+const GOLD_SOFT = "rgba(181,138,63,0.32)";
+
+/* Severity colors — restrained, editorial */
+const SEV_INK: Record<Severity, string> = {
+  critical: "#8B0000",
+  closure:  "#C0392B",
+  caution:  "#B5830A",
+  info:     "#2F6F4E",
+};
+const SEV_LABEL: Record<Severity, string> = {
+  critical: "Emergency",
+  closure:  "Closure",
+  caution:  "Caution",
+  info:     "Dispatch",
+};
+const SEV_RANK: Record<Severity, number> = { critical: 0, closure: 1, caution: 2, info: 3 };
+
+const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
+const EIGHTEEN_MONTHS_MS = 18 * 30 * 24 * 60 * 60 * 1000;
+
 function severityOf(category: string): Severity {
   const c = category.toLowerCase();
   if (/danger|emergency|evacuation/.test(c)) return "critical";
@@ -39,18 +68,6 @@ function severityOf(category: string): Severity {
   if (/caution/.test(c)) return "caution";
   return "info";
 }
-
-const SEVERITY_META: Record<Severity, { label: string; ink: string; tint: string; ring: string; sigil: string }> = {
-  critical: { label: "EMERGENCY",  ink: "#E24B4A", tint: "rgba(226,75,74,0.10)",  ring: "rgba(226,75,74,0.55)",  sigil: "△" },
-  closure:  { label: "CLOSURE",    ink: "#8A6B2E", tint: "rgba(201,169,110,0.14)", ring: "rgba(201,169,110,0.60)", sigil: "✕" },
-  caution:  { label: "CAUTION",    ink: "#B5830A", tint: "rgba(201,169,110,0.10)", ring: "rgba(201,169,110,0.50)", sigil: "!" },
-  info:     { label: "DISPATCH",   ink: "#2F6F4E", tint: "rgba(47,111,78,0.08)",   ring: "rgba(47,111,78,0.45)",   sigil: "i" },
-};
-
-const SEVERITY_RANK: Record<Severity, number> = { critical: 0, closure: 1, caution: 2, info: 3 };
-
-const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
-const EIGHTEEN_MONTHS_MS = 18 * 30 * 24 * 60 * 60 * 1000;
 
 function smartTimeAgo(timestamp: number): string {
   const diff = Date.now() - timestamp;
@@ -61,9 +78,7 @@ function smartTimeAgo(timestamp: number): string {
   if (hours < 24) return `${hours}h ago`;
   const date = new Date(timestamp);
   const days = Math.floor(hours / 24);
-  if (days < 7) {
-    return date.toLocaleDateString("en-US", { weekday: "short" });
-  }
+  if (days < 7) return date.toLocaleDateString("en-US", { weekday: "short" });
   return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
@@ -72,10 +87,14 @@ function formatPostedDate(dateStr: string): string {
   return d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
 }
 
+function formatEditionDate(): string {
+  return new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }).toUpperCase();
+}
+
 function sortAlerts(list: ParkAlert[], readIds: Set<string>): ParkAlert[] {
   return [...list].sort((a, b) => {
-    const sa = SEVERITY_RANK[severityOf(a.category)];
-    const sb = SEVERITY_RANK[severityOf(b.category)];
+    const sa = SEV_RANK[severityOf(a.category)];
+    const sb = SEV_RANK[severityOf(b.category)];
     const aRead = readIds.has(a.id) ? 1 : 0;
     const bRead = readIds.has(b.id) ? 1 : 0;
     if (aRead !== bRead) return aRead - bRead;
@@ -94,8 +113,11 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
   const [showOlder, setShowOlder] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
   const [, forceRender] = useState(0);
-
   const [metaTimeLabel, setMetaTimeLabel] = useState<string | null>(null);
+
+  const [activeTypeFilter, setActiveTypeFilter] = useState<string | null>(null);
+  const [activeParkFilter, setActiveParkFilter] = useState<string | null>(null);
+  const [unreadOnly, setUnreadOnly] = useState(false);
 
   useEffect(() => {
     if (!lastFetchedAt) return;
@@ -106,10 +128,6 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
     document.addEventListener("visibilitychange", onVis);
     return () => { clearInterval(id); document.removeEventListener("visibilitychange", onVis); };
   }, [lastFetchedAt]);
-
-  const [activeTypeFilter, setActiveTypeFilter] = useState<string | null>(null);
-  const [activeParkFilter, setActiveParkFilter] = useState<string | null>(null);
-  const [unreadOnly, setUnreadOnly] = useState(false);
 
   useEffect(() => {
     const iv = setInterval(() => forceRender((n) => n + 1), 30_000);
@@ -177,7 +195,6 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
     }
   };
 
-  /* ── Severity counts (drives the dial) ── */
   const counts = useMemo(() => {
     const out = { critical: 0, closure: 0, caution: 0, info: 0 };
     for (const a of alerts) out[severityOf(a.category)]++;
@@ -185,14 +202,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
   }, [alerts]);
 
   const total = alerts.length;
-  const dominantSeverity: Severity = useMemo(() => {
-    if (counts.critical) return "critical";
-    if (counts.closure) return "closure";
-    if (counts.caution) return "caution";
-    return "info";
-  }, [counts]);
 
-  /* ── Filters ── */
   const parkFilteredAlerts = useMemo(() => {
     if (!activeParkFilter) return alerts;
     return alerts.filter((a) => a.park_id === activeParkFilter);
@@ -204,7 +214,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
     for (const a of parkFilteredAlerts) c[severityOf(a.category)]++;
     return order
       .filter((s) => c[s] > 0)
-      .map((s) => ({ id: s, label: SEVERITY_META[s].label.charAt(0) + SEVERITY_META[s].label.slice(1).toLowerCase(), count: c[s] }));
+      .map((s) => ({ id: s, label: SEV_LABEL[s], count: c[s] }));
   }, [parkFilteredAlerts]);
 
   const parkChips = useMemo(() => {
@@ -223,15 +233,9 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
 
   const filteredAlerts = useMemo(() => {
     let result = alerts;
-    if (activeTypeFilter) {
-      result = result.filter((a) => severityOf(a.category) === activeTypeFilter);
-    }
-    if (activeParkFilter) {
-      result = result.filter((a) => a.park_id === activeParkFilter);
-    }
-    if (unreadOnly) {
-      result = result.filter((a) => !readAlertIds.has(a.id));
-    }
+    if (activeTypeFilter) result = result.filter((a) => severityOf(a.category) === activeTypeFilter);
+    if (activeParkFilter) result = result.filter((a) => a.park_id === activeParkFilter);
+    if (unreadOnly) result = result.filter((a) => !readAlertIds.has(a.id));
     return result;
   }, [alerts, activeTypeFilter, activeParkFilter, unreadOnly, readAlertIds]);
 
@@ -259,18 +263,23 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
   }, [filteredAlerts, readAlertIds]);
 
   const visibleAlerts = showOlder ? [...recentAlerts, ...olderAlerts] : recentAlerts;
+  const parkCount = trackedParkIds?.size ?? 0;
 
-  /* ── Loading skeleton ── */
+  /* ── Loading ── */
   if (loading) {
     return (
-      <div ref={ref} style={{ width: "100%" }}>
-        <FieldDispatchHero loading counts={counts} total={0} dominantSeverity="info" parkCount={0} timeLabel={null} onRefresh={() => {}} refreshing={false} />
-        <div style={{ padding: "24px 20px", display: "flex", flexDirection: "column", gap: 10 }}>
+      <div ref={ref} style={{ width: "100%", background: CREAM, minHeight: "100vh" }}>
+        <Masthead loading total={0} parkCount={0} timeLabel={null} onRefresh={() => {}} refreshing={false} dominantSev={null} />
+        <div style={{ padding: "8px 20px 32px", display: "flex", flexDirection: "column", gap: 14 }}>
           {[0, 1, 2].map((i) => (
-            <div key={i} className="ranger-card" style={{ padding: 16, opacity: 0.6, animation: `dispatch-pulse 1.6s ease-in-out ${i * 120}ms infinite` }}>
-              <div style={{ height: 10, width: 80, background: "rgba(0,0,0,0.06)", borderRadius: 4, marginBottom: 10 }} />
-              <div style={{ height: 16, width: "70%", background: "rgba(0,0,0,0.08)", borderRadius: 4, marginBottom: 8 }} />
-              <div style={{ height: 12, width: "90%", background: "rgba(0,0,0,0.05)", borderRadius: 4 }} />
+            <div key={i} style={{
+              padding: "18px 20px", background: PAPER, borderRadius: 8,
+              border: `1px solid ${RULE}`,
+              opacity: 0.65, animation: `dispatch-pulse 1.6s ease-in-out ${i * 120}ms infinite`,
+            }}>
+              <div style={{ height: 9, width: 70, background: RULE, borderRadius: 2, marginBottom: 12 }} />
+              <div style={{ height: 17, width: "78%", background: RULE_STRONG, borderRadius: 3, marginBottom: 9 }} />
+              <div style={{ height: 11, width: "92%", background: RULE, borderRadius: 2 }} />
             </div>
           ))}
         </div>
@@ -279,182 +288,166 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
     );
   }
 
-  /* ── Empty state ── */
+  /* ── Empty ── */
   if (alerts.length === 0 && !refreshError) {
     return (
-      <div ref={ref} style={{ width: "100%" }}>
-        <FieldDispatchHero counts={counts} total={0} dominantSeverity="info" parkCount={trackedParkIds?.size ?? 0} timeLabel={metaTimeLabel} onRefresh={handleRefresh} refreshing={refreshing} />
-        <QuietTrail />
+      <div ref={ref} style={{ width: "100%", background: CREAM, minHeight: "100vh" }}>
+        <Masthead total={0} parkCount={parkCount} timeLabel={metaTimeLabel} onRefresh={handleRefresh} refreshing={refreshing} dominantSev={null} />
+        <QuietTrail timeLabel={metaTimeLabel} />
       </div>
     );
   }
 
-  const hasTrackedParks = trackedParkIds && trackedParkIds.size > 0;
-  const parkCount = hasTrackedParks ? trackedParkIds!.size : 0;
+  const dominantSev: Severity | null =
+    counts.critical ? "critical" :
+    counts.closure  ? "closure"  :
+    counts.caution  ? "caution"  :
+    counts.info     ? "info"     : null;
 
   return (
-    <div ref={ref} style={{ width: "100%" }}>
-      {/* ─── HERO ─── */}
-      <FieldDispatchHero
-        counts={counts}
+    <div ref={ref} style={{ width: "100%", background: CREAM, minHeight: "100vh" }}>
+      <Masthead
         total={total}
-        dominantSeverity={dominantSeverity}
         parkCount={parkCount}
         timeLabel={metaTimeLabel}
         onRefresh={handleRefresh}
         refreshing={refreshing}
+        dominantSev={dominantSev}
+        counts={counts}
         onSeveritySelect={(sev) => {
           setActiveTypeFilter((prev) => (prev === sev ? null : sev));
           setUnreadOnly(false);
         }}
       />
 
-      {/* ─── DISPATCH FEED ─── */}
-      <div style={{ background: "linear-gradient(180deg, var(--ranger-paper-cream) 0%, #F2F1ED 80px)", paddingTop: 20, paddingBottom: 4 }}>
-        {/* Filter rail */}
-        <LayoutGroup id="dispatch-filters">
-          <div
-            className="no-scrollbar"
+      {/* ── Filter rail ── */}
+      <LayoutGroup id="dispatch-filters">
+        <div
+          className="no-scrollbar"
+          style={{
+            display: "flex", gap: 2,
+            padding: "0 20px 6px",
+            overflowX: "auto", WebkitOverflowScrolling: "touch", scrollbarWidth: "none",
+            borderBottom: `1px solid ${RULE}`,
+          }}
+        >
+          <RailChip
+            label="All"
+            count={total}
+            active={isAllActive}
+            onClick={() => { setActiveTypeFilter(null); setActiveParkFilter(null); setUnreadOnly(false); }}
+          />
+          {unreadCount > 0 && (
+            <RailChip
+              label="Unread"
+              count={unreadCount}
+              active={unreadOnly}
+              accent={SEV_INK.info}
+              onClick={() => setUnreadOnly((v) => !v)}
+            />
+          )}
+          {typeChips.map((tc) => (
+            <RailChip
+              key={tc.id}
+              label={tc.label}
+              count={tc.count}
+              active={activeTypeFilter === tc.id}
+              accent={SEV_INK[tc.id as Severity]}
+              onClick={() => setActiveTypeFilter((p) => (p === tc.id ? null : tc.id))}
+            />
+          ))}
+          {parkChips.length > 0 && typeChips.length > 0 && (
+            <div style={{ width: 1, alignSelf: "center", height: 14, background: RULE, margin: "0 6px", flexShrink: 0 }} />
+          )}
+          {parkChips.map((p) => (
+            <RailChip
+              key={p.id}
+              label={p.label}
+              count={p.count}
+              active={activeParkFilter === p.id}
+              dot={p.color}
+              onClick={() => setActiveParkFilter((prev) => (prev === p.id ? null : p.id))}
+            />
+          ))}
+        </div>
+      </LayoutGroup>
+
+      {/* ── Refresh error ── */}
+      <AnimatePresence>
+        {refreshError && (
+          <motion.div
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
             style={{
-              display: "flex",
-              gap: 4,
-              padding: "0 20px 14px",
-              overflowX: "auto",
-              WebkitOverflowScrolling: "touch",
-              scrollbarWidth: "none",
+              margin: "14px 20px 0", padding: "10px 14px", borderRadius: 6,
+              background: "rgba(192,57,43,0.05)", border: `1px solid rgba(192,57,43,0.20)`,
+              borderLeft: `3px solid ${SEV_INK.closure}`,
+              fontFamily: DM, fontSize: 12, color: SEV_INK.closure,
             }}
           >
-            <RailChip
-              label="All"
-              count={total}
-              active={isAllActive}
-              onClick={() => { setActiveTypeFilter(null); setActiveParkFilter(null); setUnreadOnly(false); }}
-            />
-            {unreadCount > 0 && (
-              <RailChip
-                label="Unread"
-                count={unreadCount}
-                active={unreadOnly}
-                accent="#2F6F4E"
-                onClick={() => setUnreadOnly((v) => !v)}
-              />
-            )}
-            {typeChips.map((tc) => {
-              // Match RailChip count color to the new severity-border palette
-              // (defined inline in TelegramCard). Keep duplicated map small + local.
-              const SEV_BORDER_TAB: Record<Severity, string> = {
-                critical: "#8B0000", closure: "#C0392B", caution: "#E8935A", info: "#2F6F4E",
-              };
-              return (
-                <RailChip
-                  key={tc.id}
-                  label={tc.label}
-                  count={tc.count}
-                  active={activeTypeFilter === tc.id}
-                  accent={SEV_BORDER_TAB[tc.id as Severity]}
-                  onClick={() => setActiveTypeFilter((p) => (p === tc.id ? null : tc.id))}
-                />
-              );
-            })}
-            {parkChips.length > 0 && typeChips.length > 0 && (
-              <div style={{ width: 1, alignSelf: "center", height: 18, background: "rgba(0,0,0,0.10)", margin: "0 6px", flexShrink: 0 }} />
-            )}
-            {parkChips.map((p) => (
-              <RailChip
-                key={p.id}
-                label={p.label}
-                count={p.count}
-                active={activeParkFilter === p.id}
-                dot={p.color}
-                onClick={() => setActiveParkFilter((prev) => (prev === p.id ? null : p.id))}
-              />
-            ))}
-          </div>
-        </LayoutGroup>
+            {refreshError} — pull to refresh.
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-        {/* Refresh error banner */}
-        <AnimatePresence>
-          {refreshError && (
-            <motion.div
-              initial={{ opacity: 0, y: -4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              style={{
-                margin: "0 20px 12px",
-                padding: "10px 14px",
-                borderRadius: 10,
-                background: "rgba(226,75,74,0.06)",
-                border: "1px solid rgba(226,75,74,0.18)",
-                fontFamily: DM, fontSize: 12, color: "#A32D2D",
-              }}
-            >
-              {refreshError} — pull to refresh.
-            </motion.div>
-          )}
+      {/* ── Cards ── */}
+      <div style={{ padding: "18px 20px 4px", display: "flex", flexDirection: "column", gap: 14 }}>
+        {visibleAlerts.length === 0 && (
+          <p style={{ fontFamily: CG, fontStyle: "italic", fontSize: 17, color: INK_MUTED, textAlign: "center", padding: "32px 0", letterSpacing: "0.005em" }}>
+            Nothing matches that filter.
+          </p>
+        )}
+
+        <AnimatePresence initial={false}>
+          {visibleAlerts.map((alert, i) => (
+            <JournalCard
+              key={alert.id}
+              alert={alert}
+              index={i}
+              isUnread={!readAlertIds.has(alert.id)}
+              onRead={handleRead}
+            />
+          ))}
         </AnimatePresence>
 
-        {/* Cards */}
-        <div style={{ padding: "0 20px", display: "flex", flexDirection: "column", gap: 10 }}>
-          {visibleAlerts.length === 0 && (
-            <p style={{ fontFamily: CG, fontStyle: "italic", fontSize: 16, color: "var(--ranger-ink-muted)", textAlign: "center", padding: "32px 0" }}>
-              Nothing matches that filter.
-            </p>
-          )}
+        {/* Archive toggle */}
+        {((!showOlder && olderAlerts.length > 0) || (showOlder && archivedAlerts.length > 0)) && (
+          <button
+            onClick={() => {
+              if (!showOlder && olderAlerts.length > 0) setShowOlder(true);
+              else setShowArchived((v) => !v);
+            }}
+            style={{
+              marginTop: 6, padding: "13px 16px",
+              background: "transparent",
+              border: "none",
+              borderTop: `1px solid ${RULE}`,
+              fontFamily: DM, fontSize: 11, fontWeight: 500, color: INK_FAINT,
+              letterSpacing: "0.18em", textTransform: "uppercase",
+              cursor: "pointer", minHeight: 44,
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+            }}
+          >
+            <span aria-hidden style={{ color: GOLD, fontFamily: CG, fontSize: 11 }}>◆</span>
+            {!showOlder
+              ? `Open ${olderAlerts.length} earlier dispatches`
+              : showArchived ? "Hide archive" : `Open archive · ${archivedAlerts.length}`}
+            <span aria-hidden style={{ color: GOLD, fontFamily: CG, fontSize: 11 }}>◆</span>
+          </button>
+        )}
 
-          <AnimatePresence initial={false}>
-            {visibleAlerts.map((alert, i) => (
-              <TelegramCard
-                key={alert.id}
-                alert={alert}
-                index={i}
-                isUnread={!readAlertIds.has(alert.id)}
-                onRead={handleRead}
-              />
+        {showArchived && (
+          <div style={{ display: "flex", flexDirection: "column", gap: 14, marginTop: 4 }}>
+            {archivedAlerts.map((alert, i) => (
+              <JournalCard key={alert.id} alert={alert} index={i} isUnread={!readAlertIds.has(alert.id)} onRead={handleRead} archived />
             ))}
-          </AnimatePresence>
-
-          {/* Show older */}
-          {((!showOlder && olderAlerts.length > 0) || (showOlder && archivedAlerts.length > 0)) && (
-            <button
-              onClick={() => {
-                if (!showOlder && olderAlerts.length > 0) setShowOlder(true);
-                else setShowArchived((v) => !v);
-              }}
-              className="ranger-card--interactive"
-              style={{
-                marginTop: 8,
-                padding: "13px 16px",
-                background: "transparent",
-                border: "1px dashed var(--ranger-rule-strong)",
-                borderRadius: 12,
-                fontFamily: DM, fontSize: 12, fontWeight: 500, color: "var(--ranger-gold-deep)",
-                letterSpacing: "0.08em", textTransform: "uppercase",
-                cursor: "pointer",
-                display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                minHeight: 44,
-              }}
-            >
-              {!showOlder ? `Show ${olderAlerts.length} earlier dispatches` : showArchived ? "Hide archive" : `Open archive (${archivedAlerts.length})`}
-            </button>
-          )}
-
-          {showArchived && (
-            <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 4 }}>
-              {archivedAlerts.map((alert, i) => (
-                <TelegramCard key={alert.id} alert={alert} index={i} isUnread={!readAlertIds.has(alert.id)} onRead={handleRead} archived />
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Field log footer */}
-        <div style={{ padding: "28px 20px 12px", textAlign: "center" }}>
-          <div style={{ height: 1, background: "linear-gradient(90deg, transparent, var(--ranger-rule), transparent)", marginBottom: 14 }} />
-          <p style={{ fontFamily: CG, fontStyle: "italic", fontSize: 14, color: "var(--ranger-ink-muted)" }}>
-            Sourced live from the National Park Service. Field-checked daily.
-          </p>
-        </div>
+          </div>
+        )}
       </div>
+
+      {/* ── Colophon ── */}
+      <Colophon timeLabel={metaTimeLabel} />
     </div>
   );
 });
@@ -463,461 +456,193 @@ ParkAlerts.displayName = "ParkAlerts";
 export default ParkAlerts;
 
 /* ═════════════════════════════════════════════════════════════════
-   FIELD DISPATCH HERO — dark cinematic header w/ severity dial
+   MASTHEAD — editorial cream wordmark with edition stamp
    ═════════════════════════════════════════════════════════════════ */
 
-function FieldDispatchHero({
-  counts, total, dominantSeverity, parkCount, timeLabel, onRefresh, refreshing, loading, onSeveritySelect,
+function Masthead({
+  total, parkCount, timeLabel, onRefresh, refreshing, loading, dominantSev, counts, onSeveritySelect,
 }: {
-  counts: { critical: number; closure: number; caution: number; info: number };
   total: number;
-  dominantSeverity: Severity;
   parkCount: number;
   timeLabel: string | null;
   onRefresh: () => void;
   refreshing: boolean;
   loading?: boolean;
+  dominantSev: Severity | null;
+  counts?: { critical: number; closure: number; caution: number; info: number };
   onSeveritySelect?: (sev: Severity) => void;
 }) {
-  const ambientHue = SEVERITY_META[dominantSeverity].ring;
-  const today = new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+  const edition = formatEditionDate();
+  const issueNumber = useMemo(() => {
+    // deterministic-ish issue number from day-of-year
+    const d = new Date();
+    const start = new Date(d.getFullYear(), 0, 0);
+    const diff = d.getTime() - start.getTime();
+    return Math.floor(diff / (1000 * 60 * 60 * 24));
+  }, []);
 
   return (
-    <div
-      style={{
-        position: "relative",
-        background: "linear-gradient(180deg, #0E1A11 0%, #142519 60%, #1A2E1F 100%)",
-        padding: "24px 20px 28px",
-        overflow: "hidden",
-        borderBottom: "1px solid rgba(201,169,110,0.12)",
-      }}
-    >
-      {/* Ambient severity glow */}
-      <motion.div
-        aria-hidden
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.2 }}
-        style={{
-          position: "absolute", inset: 0,
-          background: `radial-gradient(ellipse 380px 220px at 75% 0%, ${ambientHue} 0%, transparent 70%)`,
-          opacity: 0.35, pointerEvents: "none",
-        }}
-      />
-
-      {/* Mountain silhouette ridge */}
-      <RidgeSilhouette />
-
-      {/* Header row: kicker + refresh */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", position: "relative", zIndex: 2 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
-          <span style={{ display: "block", width: 18, height: 1, background: "var(--park-accent)", opacity: 0.5, transition: "background-color 300ms ease-out" }} />
-          <span style={{
-            fontFamily: DM, fontSize: 12, fontWeight: 500, letterSpacing: "0.22em",
-            textTransform: "uppercase", color: "rgba(201,169,110,0.75)",
-          }}>
-            Field Dispatch · {today}
-          </span>
-        </div>
-        <button
-          onClick={onRefresh}
-          disabled={refreshing || loading}
-          aria-label="Refresh dispatches"
-          style={{
-            background: "rgba(232,217,181,0.06)",
-            border: "1px solid rgba(201,169,110,0.22)",
-            borderRadius: 999,
-            width: 34, height: 34,
-            display: "inline-flex", alignItems: "center", justifyContent: "center",
-            cursor: refreshing ? "default" : "pointer",
-            color: "rgba(232,217,181,0.7)",
-          }}
-        >
-          <RefreshCw size={13} style={{ animation: refreshing ? "spin 1s linear infinite" : undefined }} />
-        </button>
+    <header style={{
+      position: "relative",
+      background: CREAM,
+      padding: "26px 20px 18px",
+      borderBottom: `1px solid ${RULE}`,
+    }}>
+      {/* Edition strip */}
+      <div style={{
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        fontFamily: MONO, fontSize: 12, letterSpacing: "0.18em",
+        color: INK_FAINT, textTransform: "uppercase",
+        marginBottom: 14,
+      }}>
+        <span>Field&nbsp;Dispatch</span>
+        <span style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <span>№&nbsp;{String(issueNumber).padStart(3, "0")}</span>
+          <button
+            onClick={onRefresh}
+            disabled={refreshing || loading}
+            aria-label="Refresh dispatches"
+            style={{
+              width: 28, height: 28, padding: 0,
+              background: "transparent", border: `1px solid ${RULE_STRONG}`, borderRadius: 999,
+              display: "inline-flex", alignItems: "center", justifyContent: "center",
+              color: INK_MUTED,
+              cursor: refreshing ? "default" : "pointer",
+            }}
+          >
+            <RefreshCw size={11} style={{ animation: refreshing ? "spin 1s linear infinite" : undefined }} />
+          </button>
+        </span>
       </div>
 
-      {/* Headline */}
+      {/* Wordmark */}
       <h1 style={{
-        fontFamily: CG, fontWeight: 300,
-        margin: "16px 0 0", color: "#F4F0E8", letterSpacing: "-0.02em",
-        position: "relative", zIndex: 2,
+        margin: 0,
+        fontFamily: CG, fontWeight: 400,
+        fontSize: 56, lineHeight: 0.95, letterSpacing: "-0.025em",
+        color: INK,
       }}>
-        <span style={{ display: "block", fontSize: 56, lineHeight: 1 }}>Park</span>
-        <span style={{ display: "block", fontSize: 72, lineHeight: 1, marginTop: 4, fontStyle: "italic", color: "rgba(244,240,232,0.62)", letterSpacing: "-0.04em" }}>
-          alerts.
-        </span>
+        Park <span style={{ fontStyle: "italic", color: INK_MUTED, fontWeight: 300 }}>alerts</span>
       </h1>
 
-      {/* Subhead */}
+      {/* Edition date / source line */}
       <p style={{
-        fontFamily: DM, fontSize: 13, fontWeight: 300, color: "rgba(244,240,232,0.55)",
-        marginTop: 10, lineHeight: 1.5, maxWidth: 280, position: "relative", zIndex: 2,
+        margin: "10px 0 0",
+        fontFamily: DM, fontSize: 12, fontWeight: 400,
+        color: INK_MUTED, letterSpacing: "0.04em",
       }}>
-        {loading ? "Tuning the wire…" :
-          parkCount > 0
-            ? <>Live wire from <span style={{ color: "rgba(201,169,110,0.85)" }}>{parkCount} park{parkCount !== 1 ? "s" : ""}</span> you watch{timeLabel ? `. Updated ${timeLabel}.` : "."}</>
-            : <>Listening across the National Park Service{timeLabel ? `. Updated ${timeLabel}.` : "."}</>
-        }
+        {edition}
+        <span style={{ color: INK_FAINT, padding: "0 8px" }}>·</span>
+        Sourced live from the National Park Service
       </p>
 
-      {/* Severity dial + counts */}
-      <div style={{ display: "flex", alignItems: "center", gap: 18, marginTop: 22, position: "relative", zIndex: 2 }}>
-        <SeverityDial counts={counts} total={total} loading={loading} />
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 6 }}>
-          <CountRow label="Emergency"  value={counts.critical} ink="#E24B4A" tip="Immediate danger — evacuations, search-and-rescue, or active hazards. Act now." />
-          <CountRow label="Closure"    value={counts.closure}  ink="#C9A96E" tip="Trail, road, or area closed by the park. Plan an alternate route." />
-          <CountRow label="Caution"    value={counts.caution}  ink="#E0B560" tip="Heightened risk — wildlife activity, weather, or trail conditions. Proceed prepared." />
-          <CountRow label="Dispatch"   value={counts.info}     ink="#7FB89A" tip="General park notice — service updates, advisories, and seasonal news." />
-        </div>
-      </div>
-
-      {/* Highest-level summary line */}
-      <HighestLevelSummary counts={counts} loading={loading} onSeveritySelect={onSeveritySelect} />
-
-      {/* Live wire ticker */}
-      <WireTicker active={!loading && !refreshing} />
-    </div>
-  );
-}
-
-function RidgeSilhouette() {
-  return (
-    <svg
-      aria-hidden
-      width="100%"
-      height="64"
-      viewBox="0 0 400 64"
-      preserveAspectRatio="none"
-      style={{ position: "absolute", left: 0, right: 0, bottom: -1, zIndex: 1, opacity: 0.55, pointerEvents: "none" }}
-    >
-      <path
-        d="M0,64 L0,42 L40,28 L70,38 L110,18 L150,32 L190,12 L230,30 L270,22 L310,40 L350,26 L400,36 L400,64 Z"
-        fill="#0B1A11"
-      />
-      <path
-        d="M0,64 L0,52 L60,44 L100,50 L160,38 L210,46 L270,40 L320,50 L400,44 L400,64 Z"
-        fill="#091610"
-        opacity="0.85"
-      />
-    </svg>
-  );
-}
-
-function SeverityDial({ counts, total, loading }: { counts: { critical: number; closure: number; caution: number; info: number }; total: number; loading?: boolean }) {
-  // Three concentric arcs — animated draw
-  const SIZE = 92;
-  const STROKE = 5;
-  const CENTER = SIZE / 2;
-  const RINGS = [
-    { r: CENTER - STROKE * 0,  count: counts.critical, color: "#E24B4A", track: "rgba(226,75,74,0.10)" },
-    { r: CENTER - STROKE * 2.2, count: counts.closure,  color: "#C9A96E", track: "rgba(201,169,110,0.10)" },
-    { r: CENTER - STROKE * 4.4, count: counts.caution + counts.info, color: "#7FB89A", track: "rgba(127,184,154,0.10)" },
-  ];
-  const denom = Math.max(total, 1);
-
-  return (
-    <div style={{ position: "relative", width: SIZE, height: SIZE, flexShrink: 0 }}>
-      <svg width={SIZE} height={SIZE} style={{ transform: "rotate(-90deg)" }}>
-        {RINGS.map((ring, i) => {
-          const circ = 2 * Math.PI * ring.r;
-          const ratio = loading ? 0 : ring.count / denom;
-          return (
-            <g key={i}>
-              <circle cx={CENTER} cy={CENTER} r={ring.r} fill="none" stroke={ring.track} strokeWidth={STROKE} />
-              <motion.circle
-                cx={CENTER} cy={CENTER} r={ring.r}
-                fill="none" stroke={ring.color} strokeWidth={STROKE} strokeLinecap="round"
-                initial={{ strokeDasharray: `0 ${circ}` }}
-                animate={{ strokeDasharray: `${circ * ratio} ${circ}` }}
-                transition={{ duration: 1.1, delay: 0.15 + i * 0.18, ease: [0.22, 1, 0.36, 1] }}
-              />
-            </g>
-          );
-        })}
-      </svg>
+      {/* Gold ornament rule */}
       <div style={{
-        position: "absolute", inset: 0, display: "flex", flexDirection: "column",
-        alignItems: "center", justifyContent: "center", pointerEvents: "none",
+        marginTop: 18, display: "flex", alignItems: "center", gap: 10,
       }}>
-        <motion.span
-          initial={{ opacity: 0, y: 4 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.5 }}
-          style={{ fontFamily: CG, fontSize: 32, fontWeight: 300, color: "#F4F0E8", lineHeight: 1, letterSpacing: "-0.02em" }}
-        >
-          {total}
-        </motion.span>
-        <span style={{
-          fontFamily: DM, fontSize: 12, fontWeight: 500, letterSpacing: "0.18em",
-          textTransform: "uppercase", color: "rgba(244,240,232,0.45)", marginTop: 3,
-        }}>
-          ACTIVE
-        </span>
+        <span style={{ flex: 1, height: 1, background: `linear-gradient(90deg, transparent, ${GOLD_SOFT}, transparent)` }} />
+        <span style={{ color: GOLD, fontFamily: CG, fontSize: 11 }}>◆</span>
+        <span style={{ flex: 1, height: 1, background: `linear-gradient(90deg, transparent, ${GOLD_SOFT}, transparent)` }} />
       </div>
-    </div>
+
+      {/* Stats line: total · parks · last update */}
+      <div style={{
+        marginTop: 16,
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr 1fr",
+        gap: 10,
+        alignItems: "end",
+      }}>
+        <Stat numeral={loading ? "—" : String(total)} label="Active" />
+        <Stat numeral={parkCount > 0 ? String(parkCount) : "—"} label={parkCount === 1 ? "Park" : "Parks"} />
+        <Stat
+          numeral={timeLabel ? "·" : "—"}
+          label={timeLabel ? `Updated ${timeLabel}` : "Standing by"}
+          mono
+        />
+      </div>
+
+      {/* Highest summary line */}
+      {!loading && counts && dominantSev && (
+        <button
+          type="button"
+          onClick={() => onSeveritySelect?.(dominantSev)}
+          aria-label={`Filter by ${SEV_LABEL[dominantSev]}`}
+          style={{
+            marginTop: 16, padding: "10px 0 0", width: "100%",
+            background: "transparent", border: "none",
+            borderTop: `1px solid ${RULE}`,
+            display: "flex", alignItems: "baseline", gap: 8,
+            cursor: "pointer", textAlign: "left", minHeight: 32,
+          }}
+        >
+          <span style={{
+            width: 5, height: 5, borderRadius: 999,
+            background: SEV_INK[dominantSev], alignSelf: "center", flexShrink: 0,
+            boxShadow: `0 0 8px ${SEV_INK[dominantSev]}55`,
+          }} />
+          <span style={{
+            fontFamily: DM, fontSize: 12, fontWeight: 600,
+            letterSpacing: "0.20em", textTransform: "uppercase",
+            color: SEV_INK[dominantSev],
+          }}>
+            Highest · {SEV_LABEL[dominantSev]}
+          </span>
+          <span style={{
+            fontFamily: CG, fontStyle: "italic", fontSize: 14,
+            color: INK_MUTED, lineHeight: 1.35, flex: 1,
+          }}>
+            {summaryFor(dominantSev)}
+          </span>
+          <span aria-hidden style={{ color: INK_FAINT, fontFamily: DM, fontSize: 14 }}>›</span>
+        </button>
+      )}
+
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+    </header>
   );
 }
 
-function CountRow({ label, value, ink, tip }: { label: string; value: number; ink: string; tip?: string }) {
-  const isZero = value === 0;
-  const [open, setOpen] = useState(false);
+function summaryFor(sev: Severity): string {
+  switch (sev) {
+    case "critical": return "immediate danger reported. Act now.";
+    case "closure":  return "trails or roads closed. Plan around them.";
+    case "caution":  return "heightened risk. Proceed prepared.";
+    case "info":     return "general park notices. Worth a glance.";
+  }
+}
+
+function Stat({ numeral, label, mono }: { numeral: string; label: string; mono?: boolean }) {
   return (
-    <div
-      role={tip ? "button" : undefined}
-      tabIndex={tip ? 0 : undefined}
-      aria-label={tip ? `${label} — ${tip}` : undefined}
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
-      onFocus={() => setOpen(true)}
-      onBlur={() => setOpen(false)}
-      onClick={() => setOpen((v) => !v)}
-      style={{
-        position: "relative",
-        display: "flex", alignItems: "center", gap: 8,
-        opacity: isZero ? 0.32 : 1,
-        cursor: tip ? "help" : "default",
-        outline: "none",
-        minHeight: 18,
-      }}
-    >
+    <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
       <span style={{
-        width: 6, height: 6, borderRadius: "50%", background: ink,
-        boxShadow: isZero ? "none" : `0 0 8px ${ink}66`,
-        flexShrink: 0,
-      }} />
+        fontFamily: mono ? MONO : CG,
+        fontSize: mono ? 16 : 28,
+        fontWeight: mono ? 400 : 400,
+        lineHeight: 1, color: INK, letterSpacing: mono ? "0.04em" : "-0.02em",
+        fontVariantNumeric: "tabular-nums",
+      }}>
+        {numeral}
+      </span>
       <span style={{
-        fontFamily: DM, fontSize: 12, fontWeight: 400,
-        color: "rgba(244,240,232,0.78)", letterSpacing: "0.02em", flex: 1,
+        fontFamily: DM, fontSize: 11, fontWeight: 500,
+        letterSpacing: "0.18em", textTransform: "uppercase",
+        color: INK_FAINT,
       }}>
         {label}
       </span>
-      <span style={{
-        fontFamily: CG, fontSize: 16, fontWeight: 400,
-        color: "#F4F0E8", fontVariantNumeric: "tabular-nums",
-      }}>
-        {value}
-      </span>
-
-      <AnimatePresence>
-        {tip && open && (
-          <motion.div
-            role="tooltip"
-            initial={{ opacity: 0, y: -2 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -2 }}
-            transition={{ duration: 0.16, ease: [0.4, 0, 0.2, 1] }}
-            style={{
-              position: "absolute",
-              top: "calc(100% + 8px)",
-              right: 0,
-              zIndex: 5,
-              maxWidth: 240,
-              padding: "9px 12px",
-              background: "rgba(11,22,16,0.96)",
-              border: `1px solid ${ink}55`,
-              borderLeft: `2px solid ${ink}`,
-              borderRadius: 8,
-              boxShadow: "0 8px 24px rgba(0,0,0,0.35)",
-              fontFamily: DM, fontSize: 12, fontWeight: 300,
-              lineHeight: 1.45,
-              color: "rgba(244,240,232,0.85)",
-              pointerEvents: "none",
-              backdropFilter: "blur(6px)",
-              WebkitBackdropFilter: "blur(6px)",
-            }}
-          >
-            <div style={{
-              fontFamily: DM, fontSize: 12, fontWeight: 600, letterSpacing: "0.16em",
-              textTransform: "uppercase", color: ink, marginBottom: 4,
-            }}>
-              {label}
-            </div>
-            {tip}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
-function HighestLevelSummary({
-  counts, loading, onSeveritySelect,
-}: {
-  counts: { critical: number; closure: number; caution: number; info: number };
-  loading?: boolean;
-  onSeveritySelect?: (sev: Severity) => void;
-}) {
-  if (loading) return null;
-
-  const total = counts.critical + counts.closure + counts.caution + counts.info;
-
-  let ink = "rgba(127,184,154,0.85)";
-  let label = "All clear";
-  let meaning = "no active advisories on the wire.";
-  let severity: Severity | null = null;
-
-  if (counts.critical > 0) {
-    severity = "critical";
-    ink = SEVERITY_META.critical.ink;
-    label = "Emergency";
-    meaning = "immediate danger reported. Act now.";
-  } else if (counts.closure > 0) {
-    severity = "closure";
-    ink = SEVERITY_META.closure.ink;
-    label = "Closure";
-    meaning = "trails, roads, or areas closed. Plan around them.";
-  } else if (counts.caution > 0) {
-    severity = "caution";
-    ink = SEVERITY_META.caution.ink;
-    label = "Caution";
-    meaning = "heightened risk. Proceed prepared.";
-  } else if (counts.info > 0) {
-    severity = "info";
-    ink = SEVERITY_META.info.ink;
-    label = "Dispatch";
-    meaning = "general park notices. Worth a glance.";
-  }
-
-  const isClear = total === 0;
-  const isClickable = !isClear && !!severity && !!onSeveritySelect;
-
-  const handleClick = () => {
-    if (isClickable && severity) onSeveritySelect!(severity);
-  };
-
-  const sharedStyle: React.CSSProperties = {
-    marginTop: 16,
-    paddingTop: 12,
-    borderTop: "1px solid rgba(201,169,110,0.10)",
-    display: "flex", alignItems: "baseline", gap: 8,
-    position: "relative", zIndex: 2,
-    width: "100%",
-    background: "transparent",
-    border: "none",
-    borderTopColor: "rgba(201,169,110,0.10)",
-    borderTopStyle: "solid",
-    borderTopWidth: 1,
-    textAlign: "left",
-    cursor: isClickable ? "pointer" : "default",
-    outline: "none",
-    minHeight: 32,
-    WebkitTapHighlightColor: "transparent",
-  };
-
-  const inner = (
-    <>
-      <span style={{
-        width: 5, height: 5, borderRadius: "50%", background: ink,
-        boxShadow: `0 0 8px ${ink}66`,
-        alignSelf: "center", flexShrink: 0,
-      }} />
-      <span style={{
-        fontFamily: DM, fontSize: 12, fontWeight: 600,
-        letterSpacing: "0.18em", textTransform: "uppercase",
-        color: ink, flexShrink: 0,
-      }}>
-        {isClear ? "Clear" : `Highest · ${label}`}
-      </span>
-      <span style={{
-        fontFamily: CG, fontStyle: "italic", fontSize: 13,
-        color: "rgba(244,240,232,0.70)", lineHeight: 1.4,
-        flex: 1,
-      }}>
-        {meaning}
-      </span>
-      {isClickable && (
-        <span aria-hidden style={{
-          fontFamily: DM, fontSize: 14, fontWeight: 300,
-          color: "rgba(244,240,232,0.55)", marginLeft: 4, lineHeight: 1,
-          transform: "translateY(-1px)",
-        }}>
-          ›
-        </span>
-      )}
-    </>
-  );
-
-  if (!isClickable) {
-    return (
-      <motion.div
-        key={label}
-        initial={{ opacity: 0, y: 3 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1], delay: 0.5 }}
-        style={sharedStyle}
-      >
-        {inner}
-      </motion.div>
-    );
-  }
-
-  return (
-    <motion.button
-      key={label}
-      type="button"
-      onClick={handleClick}
-      aria-label={`Filter alerts by ${label}`}
-      initial={{ opacity: 0, y: 3 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1], delay: 0.5 }}
-      whileTap={{ scale: 0.99 }}
-      style={sharedStyle}
-    >
-      {inner}
-    </motion.button>
-  );
-}
-
-function WireTicker({ active }: { active: boolean }) {
-  return (
-    <div style={{
-      position: "relative", marginTop: 22, height: 18,
-      display: "flex", alignItems: "center", gap: 10, zIndex: 2,
-    }}>
-      <span style={{
-        width: 5, height: 5, borderRadius: "50%", background: "#7FB89A",
-        boxShadow: "0 0 10px rgba(127,184,154,0.7)",
-        animation: active ? "wire-pulse 1.6s ease-in-out infinite" : undefined,
-        flexShrink: 0,
-      }} />
-      <span style={{
-        fontFamily: "'JetBrains Mono', monospace", fontSize: 12, fontWeight: 400,
-        letterSpacing: "0.18em", color: "rgba(127,184,154,0.62)", textTransform: "uppercase",
-      }}>
-        {active ? "WIRE OPEN · LISTENING" : "WIRE QUIET"}
-      </span>
-      <div style={{ flex: 1, position: "relative", height: 1, overflow: "hidden", marginLeft: 4 }}>
-        <div style={{
-          position: "absolute", inset: 0,
-          background: "linear-gradient(90deg, transparent, rgba(201,169,110,0.35), transparent)",
-          animation: active ? "wire-sweep 3.2s linear infinite" : undefined,
-        }} />
-      </div>
-      <style>{`
-        @keyframes wire-pulse {
-          0%, 100% { opacity: 0.5; transform: scale(1); }
-          50% { opacity: 1; transform: scale(1.18); }
-        }
-        @keyframes wire-sweep {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-      `}</style>
     </div>
   );
 }
 
 /* ═════════════════════════════════════════════════════════════════
-   FILTER RAIL CHIP — shared layoutId underline indicator
+   FILTER RAIL CHIP — flat, gold-underline indicator
    ═════════════════════════════════════════════════════════════════ */
 
 function RailChip({
   label, count, active, accent, dot, onClick,
 }: {
   label: string; count?: number; active: boolean;
-  /** Color for the count number (typically severity ink). Underline is always amber gold. */
   accent?: string; dot?: string;
   onClick: () => void;
 }) {
@@ -926,12 +651,12 @@ function RailChip({
       onClick={onClick}
       style={{
         position: "relative",
-        background: "transparent", border: "none", padding: "10px 12px 12px",
+        background: "transparent", border: "none",
+        padding: "12px 12px 14px",
         display: "inline-flex", alignItems: "center", gap: 6,
-        fontFamily: DM, fontSize: 12.5,
+        fontFamily: DM, fontSize: 13,
         fontWeight: active ? 500 : 400,
-        // Active: dark ink. Inactive: muted sage. No background pill ever.
-        color: active ? "#1A2F1E" : "#8A9E8A",
+        color: active ? INK : INK_FAINT,
         cursor: "pointer", whiteSpace: "nowrap",
         minHeight: 44,
         transition: "color 200ms cubic-bezier(0.4,0,0.2,1)",
@@ -939,7 +664,7 @@ function RailChip({
     >
       {dot && (
         <span style={{
-          width: 7, height: 7, borderRadius: "50%", background: dot,
+          width: 6, height: 6, borderRadius: 999, background: dot,
           boxShadow: active ? `0 0 6px ${dot}99` : "none",
           flexShrink: 0,
         }} />
@@ -947,9 +672,8 @@ function RailChip({
       <span>{label}</span>
       {count != null && (
         <span style={{
-          // 12px floor (spec asked 11px). Severity-tinted count.
-          fontFamily: DM, fontSize: 12, fontWeight: 500,
-          color: accent ?? "#8A9E8A",
+          fontFamily: MONO, fontSize: 12, fontWeight: 400,
+          color: active ? (accent ?? INK) : INK_FAINT,
           fontVariantNumeric: "tabular-nums",
         }}>
           {count}
@@ -960,10 +684,8 @@ function RailChip({
           layoutId="rail-indicator"
           transition={{ type: "spring", stiffness: 480, damping: 36 }}
           style={{
-            // 2px amber underline — uniform across all tabs (spec).
-            position: "absolute", left: 8, right: 8, bottom: 4, height: 2,
-            background: "#C9A96E",
-            borderRadius: 2,
+            position: "absolute", left: 8, right: 8, bottom: 2, height: 2,
+            background: GOLD, borderRadius: 2,
           }}
         />
       )}
@@ -972,16 +694,17 @@ function RailChip({
 }
 
 /* ═════════════════════════════════════════════════════════════════
-   TELEGRAM CARD — editorial alert card
+   JOURNAL CARD — editorial alert entry
    ═════════════════════════════════════════════════════════════════ */
 
-function TelegramCard({
+function JournalCard({
   alert, isUnread, onRead, index, archived,
 }: {
   alert: ParkAlert; isUnread: boolean; onRead: (id: string) => void; index: number; archived?: boolean;
 }) {
   const sev = severityOf(alert.category);
-  const meta = SEVERITY_META[sev];
+  const sevInk = SEV_INK[sev];
+  const sevLabel = SEV_LABEL[sev].toUpperCase();
   const parkColor = getParkColor(alert.park_id);
   const parkName = PARKS[alert.park_id]?.shortName ?? alert.park_id;
 
@@ -1016,199 +739,162 @@ function TelegramCard({
   };
 
   const isFresh = isUnread && (Date.now() - new Date(alert.last_updated).getTime() < 72 * 60 * 60 * 1000);
-
-  /* ── Severity border + header wash system ──
-     Spec: 4px solid left border, 4% header wash, label/dot match border color.
-     Emergency uses ✕ icon prefix instead of a dot. */
-  const SEV_BORDER: Record<Severity, string> = {
-    critical: "#8B0000",   // Emergency
-    closure:  "#C0392B",   // Closure
-    caution:  "#E8935A",   // Caution
-    info:     "#2F6F4E",   // Dispatch
-  };
-  const SEV_WASH: Record<Severity, string> = {
-    critical: "rgba(139,0,0,0.04)",
-    closure:  "rgba(192,57,43,0.04)",
-    caution:  "rgba(232,147,90,0.04)",
-    info:     "rgba(47,111,78,0.04)",
-  };
-  const sevBorder = SEV_BORDER[sev];
-  const sevWash = SEV_WASH[sev];
-  const sevLabel = sev === "critical" ? "EMERGENCY" : sev === "closure" ? "CLOSURE" : sev === "caution" ? "CAUTION" : "DISPATCH";
+  const interactive = showChevron || hasSubstantialDesc;
 
   return (
-    <motion.div
+    <motion.article
       layout
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: archived ? 0.55 : (isUnread ? 1 : 0.78), y: 0 }}
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: archived ? 0.55 : (isUnread ? 1 : 0.82), y: 0 }}
       exit={{ opacity: 0, y: -4 }}
       transition={{
         opacity: { duration: 0.4, ease: [0.4, 0, 0.2, 1] },
         y: { duration: 0.4, ease: [0.4, 0, 0.2, 1] },
-        delay: Math.min(index * 0.04, 0.32),
+        delay: Math.min(index * 0.04, 0.3),
         layout: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
       }}
       onClick={handleToggle}
-      role={(showChevron || hasSubstantialDesc) ? "button" : undefined}
-      tabIndex={(showChevron || hasSubstantialDesc) ? 0 : undefined}
-      onKeyDown={(showChevron || hasSubstantialDesc) ? (e) => e.key === "Enter" && handleToggle() : undefined}
+      role={interactive ? "button" : undefined}
+      tabIndex={interactive ? 0 : undefined}
+      onKeyDown={interactive ? (e) => e.key === "Enter" && handleToggle() : undefined}
       style={{
         position: "relative",
-        background: "#FFFFFF",
-        // Sole indicator: 4px left border in severity color. No other border.
-        border: "none",
-        borderLeft: `4px solid ${sevBorder}`,
-        borderRadius: 12,
-        boxShadow: "0 2px 8px rgba(26,47,30,0.05)",
-        cursor: (showChevron || hasSubstantialDesc) ? "pointer" : "default",
-        overflow: "hidden",
+        background: PAPER,
+        border: `1px solid ${RULE}`,
+        borderLeft: `3px solid ${sevInk}`,
+        borderRadius: 6,
+        cursor: interactive ? "pointer" : "default",
       }}
     >
-      {/* Critical: subtle shimmer along the left border for unread items */}
+      {/* Critical: faint shimmer on the left edge */}
       {sev === "critical" && isUnread && (
         <span
           aria-hidden
           style={{
-            position: "absolute", left: 0, top: 0, bottom: 0, width: 4,
-            background: "linear-gradient(180deg, transparent, rgba(255,255,255,0.55), transparent)",
+            position: "absolute", left: 0, top: 0, bottom: 0, width: 3,
+            background: "linear-gradient(180deg, transparent, rgba(255,255,255,0.6), transparent)",
             animation: "tg-shimmer 2.4s ease-in-out infinite",
             pointerEvents: "none",
           }}
         />
       )}
 
-      {/* Header row — tinted wash matches border color at 4% */}
+      {/* Header: severity label + posted date (mono) */}
       <div style={{
-        display: "flex", alignItems: "center", gap: 8,
-        background: sevWash,
-        padding: "10px 16px",
+        display: "flex", alignItems: "center", gap: 10,
+        padding: "11px 16px 0",
       }}>
-        {/* Severity dot or ✕ for Emergency. 12px text floor for label. */}
-        {sev === "critical" ? (
-          <span aria-hidden style={{
-            width: 12, height: 12, display: "inline-flex", alignItems: "center", justifyContent: "center",
-            color: sevBorder, fontFamily: DM, fontSize: 12, fontWeight: 700, lineHeight: 1, flexShrink: 0,
-          }}>✕</span>
-        ) : (
-          <span aria-hidden style={{
-            width: 6, height: 6, borderRadius: "50%", background: sevBorder, flexShrink: 0,
-          }} />
-        )}
         <span style={{
-          fontFamily: DM, fontSize: 12, fontWeight: 600,
-          letterSpacing: "0.20em", textTransform: "uppercase",
-          color: sevBorder,
+          fontFamily: DM, fontSize: 11, fontWeight: 600,
+          letterSpacing: "0.22em", color: sevInk,
         }}>
           {sevLabel}
         </span>
         {isFresh && (
           <span style={{
-            fontFamily: DM, fontSize: 12, fontWeight: 700,
-            letterSpacing: "0.10em", textTransform: "uppercase",
-            background: "var(--ranger-forest)", color: "#F4F0E8",
-            padding: "2px 6px", borderRadius: 3,
+            fontFamily: DM, fontSize: 10, fontWeight: 700,
+            letterSpacing: "0.16em", textTransform: "uppercase",
+            color: GOLD,
+            border: `1px solid ${GOLD_SOFT}`, padding: "1px 6px", borderRadius: 2,
           }}>
-            NEW
+            New
           </span>
         )}
         <div style={{ flex: 1 }} />
         <span style={{
-          fontFamily: DM, fontSize: 12, color: "#8A9E8A",
-          fontVariantNumeric: "tabular-nums",
+          fontFamily: MONO, fontSize: 11, color: INK_FAINT,
+          letterSpacing: "0.04em", fontVariantNumeric: "tabular-nums",
         }}>
           {smartTimeAgo(new Date(alert.last_updated).getTime())}
         </span>
       </div>
 
-      {/* Card body */}
-      <div style={{ padding: "12px 16px 0 16px" }}>
-        {/* Title */}
-        <h3 style={{
-          fontFamily: DM, fontSize: 15, fontWeight: 500,
-          color: "#1A2F1E",
-          lineHeight: 1.35, letterSpacing: "-0.005em",
-          marginBottom: hasSubstantialDesc ? 6 : 8,
-        }}>
-          {alert.title}
-        </h3>
+      {/* Title — editorial serif */}
+      <h3 style={{
+        margin: "6px 16px 0",
+        fontFamily: CG, fontWeight: 500,
+        fontSize: 21, lineHeight: 1.2, letterSpacing: "-0.005em",
+        color: INK,
+      }}>
+        {alert.title}
+      </h3>
 
-        {/* Body preview (collapsed) / full body (expanded) */}
-        {hasSubstantialDesc && (
-          <div style={{
-            maxHeight: expanded ? 600 : 42,
-            overflow: "hidden",
-            transition: "max-height 280ms cubic-bezier(0.4,0,0.2,1)",
-          }}>
-            {expanded ? (
-              <>
-                {/* 1px hairline divider between preview area and expanded body */}
-                <div aria-hidden style={{ height: 1, background: "#F0EDEA", marginBottom: 12 }} />
-                <p style={{
-                  fontFamily: DM, fontSize: 14, fontWeight: 400,
-                  color: "#1A2F1E", lineHeight: 1.6,
-                  padding: "4px 0 12px 0",
-                  margin: 0,
-                }}>
-                  {desc}
-                </p>
-                {hasUrl && (
-                  <a
-                    href={alert.url!}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    style={{
-                      display: "inline-flex", alignItems: "center", gap: 4,
-                      fontFamily: DM, fontSize: 13, fontWeight: 500,
-                      color: "#2F6F4E", textDecoration: "none",
-                      paddingBottom: 12,
-                    }}
-                  >
-                    View on NPS.gov →
-                  </a>
-                )}
-              </>
-            ) : (
-              <p
-                ref={previewRef}
-                className="line-clamp-2"
-                style={{
-                  fontFamily: DM, fontSize: 13, fontWeight: 400,
-                  color: "#6B7B6B", lineHeight: 1.5,
-                  marginBottom: 8, marginTop: 0,
-                }}
-              >
+      {/* Body */}
+      {hasSubstantialDesc && (
+        <div style={{
+          margin: "8px 16px 0",
+          maxHeight: expanded ? 600 : 44,
+          overflow: "hidden",
+          transition: "max-height 280ms cubic-bezier(0.4,0,0.2,1)",
+        }}>
+          {expanded ? (
+            <>
+              <p style={{
+                fontFamily: DM, fontSize: 14, fontWeight: 400,
+                color: "#3D4D3D", lineHeight: 1.62,
+                margin: 0,
+              }}>
                 {desc}
               </p>
-            )}
-          </div>
-        )}
-      </div>
+              {hasUrl && (
+                <a
+                  href={alert.url!}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  style={{
+                    display: "inline-flex", alignItems: "center", gap: 4,
+                    fontFamily: DM, fontSize: 12, fontWeight: 500,
+                    letterSpacing: "0.06em",
+                    color: SEV_INK.info, textDecoration: "none",
+                    marginTop: 12,
+                  }}
+                >
+                  Open on NPS.gov →
+                </a>
+              )}
+            </>
+          ) : (
+            <p
+              ref={previewRef}
+              className="line-clamp-2"
+              style={{
+                fontFamily: DM, fontSize: 13, fontWeight: 400,
+                color: INK_MUTED, lineHeight: 1.5,
+                margin: 0,
+              }}
+            >
+              {desc}
+            </p>
+          )}
+        </div>
+      )}
 
-      {/* Footer row — park dot + name + date + external + chevron */}
+      {/* Footer: hairline + park byline */}
       <div style={{
-        margin: "0 16px",
-        paddingTop: 10,
-        paddingBottom: 12,
-        borderTop: "1px solid #F0EDEA",
+        margin: "12px 16px 0",
+        paddingTop: 10, paddingBottom: 12,
+        borderTop: `1px solid ${RULE}`,
         display: "flex", alignItems: "center", gap: 8,
       }}>
         <span style={{
-          width: 6, height: 6, borderRadius: "50%", background: parkColor,
+          width: 6, height: 6, borderRadius: 999, background: parkColor,
           flexShrink: 0,
         }} />
         <span style={{
           fontFamily: DM, fontSize: 12, fontWeight: 500,
-          color: "#8A9E8A", letterSpacing: "0.02em",
+          color: INK_MUTED, letterSpacing: "0.02em",
         }}>
           {parkName}
         </span>
-        <span style={{ fontFamily: DM, fontSize: 12, color: "#8A9E8A" }}>·</span>
-        <span style={{ fontFamily: DM, fontSize: 12, color: "#8A9E8A" }}>
-          {formatPostedDate(alert.last_updated)}
+        <span style={{
+          fontFamily: MONO, fontSize: 11, color: INK_FAINT, letterSpacing: "0.04em",
+          marginLeft: 4,
+        }}>
+          · {formatPostedDate(alert.last_updated)}
         </span>
         <div style={{ flex: 1 }} />
-        {hasUrl && (
+        {hasUrl && !expanded && (
           <a
             href={alert.url!}
             target="_blank"
@@ -1217,21 +903,17 @@ function TelegramCard({
             aria-label="Open on NPS"
             style={{
               display: "inline-flex", alignItems: "center", justifyContent: "center",
-              width: 28, height: 28, borderRadius: 6,
-              color: "#8A9E8A",
-              transition: "background 150ms",
+              width: 28, height: 28, borderRadius: 4,
+              color: INK_FAINT,
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(0,0,0,0.04)")}
-            onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
           >
-            <ExternalLink size={14} />
+            <ExternalLink size={13} />
           </a>
         )}
         {showChevron && (
           <span style={{
             display: "inline-flex", alignItems: "center", justifyContent: "center",
-            width: 28, height: 28,
-            color: "#8A9E8A",
+            width: 28, height: 28, color: INK_FAINT,
             transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
             transition: "transform 240ms cubic-bezier(0.4,0,0.2,1)",
           }}>
@@ -1246,7 +928,7 @@ function TelegramCard({
           50% { opacity: 1; transform: translateY(0%); }
         }
       `}</style>
-    </motion.div>
+    </motion.article>
   );
 }
 
@@ -1254,31 +936,71 @@ function TelegramCard({
    QUIET TRAIL — empty state
    ═════════════════════════════════════════════════════════════════ */
 
-function QuietTrail() {
+function QuietTrail({ timeLabel }: { timeLabel: string | null }) {
   return (
     <div style={{
-      background: "linear-gradient(180deg, var(--ranger-paper-cream) 0%, #F2F1ED 80px)",
-      padding: "48px 24px",
+      padding: "56px 24px 40px",
       display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center",
     }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
+        <span style={{ width: 28, height: 1, background: GOLD_SOFT }} />
+        <span style={{ color: GOLD, fontFamily: CG, fontSize: 11 }}>◆</span>
+        <span style={{ width: 28, height: 1, background: GOLD_SOFT }} />
+      </div>
       <p style={{
-        fontFamily: CG, fontStyle: "italic", fontSize: 24, fontWeight: 400,
-        color: "#1A2F1E", lineHeight: 1.2, marginBottom: 8,
+        fontFamily: CG, fontStyle: "italic", fontSize: 28, fontWeight: 400,
+        color: INK, lineHeight: 1.1, margin: 0, letterSpacing: "-0.01em",
       }}>
         All clear.
       </p>
       <p style={{
         fontFamily: DM, fontSize: 13, fontWeight: 400,
-        color: "#8A9E8A", lineHeight: 1.55, maxWidth: 280, marginBottom: 20,
+        color: INK_MUTED, lineHeight: 1.55, maxWidth: 280, margin: "12px 0 0",
       }}>
-        No active alerts for your watched parks. Sourced live from NPS.
+        No active dispatches for the parks you watch.
       </p>
       <p style={{
-        fontFamily: DM, fontSize: 12, fontWeight: 400,
-        color: "#8A9E8A",
+        fontFamily: MONO, fontSize: 11, fontWeight: 400,
+        color: INK_FAINT, letterSpacing: "0.10em", textTransform: "uppercase",
+        marginTop: 18,
       }}>
-        Last checked just now
+        {timeLabel ? `Last checked ${timeLabel}` : "Standing by"}
       </p>
     </div>
+  );
+}
+
+/* ═════════════════════════════════════════════════════════════════
+   COLOPHON — editorial footer
+   ═════════════════════════════════════════════════════════════════ */
+
+function Colophon({ timeLabel }: { timeLabel: string | null }) {
+  return (
+    <footer style={{
+      padding: "32px 20px 24px",
+      textAlign: "center",
+    }}>
+      <div style={{
+        display: "flex", alignItems: "center", gap: 10, justifyContent: "center", marginBottom: 14,
+      }}>
+        <span style={{ width: 36, height: 1, background: GOLD_SOFT }} />
+        <span style={{ color: GOLD, fontFamily: CG, fontSize: 11 }}>◆</span>
+        <span style={{ width: 36, height: 1, background: GOLD_SOFT }} />
+      </div>
+      <p style={{
+        fontFamily: CG, fontStyle: "italic", fontSize: 14, color: INK_MUTED,
+        margin: 0, lineHeight: 1.5,
+      }}>
+        Sourced live from the National Park Service. Field-checked daily.
+      </p>
+      {timeLabel && (
+        <p style={{
+          fontFamily: MONO, fontSize: 11, color: INK_FAINT,
+          letterSpacing: "0.10em", textTransform: "uppercase", marginTop: 8,
+        }}>
+          Updated {timeLabel}
+        </p>
+      )}
+    </footer>
   );
 }
