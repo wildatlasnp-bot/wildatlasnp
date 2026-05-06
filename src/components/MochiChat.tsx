@@ -1486,12 +1486,48 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               100% { transform: translate3d(0, 0, 0); }
             }
             .poko-topo { animation: poko-topo-drift 90s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+
+            /* ── Premium parallax layer offsets ──
+               --px / --py are set on .poko-stage by the parallax effect
+               (range -0.5..0.5). Each layer multiplies the vars to set its
+               apparent depth. Using will-change + translate3d keeps it on
+               the GPU compositor. The transforms compose with each layer's
+               own loop animation (drift/topo) without conflict because
+               those animate child-element transforms, not the wrappers
+               selected here. */
+            .poko-stage {
+              --px: 0; --py: 0;
+            }
+            .poko-stage .poko-topo {
+              transform: translate3d(calc(var(--px, 0) * -10px), calc(var(--py, 0) * -8px), 0);
+              transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
+              will-change: transform;
+            }
+            .poko-stage .poko-drift {
+              transform: translate3d(calc(var(--px, 0) * -4px), calc(var(--py, 0) * -3px), 0);
+              transition: transform 800ms cubic-bezier(0.4, 0, 0.2, 1);
+              will-change: transform;
+            }
+            .poko-stage .poko-emblem-reveal {
+              transform: translate3d(calc(var(--px, 0) * 14px), calc(var(--py, 0) * 10px), 0);
+              transition: transform 380ms cubic-bezier(0.4, 0, 0.2, 1);
+              will-change: transform;
+            }
+            .poko-stage .poko-vignette {
+              transform: translate3d(calc(var(--px, 0) * 6px), calc(var(--py, 0) * 4px), 0);
+              transition: transform 500ms cubic-bezier(0.4, 0, 0.2, 1);
+              will-change: transform;
+            }
             @media (prefers-reduced-motion: reduce) {
               .poko-drift { animation: none; }
               .poko-aurora-burst { animation: none; opacity: 0.6; }
               .poko-topo { animation: none; }
               .poko-rose-drift { animation: none; transform: none; }
               .poko-ready-heartbeat { animation: none; }
+              .poko-stage .poko-topo,
+              .poko-stage .poko-drift,
+              .poko-stage .poko-emblem-reveal,
+              .poko-stage .poko-vignette { transform: none !important; transition: none !important; }
             }
           `}</style>
           {/* Sticky header: coordinate label */}
