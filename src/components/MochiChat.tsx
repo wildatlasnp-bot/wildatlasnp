@@ -1499,24 +1499,25 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               --px: 0; --py: 0;
             }
             .poko-stage .poko-topo {
-              transform: translate3d(calc(var(--px, 0) * -10px), calc(var(--py, 0) * -8px), 0);
-              transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
-              will-change: transform;
+              /* `translate:` composes with the keyframe `transform:` */
+              translate: calc(var(--px, 0) * -10px) calc(var(--py, 0) * -8px);
+              transition: translate 600ms cubic-bezier(0.4, 0, 0.2, 1);
+              will-change: translate;
             }
             .poko-stage .poko-drift {
-              transform: translate3d(calc(var(--px, 0) * -4px), calc(var(--py, 0) * -3px), 0);
-              transition: transform 800ms cubic-bezier(0.4, 0, 0.2, 1);
-              will-change: transform;
+              translate: calc(var(--px, 0) * -4px) calc(var(--py, 0) * -3px);
+              transition: translate 800ms cubic-bezier(0.4, 0, 0.2, 1);
+              will-change: translate;
             }
             .poko-stage .poko-emblem-reveal {
-              transform: translate3d(calc(var(--px, 0) * 14px), calc(var(--py, 0) * 10px), 0);
-              transition: transform 380ms cubic-bezier(0.4, 0, 0.2, 1);
-              will-change: transform;
+              translate: calc(var(--px, 0) * 14px) calc(var(--py, 0) * 10px);
+              transition: translate 380ms cubic-bezier(0.4, 0, 0.2, 1);
+              will-change: translate;
             }
             .poko-stage .poko-vignette {
-              transform: translate3d(calc(var(--px, 0) * 6px), calc(var(--py, 0) * 4px), 0);
-              transition: transform 500ms cubic-bezier(0.4, 0, 0.2, 1);
-              will-change: transform;
+              translate: calc(var(--px, 0) * 6px) calc(var(--py, 0) * 4px);
+              transition: translate 500ms cubic-bezier(0.4, 0, 0.2, 1);
+              will-change: translate;
             }
             @media (prefers-reduced-motion: reduce) {
               .poko-drift { animation: none; }
