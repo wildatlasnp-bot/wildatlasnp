@@ -6,9 +6,11 @@ import { PARKS, getParkColor } from "@/lib/parks";
 import { haptics } from "@/lib/haptics";
 
 /* ─────────────────────────────────────────────────────────────────
-   FIELD DISPATCH — Park Alerts (editorial redesign)
-   Cream masthead, hairline rules, journal-entry cards.
-   Quiet Luxury: less chrome, more whitespace, mono on timestamps.
+   FIELD DISPATCH — Park Alerts (full editorial rebuild)
+   • Numeral hero (giant Cormorant total)
+   • Severity ledger doubles as filter (no chip rail)
+   • Ledger-entry alerts: hairlines, mono numerals, no boxes
+   • Pure neutral palette — gold accents only
    ───────────────────────────────────────────────────────────────── */
 
 interface ParkAlert {
@@ -32,19 +34,19 @@ const CG = "'Cormorant Garamond', serif";
 const DM = "'DM Sans', sans-serif";
 const MONO = "'JetBrains Mono', ui-monospace, monospace";
 
-/* Editorial neutral palette — green removed, charcoal + gold only */
+/* Editorial neutral palette */
 const INK = "#1C1C1A";
+const INK_BODY = "#3A3A36";
 const INK_MUTED = "#5C5A55";
 const INK_FAINT = "#8A8780";
 const CREAM = "#F5F0E8";
-const CREAM_DEEP = "#F0EDEA";
 const PAPER = "#FFFFFF";
 const RULE = "rgba(28,28,26,0.10)";
 const RULE_STRONG = "rgba(28,28,26,0.20)";
 const GOLD = "#B58A3F";
 const GOLD_SOFT = "rgba(181,138,63,0.32)";
 
-/* Severity colors — restrained editorial; info is now slate ink, not green */
+/* Severity inks — restrained, no green */
 const SEV_INK: Record<Severity, string> = {
   critical: "#8B0000",
   closure:  "#A8421C",
@@ -55,9 +57,10 @@ const SEV_LABEL: Record<Severity, string> = {
   critical: "Emergency",
   closure:  "Closure",
   caution:  "Caution",
-  info:     "Dispatch",
+  info:     "Notice",
 };
 const SEV_RANK: Record<Severity, number> = { critical: 0, closure: 1, caution: 2, info: 3 };
+const SEV_ORDER: Severity[] = ["critical", "closure", "caution", "info"];
 
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
 const EIGHTEEN_MONTHS_MS = 18 * 30 * 24 * 60 * 60 * 1000;
@@ -104,6 +107,10 @@ function sortAlerts(list: ParkAlert[], readIds: Set<string>): ParkAlert[] {
   });
 }
 
+/* ═════════════════════════════════════════════════════════════════
+   MAIN COMPONENT
+   ═════════════════════════════════════════════════════════════════ */
+
 const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, trackedParkIds }, ref) => {
   const [alerts, setAlerts] = useState<ParkAlert[]>([]);
   const [readAlertIds, setReadAlertIds] = useState<Set<string>>(new Set());
@@ -116,7 +123,7 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
   const [, forceRender] = useState(0);
   const [metaTimeLabel, setMetaTimeLabel] = useState<string | null>(null);
 
-  const [activeTypeFilter, setActiveTypeFilter] = useState<string | null>(null);
+  const [activeTypeFilter, setActiveTypeFilter] = useState<Severity | null>(null);
   const [activeParkFilter, setActiveParkFilter] = useState<string | null>(null);
   const [unreadOnly, setUnreadOnly] = useState(false);
 
@@ -204,20 +211,6 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
 
   const total = alerts.length;
 
-  const parkFilteredAlerts = useMemo(() => {
-    if (!activeParkFilter) return alerts;
-    return alerts.filter((a) => a.park_id === activeParkFilter);
-  }, [alerts, activeParkFilter]);
-
-  const typeChips = useMemo(() => {
-    const order: Severity[] = ["critical", "closure", "caution", "info"];
-    const c: Record<Severity, number> = { critical: 0, closure: 0, caution: 0, info: 0 };
-    for (const a of parkFilteredAlerts) c[severityOf(a.category)]++;
-    return order
-      .filter((s) => c[s] > 0)
-      .map((s) => ({ id: s, label: SEV_LABEL[s], count: c[s] }));
-  }, [parkFilteredAlerts]);
-
   const parkChips = useMemo(() => {
     const parkIdsInAlerts = new Set(alerts.map((a) => a.park_id));
     const tracked = trackedParkIds ?? new Set<string>();
@@ -245,8 +238,6 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
     [alerts, readAlertIds]
   );
 
-  const isAllActive = !activeTypeFilter && !activeParkFilter && !unreadOnly;
-
   const { recentAlerts, olderAlerts, archivedAlerts } = useMemo(() => {
     const sorted = sortAlerts(filteredAlerts, readAlertIds);
     const cutoff30 = Date.now() - THIRTY_DAYS_MS;
@@ -266,25 +257,45 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
   const visibleAlerts = showOlder ? [...recentAlerts, ...olderAlerts] : recentAlerts;
   const parkCount = trackedParkIds?.size ?? 0;
 
+  const onSeverityToggle = (sev: Severity) => {
+    haptics.light();
+    setActiveTypeFilter((prev) => (prev === sev ? null : sev));
+    setUnreadOnly(false);
+  };
+  const onUnreadToggle = () => {
+    haptics.light();
+    setUnreadOnly((v) => !v);
+  };
+  const onParkToggle = (id: string) => {
+    haptics.light();
+    setActiveParkFilter((prev) => (prev === id ? null : id));
+  };
+  const onClearAll = () => {
+    setActiveTypeFilter(null);
+    setActiveParkFilter(null);
+    setUnreadOnly(false);
+  };
+
+  const hasFilter = !!activeTypeFilter || !!activeParkFilter || unreadOnly;
+
   /* ── Loading ── */
   if (loading) {
     return (
       <div ref={ref} style={{ width: "100%", background: CREAM, minHeight: "100vh" }}>
-        <Masthead loading total={0} parkCount={0} timeLabel={null} onRefresh={() => {}} refreshing={false} dominantSev={null} />
-        <div style={{ padding: "8px 20px 32px", display: "flex", flexDirection: "column", gap: 14 }}>
+        <NumeralHero loading total={0} parkCount={0} timeLabel={null} onRefresh={() => {}} refreshing={false} />
+        <div style={{ padding: "32px 20px" }}>
           {[0, 1, 2].map((i) => (
             <div key={i} style={{
-              padding: "18px 20px", background: PAPER, borderRadius: 8,
-              border: `1px solid ${RULE}`,
-              opacity: 0.65, animation: `dispatch-pulse 1.6s ease-in-out ${i * 120}ms infinite`,
+              padding: "18px 0", borderBottom: `1px solid ${RULE}`,
+              opacity: 0.55, animation: `dispatch-pulse 1.6s ease-in-out ${i * 120}ms infinite`,
             }}>
-              <div style={{ height: 9, width: 70, background: RULE, borderRadius: 2, marginBottom: 12 }} />
-              <div style={{ height: 17, width: "78%", background: RULE_STRONG, borderRadius: 3, marginBottom: 9 }} />
-              <div style={{ height: 11, width: "92%", background: RULE, borderRadius: 2 }} />
+              <div style={{ height: 9, width: 80, background: RULE_STRONG, borderRadius: 1, marginBottom: 10 }} />
+              <div style={{ height: 22, width: "82%", background: RULE_STRONG, borderRadius: 2, marginBottom: 10 }} />
+              <div style={{ height: 11, width: "60%", background: RULE, borderRadius: 1 }} />
             </div>
           ))}
         </div>
-        <style>{`@keyframes dispatch-pulse { 0%,100%{opacity:.55} 50%{opacity:.85} }`}</style>
+        <style>{`@keyframes dispatch-pulse { 0%,100%{opacity:.45} 50%{opacity:.85} } @keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
   }
@@ -293,85 +304,43 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
   if (alerts.length === 0 && !refreshError) {
     return (
       <div ref={ref} style={{ width: "100%", background: CREAM, minHeight: "100vh" }}>
-        <Masthead total={0} parkCount={parkCount} timeLabel={metaTimeLabel} onRefresh={handleRefresh} refreshing={refreshing} dominantSev={null} />
+        <NumeralHero total={0} parkCount={parkCount} timeLabel={metaTimeLabel} onRefresh={handleRefresh} refreshing={refreshing} />
         <QuietTrail timeLabel={metaTimeLabel} />
       </div>
     );
   }
 
-  const dominantSev: Severity | null =
-    counts.critical ? "critical" :
-    counts.closure  ? "closure"  :
-    counts.caution  ? "caution"  :
-    counts.info     ? "info"     : null;
-
   return (
     <div ref={ref} style={{ width: "100%", background: CREAM, minHeight: "100vh" }}>
-      <Masthead
+      {/* ─── HERO ─── */}
+      <NumeralHero
         total={total}
         parkCount={parkCount}
         timeLabel={metaTimeLabel}
         onRefresh={handleRefresh}
         refreshing={refreshing}
-        dominantSev={dominantSev}
-        counts={counts}
-        onSeveritySelect={(sev) => {
-          setActiveTypeFilter((prev) => (prev === sev ? null : sev));
-          setUnreadOnly(false);
-        }}
       />
 
-      {/* ── Filter rail ── */}
-      <LayoutGroup id="dispatch-filters">
-        <div
-          className="no-scrollbar"
-          style={{
-            display: "flex", gap: 2,
-            padding: "0 20px 6px",
-            overflowX: "auto", WebkitOverflowScrolling: "touch", scrollbarWidth: "none",
-            borderBottom: `1px solid ${RULE}`,
-          }}
-        >
-          <RailChip
-            label="All"
-            count={total}
-            active={isAllActive}
-            onClick={() => { setActiveTypeFilter(null); setActiveParkFilter(null); setUnreadOnly(false); }}
-          />
-          {unreadCount > 0 && (
-            <RailChip
-              label="Unread"
-              count={unreadCount}
-              active={unreadOnly}
-              accent={SEV_INK.info}
-              onClick={() => setUnreadOnly((v) => !v)}
-            />
-          )}
-          {typeChips.map((tc) => (
-            <RailChip
-              key={tc.id}
-              label={tc.label}
-              count={tc.count}
-              active={activeTypeFilter === tc.id}
-              accent={SEV_INK[tc.id as Severity]}
-              onClick={() => setActiveTypeFilter((p) => (p === tc.id ? null : tc.id))}
-            />
-          ))}
-          {parkChips.length > 0 && typeChips.length > 0 && (
-            <div style={{ width: 1, alignSelf: "center", height: 14, background: RULE, margin: "0 6px", flexShrink: 0 }} />
-          )}
-          {parkChips.map((p) => (
-            <RailChip
-              key={p.id}
-              label={p.label}
-              count={p.count}
-              active={activeParkFilter === p.id}
-              dot={p.color}
-              onClick={() => setActiveParkFilter((prev) => (prev === p.id ? null : p.id))}
-            />
-          ))}
-        </div>
-      </LayoutGroup>
+      {/* ─── SEVERITY LEDGER (filter) ─── */}
+      <SeverityLedger
+        counts={counts}
+        active={activeTypeFilter}
+        onToggle={onSeverityToggle}
+      />
+
+      {/* ─── SECONDARY FILTERS (Unread + Parks) ─── */}
+      {(unreadCount > 0 || parkChips.length > 0 || hasFilter) && (
+        <SecondaryFilters
+          unreadCount={unreadCount}
+          unreadActive={unreadOnly}
+          onUnreadToggle={onUnreadToggle}
+          parkChips={parkChips}
+          activeParkId={activeParkFilter}
+          onParkToggle={onParkToggle}
+          hasAnyFilter={hasFilter}
+          onClear={onClearAll}
+        />
+      )}
 
       {/* ── Refresh error ── */}
       <AnimatePresence>
@@ -381,8 +350,8 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             style={{
-              margin: "14px 20px 0", padding: "10px 14px", borderRadius: 6,
-              background: "rgba(192,57,43,0.05)", border: `1px solid rgba(192,57,43,0.20)`,
+              margin: "16px 20px 0", padding: "10px 14px", borderRadius: 4,
+              background: "rgba(168,66,28,0.05)", border: `1px solid rgba(168,66,28,0.18)`,
               borderLeft: `3px solid ${SEV_INK.closure}`,
               fontFamily: DM, fontSize: 12, color: SEV_INK.closure,
             }}
@@ -392,53 +361,61 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
         )}
       </AnimatePresence>
 
-      {/* ── Cards (grouped by severity into chapters when no severity filter) ── */}
-      <div style={{ padding: "10px 20px 4px", display: "flex", flexDirection: "column", gap: 0 }}>
-        {visibleAlerts.length === 0 && (
-          <p style={{ fontFamily: CG, fontStyle: "italic", fontSize: 17, color: INK_MUTED, textAlign: "center", padding: "32px 0", letterSpacing: "0.005em" }}>
+      {/* ─── LEDGER ENTRIES ─── */}
+      <div style={{ padding: "8px 20px 4px" }}>
+        {visibleAlerts.length === 0 ? (
+          <p style={{
+            fontFamily: CG, fontStyle: "italic", fontSize: 18, color: INK_MUTED,
+            textAlign: "center", padding: "48px 0", letterSpacing: "0.005em",
+          }}>
             Nothing matches that filter.
           </p>
-        )}
-
-        <AnimatePresence initial={false}>
-          {(() => {
-            // If a severity filter is active, render flat. Otherwise, group into chapters.
-            if (activeTypeFilter) {
-              return (
-                <div style={{ display: "flex", flexDirection: "column", gap: 14, paddingTop: 8 }}>
-                  {visibleAlerts.map((alert, i) => (
-                    <JournalCard
-                      key={alert.id}
-                      alert={alert}
-                      index={i}
-                      isUnread={!readAlertIds.has(alert.id)}
-                      onRead={handleRead}
-                    />
-                  ))}
-                </div>
-              );
-            }
-
-            const order: Severity[] = ["critical", "closure", "caution", "info"];
-            const groups: Record<Severity, ParkAlert[]> = { critical: [], closure: [], caution: [], info: [] };
-            for (const a of visibleAlerts) groups[severityOf(a.category)].push(a);
-            const ROMAN = ["I", "II", "III", "IV"];
-            let chapterIdx = 0;
-            let cardIdx = 0;
-
-            return order
-              .filter((sev) => groups[sev].length > 0)
-              .map((sev) => {
-                const numeral = ROMAN[chapterIdx++];
+        ) : (
+          <AnimatePresence initial={false}>
+            {(() => {
+              // Severity filter active → flat numbered list
+              if (activeTypeFilter) {
                 return (
-                  <section key={sev} style={{ marginTop: chapterIdx === 1 ? 4 : 24 }}>
-                    <ChapterHead numeral={numeral} label={SEV_LABEL[sev]} count={groups[sev].length} ink={SEV_INK[sev]} />
-                    <div style={{ display: "flex", flexDirection: "column", gap: 14, marginTop: 12 }}>
-                      {groups[sev].map((alert) => (
-                        <JournalCard
+                  <div>
+                    {visibleAlerts.map((alert, i) => (
+                      <LedgerEntry
+                        key={alert.id}
+                        alert={alert}
+                        index={i}
+                        seqNumber={i + 1}
+                        isFirst={i === 0}
+                        isLast={i === visibleAlerts.length - 1}
+                        isUnread={!readAlertIds.has(alert.id)}
+                        onRead={handleRead}
+                      />
+                    ))}
+                  </div>
+                );
+              }
+
+              // Otherwise: chapters by severity
+              const groups: Record<Severity, ParkAlert[]> = { critical: [], closure: [], caution: [], info: [] };
+              for (const a of visibleAlerts) groups[severityOf(a.category)].push(a);
+              const ROMAN = ["I", "II", "III", "IV"];
+              let chapterIdx = 0;
+              let cardIdx = 0;
+              const visibleSevs = SEV_ORDER.filter((sev) => groups[sev].length > 0);
+
+              return visibleSevs.map((sev, si) => {
+                const numeral = ROMAN[chapterIdx++];
+                const list = groups[sev];
+                return (
+                  <section key={sev} style={{ marginTop: si === 0 ? 12 : 32 }}>
+                    <ChapterHead numeral={numeral} label={SEV_LABEL[sev]} count={list.length} ink={SEV_INK[sev]} />
+                    <div style={{ marginTop: 4 }}>
+                      {list.map((alert, i) => (
+                        <LedgerEntry
                           key={alert.id}
                           alert={alert}
-                          index={cardIdx++}
+                          index={cardIdx}
+                          seqNumber={++cardIdx}
+                          isFirst={i === 0}
+                          isLast={i === list.length - 1}
                           isUnread={!readAlertIds.has(alert.id)}
                           onRead={handleRead}
                         />
@@ -447,8 +424,9 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
                   </section>
                 );
               });
-          })()}
-        </AnimatePresence>
+            })()}
+          </AnimatePresence>
+        )}
 
         {/* Archive toggle */}
         {((!showOlder && olderAlerts.length > 0) || (showOlder && archivedAlerts.length > 0)) && (
@@ -458,14 +436,13 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
               else setShowArchived((v) => !v);
             }}
             style={{
-              marginTop: 6, padding: "13px 16px",
-              background: "transparent",
-              border: "none",
-              borderTop: `1px solid ${RULE}`,
+              width: "100%", marginTop: 16, padding: "16px",
+              background: "transparent", border: "none",
+              borderTop: `1px solid ${RULE_STRONG}`,
               fontFamily: DM, fontSize: 11, fontWeight: 500, color: INK_FAINT,
-              letterSpacing: "0.18em", textTransform: "uppercase",
+              letterSpacing: "0.20em", textTransform: "uppercase",
               cursor: "pointer", minHeight: 44,
-              display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 12,
             }}
           >
             <span aria-hidden style={{ color: GOLD, fontFamily: CG, fontSize: 11 }}>◆</span>
@@ -477,16 +454,26 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
         )}
 
         {showArchived && (
-          <div style={{ display: "flex", flexDirection: "column", gap: 14, marginTop: 4 }}>
+          <div style={{ marginTop: 8 }}>
             {archivedAlerts.map((alert, i) => (
-              <JournalCard key={alert.id} alert={alert} index={i} isUnread={!readAlertIds.has(alert.id)} onRead={handleRead} archived />
+              <LedgerEntry
+                key={alert.id}
+                alert={alert}
+                index={i}
+                seqNumber={i + 1}
+                isFirst={i === 0}
+                isLast={i === archivedAlerts.length - 1}
+                isUnread={!readAlertIds.has(alert.id)}
+                onRead={handleRead}
+                archived
+              />
             ))}
           </div>
         )}
       </div>
 
-      {/* ── Colophon ── */}
       <Colophon timeLabel={metaTimeLabel} />
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } } @keyframes tg-shimmer { 0%,100%{opacity:0;transform:translateY(-100%)} 50%{opacity:1;transform:translateY(0%)} }`}</style>
     </div>
   );
 });
@@ -495,11 +482,11 @@ ParkAlerts.displayName = "ParkAlerts";
 export default ParkAlerts;
 
 /* ═════════════════════════════════════════════════════════════════
-   MASTHEAD — editorial cream wordmark with edition stamp
+   NUMERAL HERO — giant total, edition stamp
    ═════════════════════════════════════════════════════════════════ */
 
-function Masthead({
-  total, parkCount, timeLabel, onRefresh, refreshing, loading, dominantSev, counts, onSeveritySelect,
+function NumeralHero({
+  total, parkCount, timeLabel, onRefresh, refreshing, loading,
 }: {
   total: number;
   parkCount: number;
@@ -507,13 +494,9 @@ function Masthead({
   onRefresh: () => void;
   refreshing: boolean;
   loading?: boolean;
-  dominantSev: Severity | null;
-  counts?: { critical: number; closure: number; caution: number; info: number };
-  onSeveritySelect?: (sev: Severity) => void;
 }) {
   const edition = formatEditionDate();
   const issueNumber = useMemo(() => {
-    // deterministic-ish issue number from day-of-year
     const d = new Date();
     const start = new Date(d.getFullYear(), 0, 0);
     const diff = d.getTime() - start.getTime();
@@ -524,29 +507,29 @@ function Masthead({
     <header style={{
       position: "relative",
       background: CREAM,
-      padding: "26px 20px 18px",
+      padding: "26px 20px 24px",
       borderBottom: `1px solid ${RULE}`,
     }}>
       {/* Edition strip */}
       <div style={{
         display: "flex", alignItems: "center", justifyContent: "space-between",
-        fontFamily: MONO, fontSize: 12, letterSpacing: "0.18em",
+        fontFamily: MONO, fontSize: 11, letterSpacing: "0.20em",
         color: INK_FAINT, textTransform: "uppercase",
-        marginBottom: 14,
       }}>
         <span>Field&nbsp;Dispatch</span>
-        <span style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <span style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <span>№&nbsp;{String(issueNumber).padStart(3, "0")}</span>
           <button
             onClick={onRefresh}
             disabled={refreshing || loading}
             aria-label="Refresh dispatches"
             style={{
-              width: 28, height: 28, padding: 0,
+              width: 30, height: 30, padding: 0,
               background: "transparent", border: `1px solid ${RULE_STRONG}`, borderRadius: 999,
               display: "inline-flex", alignItems: "center", justifyContent: "center",
               color: INK_MUTED,
               cursor: refreshing ? "default" : "pointer",
+              transition: "background 200ms cubic-bezier(0.4,0,0.2,1)",
             }}
           >
             <RefreshCw size={11} style={{ animation: refreshing ? "spin 1s linear infinite" : undefined }} />
@@ -554,123 +537,246 @@ function Masthead({
         </span>
       </div>
 
-      {/* Wordmark */}
-      <h1 style={{
-        margin: 0,
-        fontFamily: CG, fontWeight: 400,
-        fontSize: 56, lineHeight: 0.95, letterSpacing: "-0.025em",
-        color: INK,
+      {/* Numeral hero — total active dispatches as the main subject */}
+      <div style={{
+        marginTop: 28,
+        display: "flex", alignItems: "flex-start", gap: 16,
       }}>
-        Park <span style={{ fontStyle: "italic", color: INK_MUTED, fontWeight: 300 }}>alerts</span>
-      </h1>
+        <div style={{
+          fontFamily: CG, fontWeight: 300, fontStyle: "italic",
+          fontSize: 124, lineHeight: 0.86, letterSpacing: "-0.04em",
+          color: INK,
+          fontVariantNumeric: "tabular-nums",
+        }}>
+          {loading ? "—" : total}
+        </div>
+        <div style={{ paddingTop: 18 }}>
+          <div style={{
+            fontFamily: DM, fontSize: 11, fontWeight: 600,
+            letterSpacing: "0.24em", textTransform: "uppercase",
+            color: INK,
+          }}>
+            Active
+          </div>
+          <div style={{
+            fontFamily: DM, fontSize: 11, fontWeight: 500,
+            letterSpacing: "0.24em", textTransform: "uppercase",
+            color: INK_FAINT, marginTop: 3,
+          }}>
+            Dispatches
+          </div>
+        </div>
+      </div>
 
-      {/* Edition date / source line */}
+      {/* Edition byline */}
       <p style={{
-        margin: "10px 0 0",
-        fontFamily: DM, fontSize: 12, fontWeight: 400,
-        color: INK_MUTED, letterSpacing: "0.04em",
+        margin: "20px 0 0",
+        fontFamily: CG, fontStyle: "italic", fontSize: 16, fontWeight: 400,
+        color: INK_MUTED, lineHeight: 1.4,
       }}>
-        {edition}
-        <span style={{ color: INK_FAINT, padding: "0 8px" }}>·</span>
-        Sourced live from the National Park Service
+        {edition === "" ? "Today" : titleCase(edition)} — sourced live from the National Park Service
+        {parkCount > 0 ? `, watching ${parkCount} ${parkCount === 1 ? "park" : "parks"}` : ""}.
       </p>
 
-      {/* Gold ornament rule */}
-      <div style={{
-        marginTop: 18, display: "flex", alignItems: "center", gap: 10,
+      {/* Mono updated timestamp */}
+      <p style={{
+        margin: "10px 0 0",
+        fontFamily: MONO, fontSize: 11, color: INK_FAINT,
+        letterSpacing: "0.10em", textTransform: "uppercase",
       }}>
-        <span style={{ flex: 1, height: 1, background: `linear-gradient(90deg, transparent, ${GOLD_SOFT}, transparent)` }} />
-        <span style={{ color: GOLD, fontFamily: CG, fontSize: 11 }}>◆</span>
-        <span style={{ flex: 1, height: 1, background: `linear-gradient(90deg, transparent, ${GOLD_SOFT}, transparent)` }} />
-      </div>
-
-      {/* Stats line: total · parks · last update */}
-      <div style={{
-        marginTop: 16,
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr 1fr",
-        gap: 10,
-        alignItems: "end",
-      }}>
-        <Stat numeral={loading ? "—" : String(total)} label="Active" />
-        <Stat numeral={parkCount > 0 ? String(parkCount) : "—"} label={parkCount === 1 ? "Park" : "Parks"} />
-        <Stat
-          numeral={timeLabel ? "·" : "—"}
-          label={timeLabel ? `Updated ${timeLabel}` : "Standing by"}
-          mono
-        />
-      </div>
-
-      {/* Highest summary line */}
-      {!loading && counts && dominantSev && (
-        <button
-          type="button"
-          onClick={() => onSeveritySelect?.(dominantSev)}
-          aria-label={`Filter by ${SEV_LABEL[dominantSev]}`}
-          style={{
-            marginTop: 16, padding: "10px 0 0", width: "100%",
-            background: "transparent", border: "none",
-            borderTop: `1px solid ${RULE}`,
-            display: "flex", alignItems: "baseline", gap: 8,
-            cursor: "pointer", textAlign: "left", minHeight: 32,
-          }}
-        >
-          <span style={{
-            width: 5, height: 5, borderRadius: 999,
-            background: SEV_INK[dominantSev], alignSelf: "center", flexShrink: 0,
-            boxShadow: `0 0 8px ${SEV_INK[dominantSev]}55`,
-          }} />
-          <span style={{
-            fontFamily: DM, fontSize: 12, fontWeight: 600,
-            letterSpacing: "0.20em", textTransform: "uppercase",
-            color: SEV_INK[dominantSev],
-          }}>
-            Highest · {SEV_LABEL[dominantSev]}
-          </span>
-          <span style={{
-            fontFamily: CG, fontStyle: "italic", fontSize: 14,
-            color: INK_MUTED, lineHeight: 1.35, flex: 1,
-          }}>
-            {summaryFor(dominantSev)}
-          </span>
-          <span aria-hidden style={{ color: INK_FAINT, fontFamily: DM, fontSize: 14 }}>›</span>
-        </button>
-      )}
-
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+        {timeLabel ? `Updated ${timeLabel}` : (loading ? "Tuning the wire…" : "Standing by")}
+      </p>
     </header>
   );
 }
 
-function summaryFor(sev: Severity): string {
-  switch (sev) {
-    case "critical": return "immediate danger reported. Act now.";
-    case "closure":  return "trails or roads closed. Plan around them.";
-    case "caution":  return "heightened risk. Proceed prepared.";
-    case "info":     return "general park notices. Worth a glance.";
-  }
+function titleCase(upper: string): string {
+  return upper.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
-function Stat({ numeral, label, mono }: { numeral: string; label: string; mono?: boolean }) {
+/* ═════════════════════════════════════════════════════════════════
+   SEVERITY LEDGER — 4-column tappable filter (replaces chips)
+   ═════════════════════════════════════════════════════════════════ */
+
+function SeverityLedger({
+  counts, active, onToggle,
+}: {
+  counts: { critical: number; closure: number; caution: number; info: number };
+  active: Severity | null;
+  onToggle: (sev: Severity) => void;
+}) {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+    <LayoutGroup id="sev-ledger">
+      <div style={{
+        display: "grid", gridTemplateColumns: "repeat(4, 1fr)",
+        background: CREAM,
+        borderBottom: `1px solid ${RULE}`,
+      }}>
+        {SEV_ORDER.map((sev, i) => {
+          const count = counts[sev];
+          const isActive = active === sev;
+          const disabled = count === 0;
+          return (
+            <button
+              key={sev}
+              type="button"
+              disabled={disabled}
+              onClick={() => onToggle(sev)}
+              aria-pressed={isActive}
+              aria-label={`${SEV_LABEL[sev]}: ${count}`}
+              style={{
+                position: "relative",
+                background: "transparent", border: "none",
+                padding: "16px 8px 18px",
+                cursor: disabled ? "default" : "pointer",
+                opacity: disabled ? 0.32 : 1,
+                display: "flex", flexDirection: "column", alignItems: "center", gap: 6,
+                minHeight: 76,
+                borderLeft: i === 0 ? "none" : `1px solid ${RULE}`,
+                WebkitTapHighlightColor: "transparent",
+              }}
+            >
+              <span style={{
+                fontFamily: CG, fontWeight: 400,
+                fontSize: 28, lineHeight: 1, letterSpacing: "-0.02em",
+                color: isActive ? SEV_INK[sev] : INK,
+                fontVariantNumeric: "tabular-nums",
+                transition: "color 200ms cubic-bezier(0.4,0,0.2,1)",
+              }}>
+                {count}
+              </span>
+              <span style={{
+                fontFamily: DM, fontSize: 10, fontWeight: 600,
+                letterSpacing: "0.20em", textTransform: "uppercase",
+                color: isActive ? SEV_INK[sev] : INK_FAINT,
+                transition: "color 200ms cubic-bezier(0.4,0,0.2,1)",
+              }}>
+                {SEV_LABEL[sev]}
+              </span>
+              {isActive && (
+                <motion.span
+                  layoutId="ledger-indicator"
+                  transition={{ type: "spring", stiffness: 480, damping: 36 }}
+                  style={{
+                    position: "absolute", left: 14, right: 14, bottom: 0, height: 2,
+                    background: GOLD, borderRadius: 2,
+                  }}
+                />
+              )}
+            </button>
+          );
+        })}
+      </div>
+    </LayoutGroup>
+  );
+}
+
+/* ═════════════════════════════════════════════════════════════════
+   SECONDARY FILTERS — Unread + Parks + Clear
+   ═════════════════════════════════════════════════════════════════ */
+
+function SecondaryFilters({
+  unreadCount, unreadActive, onUnreadToggle,
+  parkChips, activeParkId, onParkToggle,
+  hasAnyFilter, onClear,
+}: {
+  unreadCount: number;
+  unreadActive: boolean;
+  onUnreadToggle: () => void;
+  parkChips: { id: string; label: string; count: number; color: string }[];
+  activeParkId: string | null;
+  onParkToggle: (id: string) => void;
+  hasAnyFilter: boolean;
+  onClear: () => void;
+}) {
+  return (
+    <div
+      className="no-scrollbar"
+      style={{
+        display: "flex", alignItems: "center", gap: 4,
+        padding: "10px 20px",
+        overflowX: "auto", WebkitOverflowScrolling: "touch", scrollbarWidth: "none",
+        borderBottom: `1px solid ${RULE}`,
+      }}
+    >
+      {unreadCount > 0 && (
+        <SecondaryChip
+          label="Unread"
+          count={unreadCount}
+          active={unreadActive}
+          onClick={onUnreadToggle}
+        />
+      )}
+      {parkChips.length > 0 && unreadCount > 0 && (
+        <span style={{ width: 1, alignSelf: "center", height: 14, background: RULE, margin: "0 6px", flexShrink: 0 }} />
+      )}
+      {parkChips.map((p) => (
+        <SecondaryChip
+          key={p.id}
+          label={p.label}
+          count={p.count}
+          active={activeParkId === p.id}
+          dot={p.color}
+          onClick={() => onParkToggle(p.id)}
+        />
+      ))}
+      <div style={{ flex: 1, minWidth: 8 }} />
+      {hasAnyFilter && (
+        <button
+          onClick={onClear}
+          style={{
+            background: "transparent", border: "none",
+            fontFamily: DM, fontSize: 11, fontWeight: 500,
+            letterSpacing: "0.16em", textTransform: "uppercase",
+            color: GOLD, cursor: "pointer",
+            padding: "8px 4px", flexShrink: 0,
+          }}
+        >
+          Clear
+        </button>
+      )}
+    </div>
+  );
+}
+
+function SecondaryChip({
+  label, count, active, dot, onClick,
+}: {
+  label: string; count: number; active: boolean; dot?: string; onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        background: active ? "rgba(28,28,26,0.04)" : "transparent",
+        border: `1px solid ${active ? RULE_STRONG : RULE}`,
+        borderRadius: 999,
+        padding: "7px 12px",
+        display: "inline-flex", alignItems: "center", gap: 6,
+        fontFamily: DM, fontSize: 12,
+        fontWeight: active ? 500 : 400,
+        color: active ? INK : INK_MUTED,
+        cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0,
+        minHeight: 32,
+        transition: "all 200ms cubic-bezier(0.4,0,0.2,1)",
+        WebkitTapHighlightColor: "transparent",
+      }}
+    >
+      {dot && (
+        <span style={{
+          width: 6, height: 6, borderRadius: 999, background: dot,
+          flexShrink: 0,
+        }} />
+      )}
+      <span>{label}</span>
       <span style={{
-        fontFamily: mono ? MONO : CG,
-        fontSize: mono ? 16 : 28,
-        fontWeight: mono ? 400 : 400,
-        lineHeight: 1, color: INK, letterSpacing: mono ? "0.04em" : "-0.02em",
+        fontFamily: MONO, fontSize: 11,
+        color: active ? INK : INK_FAINT,
         fontVariantNumeric: "tabular-nums",
       }}>
-        {numeral}
+        {count}
       </span>
-      <span style={{
-        fontFamily: DM, fontSize: 11, fontWeight: 500,
-        letterSpacing: "0.18em", textTransform: "uppercase",
-        color: INK_FAINT,
-      }}>
-        {label}
-      </span>
-    </div>
+    </button>
   );
 }
 
@@ -682,13 +788,12 @@ function ChapterHead({ numeral, label, count, ink }: { numeral: string; label: s
   return (
     <div style={{
       display: "flex", alignItems: "baseline", gap: 12,
-      paddingTop: 18, paddingBottom: 6,
-      borderTop: `1px solid ${RULE}`,
+      paddingTop: 18, paddingBottom: 12,
     }}>
       <span style={{
         fontFamily: CG, fontStyle: "italic", fontWeight: 400,
-        fontSize: 13, color: GOLD, letterSpacing: "0.04em",
-        minWidth: 24, fontVariantNumeric: "tabular-nums",
+        fontSize: 14, color: GOLD, letterSpacing: "0.04em",
+        minWidth: 22, fontVariantNumeric: "tabular-nums",
       }}>
         {numeral}.
       </span>
@@ -711,75 +816,24 @@ function ChapterHead({ numeral, label, count, ink }: { numeral: string; label: s
 }
 
 /* ═════════════════════════════════════════════════════════════════
-   FILTER RAIL CHIP — flat, gold-underline indicator
+   LEDGER ENTRY — boxless, hairline-divided alert
    ═════════════════════════════════════════════════════════════════ */
 
-function RailChip({
-  label, count, active, accent, dot, onClick,
+function LedgerEntry({
+  alert, isUnread, onRead, index, seqNumber, isFirst, isLast, archived,
 }: {
-  label: string; count?: number; active: boolean;
-  accent?: string; dot?: string;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      style={{
-        position: "relative",
-        background: "transparent", border: "none",
-        padding: "12px 12px 14px",
-        display: "inline-flex", alignItems: "center", gap: 6,
-        fontFamily: DM, fontSize: 13,
-        fontWeight: active ? 500 : 400,
-        color: active ? INK : INK_FAINT,
-        cursor: "pointer", whiteSpace: "nowrap",
-        minHeight: 44,
-        transition: "color 200ms cubic-bezier(0.4,0,0.2,1)",
-      }}
-    >
-      {dot && (
-        <span style={{
-          width: 6, height: 6, borderRadius: 999, background: dot,
-          boxShadow: active ? `0 0 6px ${dot}99` : "none",
-          flexShrink: 0,
-        }} />
-      )}
-      <span>{label}</span>
-      {count != null && (
-        <span style={{
-          fontFamily: MONO, fontSize: 12, fontWeight: 400,
-          color: active ? (accent ?? INK) : INK_FAINT,
-          fontVariantNumeric: "tabular-nums",
-        }}>
-          {count}
-        </span>
-      )}
-      {active && (
-        <motion.span
-          layoutId="rail-indicator"
-          transition={{ type: "spring", stiffness: 480, damping: 36 }}
-          style={{
-            position: "absolute", left: 8, right: 8, bottom: 2, height: 2,
-            background: GOLD, borderRadius: 2,
-          }}
-        />
-      )}
-    </button>
-  );
-}
-
-/* ═════════════════════════════════════════════════════════════════
-   JOURNAL CARD — editorial alert entry
-   ═════════════════════════════════════════════════════════════════ */
-
-function JournalCard({
-  alert, isUnread, onRead, index, archived,
-}: {
-  alert: ParkAlert; isUnread: boolean; onRead: (id: string) => void; index: number; archived?: boolean;
+  alert: ParkAlert;
+  isUnread: boolean;
+  onRead: (id: string) => void;
+  index: number;
+  seqNumber: number;
+  isFirst: boolean;
+  isLast: boolean;
+  archived?: boolean;
 }) {
   const sev = severityOf(alert.category);
   const sevInk = SEV_INK[sev];
-  const sevLabel = SEV_LABEL[sev].toUpperCase();
+  const sevLabel = SEV_LABEL[sev];
   const parkColor = getParkColor(alert.park_id);
   const parkName = PARKS[alert.park_id]?.shortName ?? alert.park_id;
 
@@ -820,7 +874,7 @@ function JournalCard({
     <motion.article
       layout
       initial={{ opacity: 0, y: 6 }}
-      animate={{ opacity: archived ? 0.55 : (isUnread ? 1 : 0.82), y: 0 }}
+      animate={{ opacity: archived ? 0.55 : (isUnread ? 1 : 0.78), y: 0 }}
       exit={{ opacity: 0, y: -4 }}
       transition={{
         opacity: { duration: 0.4, ease: [0.4, 0, 0.2, 1] },
@@ -834,175 +888,179 @@ function JournalCard({
       onKeyDown={interactive ? (e) => e.key === "Enter" && handleToggle() : undefined}
       style={{
         position: "relative",
-        background: PAPER,
-        border: `1px solid ${RULE}`,
-        borderLeft: `3px solid ${sevInk}`,
-        borderRadius: 6,
+        padding: "20px 0 22px",
+        borderTop: isFirst ? "none" : `1px solid ${RULE}`,
         cursor: interactive ? "pointer" : "default",
+        display: "grid",
+        gridTemplateColumns: "32px 1fr",
+        columnGap: 14,
+        WebkitTapHighlightColor: "transparent",
       }}
     >
-      {/* Critical: faint shimmer on the left edge */}
-      {sev === "critical" && isUnread && (
-        <span
-          aria-hidden
-          style={{
-            position: "absolute", left: 0, top: 0, bottom: 0, width: 3,
-            background: "linear-gradient(180deg, transparent, rgba(255,255,255,0.6), transparent)",
-            animation: "tg-shimmer 2.4s ease-in-out infinite",
-            pointerEvents: "none",
-          }}
-        />
-      )}
-
-      {/* Header: severity label + posted date (mono) */}
-      <div style={{
-        display: "flex", alignItems: "center", gap: 10,
-        padding: "11px 16px 0",
-      }}>
+      {/* Sequential mono numeral (left gutter) */}
+      <div style={{ paddingTop: 4 }}>
         <span style={{
-          fontFamily: DM, fontSize: 11, fontWeight: 600,
-          letterSpacing: "0.22em", color: sevInk,
+          fontFamily: MONO, fontSize: 11, fontWeight: 400,
+          color: INK_FAINT, letterSpacing: "0.04em",
+          fontVariantNumeric: "tabular-nums",
         }}>
-          {sevLabel}
-        </span>
-        {isFresh && (
-          <span style={{
-            fontFamily: DM, fontSize: 10, fontWeight: 700,
-            letterSpacing: "0.16em", textTransform: "uppercase",
-            color: GOLD,
-            border: `1px solid ${GOLD_SOFT}`, padding: "1px 6px", borderRadius: 2,
-          }}>
-            New
-          </span>
-        )}
-        <div style={{ flex: 1 }} />
-        <span style={{
-          fontFamily: MONO, fontSize: 11, color: INK_FAINT,
-          letterSpacing: "0.04em", fontVariantNumeric: "tabular-nums",
-        }}>
-          {smartTimeAgo(new Date(alert.last_updated).getTime())}
+          {String(seqNumber).padStart(2, "0")}
         </span>
       </div>
 
-      {/* Title — editorial serif */}
-      <h3 style={{
-        margin: "6px 16px 0",
-        fontFamily: CG, fontWeight: 500,
-        fontSize: 21, lineHeight: 1.2, letterSpacing: "-0.005em",
-        color: INK,
-      }}>
-        {alert.title}
-      </h3>
-
-      {/* Body */}
-      {hasSubstantialDesc && (
+      {/* Body column */}
+      <div>
+        {/* Top row: severity tag + fresh + timestamp */}
         <div style={{
-          margin: "8px 16px 0",
-          maxHeight: expanded ? 600 : 44,
-          overflow: "hidden",
-          transition: "max-height 280ms cubic-bezier(0.4,0,0.2,1)",
+          display: "flex", alignItems: "center", gap: 10,
+          marginBottom: 8,
         }}>
-          {expanded ? (
-            <>
-              <p style={{
-                fontFamily: DM, fontSize: 14, fontWeight: 400,
-                color: "#3D4D3D", lineHeight: 1.62,
-                margin: 0,
-              }}>
+          <span style={{
+            display: "inline-flex", alignItems: "center", gap: 6,
+          }}>
+            <span aria-hidden style={{
+              width: 4, height: 4, borderRadius: 999, background: sevInk,
+              flexShrink: 0,
+              boxShadow: sev === "critical" && isUnread ? `0 0 6px ${sevInk}99` : "none",
+            }} />
+            <span style={{
+              fontFamily: DM, fontSize: 11, fontWeight: 600,
+              letterSpacing: "0.22em", textTransform: "uppercase",
+              color: sevInk,
+            }}>
+              {sevLabel}
+            </span>
+          </span>
+          {isFresh && (
+            <span style={{
+              fontFamily: DM, fontSize: 10, fontWeight: 700,
+              letterSpacing: "0.18em", textTransform: "uppercase",
+              color: GOLD,
+              padding: "1px 6px", border: `1px solid ${GOLD_SOFT}`, borderRadius: 2,
+            }}>
+              New
+            </span>
+          )}
+          <div style={{ flex: 1 }} />
+          <span style={{
+            fontFamily: MONO, fontSize: 11, color: INK_FAINT,
+            letterSpacing: "0.04em", fontVariantNumeric: "tabular-nums",
+          }}>
+            {smartTimeAgo(new Date(alert.last_updated).getTime())}
+          </span>
+        </div>
+
+        {/* Title — editorial serif headline */}
+        <h3 style={{
+          margin: 0,
+          fontFamily: CG, fontWeight: 500,
+          fontSize: 22, lineHeight: 1.18, letterSpacing: "-0.008em",
+          color: INK,
+        }}>
+          {alert.title}
+        </h3>
+
+        {/* Body */}
+        {hasSubstantialDesc && (
+          <div style={{
+            marginTop: 8,
+            maxHeight: expanded ? 600 : 44,
+            overflow: "hidden",
+            transition: "max-height 280ms cubic-bezier(0.4,0,0.2,1)",
+          }}>
+            {expanded ? (
+              <>
+                <p style={{
+                  fontFamily: DM, fontSize: 14, fontWeight: 400,
+                  color: INK_BODY, lineHeight: 1.62,
+                  margin: 0,
+                }}>
+                  {desc}
+                </p>
+                {hasUrl && (
+                  <a
+                    href={alert.url!}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    style={{
+                      display: "inline-flex", alignItems: "center", gap: 6,
+                      fontFamily: DM, fontSize: 12, fontWeight: 500,
+                      letterSpacing: "0.06em",
+                      color: INK, textDecoration: "none",
+                      borderBottom: `1px solid ${GOLD_SOFT}`,
+                      paddingBottom: 1, marginTop: 14,
+                    }}
+                  >
+                    Open on NPS.gov →
+                  </a>
+                )}
+              </>
+            ) : (
+              <p
+                ref={previewRef}
+                className="line-clamp-2"
+                style={{
+                  fontFamily: DM, fontSize: 13, fontWeight: 400,
+                  color: INK_MUTED, lineHeight: 1.55,
+                  margin: 0,
+                }}
+              >
                 {desc}
               </p>
-              {hasUrl && (
-                <a
-                  href={alert.url!}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
-                  style={{
-                    display: "inline-flex", alignItems: "center", gap: 4,
-                    fontFamily: DM, fontSize: 12, fontWeight: 500,
-                    letterSpacing: "0.06em",
-                    color: SEV_INK.info, textDecoration: "none",
-                    marginTop: 12,
-                  }}
-                >
-                  Open on NPS.gov →
-                </a>
-              )}
-            </>
-          ) : (
-            <p
-              ref={previewRef}
-              className="line-clamp-2"
+            )}
+          </div>
+        )}
+
+        {/* Byline footer */}
+        <div style={{
+          marginTop: 12,
+          display: "flex", alignItems: "center", gap: 8,
+        }}>
+          <span style={{
+            width: 5, height: 5, borderRadius: 999, background: parkColor, flexShrink: 0,
+          }} />
+          <span style={{
+            fontFamily: DM, fontSize: 12, fontWeight: 500,
+            color: INK_MUTED, letterSpacing: "0.02em",
+          }}>
+            {parkName}
+          </span>
+          <span style={{ color: INK_FAINT, fontFamily: DM, fontSize: 12 }}>·</span>
+          <span style={{
+            fontFamily: MONO, fontSize: 11, color: INK_FAINT, letterSpacing: "0.04em",
+          }}>
+            {formatPostedDate(alert.last_updated)}
+          </span>
+          <div style={{ flex: 1 }} />
+          {hasUrl && !expanded && (
+            <a
+              href={alert.url!}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              aria-label="Open on NPS"
               style={{
-                fontFamily: DM, fontSize: 13, fontWeight: 400,
-                color: INK_MUTED, lineHeight: 1.5,
-                margin: 0,
+                display: "inline-flex", alignItems: "center", justifyContent: "center",
+                width: 28, height: 28, borderRadius: 4,
+                color: INK_FAINT,
               }}
             >
-              {desc}
-            </p>
+              <ExternalLink size={13} />
+            </a>
+          )}
+          {showChevron && (
+            <span style={{
+              display: "inline-flex", alignItems: "center", justifyContent: "center",
+              width: 28, height: 28, color: INK_FAINT,
+              transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
+              transition: "transform 240ms cubic-bezier(0.4,0,0.2,1)",
+            }}>
+              <ChevronDown size={14} />
+            </span>
           )}
         </div>
-      )}
-
-      {/* Footer: hairline + park byline */}
-      <div style={{
-        margin: "12px 16px 0",
-        paddingTop: 10, paddingBottom: 12,
-        borderTop: `1px solid ${RULE}`,
-        display: "flex", alignItems: "center", gap: 8,
-      }}>
-        <span style={{
-          width: 6, height: 6, borderRadius: 999, background: parkColor,
-          flexShrink: 0,
-        }} />
-        <span style={{
-          fontFamily: DM, fontSize: 12, fontWeight: 500,
-          color: INK_MUTED, letterSpacing: "0.02em",
-        }}>
-          {parkName}
-        </span>
-        <span style={{
-          fontFamily: MONO, fontSize: 11, color: INK_FAINT, letterSpacing: "0.04em",
-          marginLeft: 4,
-        }}>
-          · {formatPostedDate(alert.last_updated)}
-        </span>
-        <div style={{ flex: 1 }} />
-        {hasUrl && !expanded && (
-          <a
-            href={alert.url!}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            aria-label="Open on NPS"
-            style={{
-              display: "inline-flex", alignItems: "center", justifyContent: "center",
-              width: 28, height: 28, borderRadius: 4,
-              color: INK_FAINT,
-            }}
-          >
-            <ExternalLink size={13} />
-          </a>
-        )}
-        {showChevron && (
-          <span style={{
-            display: "inline-flex", alignItems: "center", justifyContent: "center",
-            width: 28, height: 28, color: INK_FAINT,
-            transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
-            transition: "transform 240ms cubic-bezier(0.4,0,0.2,1)",
-          }}>
-            <ChevronDown size={14} />
-          </span>
-        )}
       </div>
-
-      <style>{`
-        @keyframes tg-shimmer {
-          0%, 100% { opacity: 0; transform: translateY(-100%); }
-          50% { opacity: 1; transform: translateY(0%); }
-        }
-      `}</style>
     </motion.article>
   );
 }
@@ -1014,30 +1072,30 @@ function JournalCard({
 function QuietTrail({ timeLabel }: { timeLabel: string | null }) {
   return (
     <div style={{
-      padding: "56px 24px 40px",
+      padding: "64px 24px 48px",
       display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center",
     }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
-        <span style={{ width: 28, height: 1, background: GOLD_SOFT }} />
-        <span style={{ color: GOLD, fontFamily: CG, fontSize: 11 }}>◆</span>
-        <span style={{ width: 28, height: 1, background: GOLD_SOFT }} />
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 22 }}>
+        <span style={{ width: 32, height: 1, background: GOLD_SOFT }} />
+        <span style={{ color: GOLD, fontFamily: CG, fontSize: 12 }}>◆</span>
+        <span style={{ width: 32, height: 1, background: GOLD_SOFT }} />
       </div>
       <p style={{
-        fontFamily: CG, fontStyle: "italic", fontSize: 28, fontWeight: 400,
-        color: INK, lineHeight: 1.1, margin: 0, letterSpacing: "-0.01em",
+        fontFamily: CG, fontStyle: "italic", fontSize: 32, fontWeight: 400,
+        color: INK, lineHeight: 1.05, margin: 0, letterSpacing: "-0.015em",
       }}>
         All clear.
       </p>
       <p style={{
         fontFamily: DM, fontSize: 13, fontWeight: 400,
-        color: INK_MUTED, lineHeight: 1.55, maxWidth: 280, margin: "12px 0 0",
+        color: INK_MUTED, lineHeight: 1.6, maxWidth: 280, margin: "14px 0 0",
       }}>
         No active dispatches for the parks you watch.
       </p>
       <p style={{
         fontFamily: MONO, fontSize: 11, fontWeight: 400,
         color: INK_FAINT, letterSpacing: "0.10em", textTransform: "uppercase",
-        marginTop: 18,
+        marginTop: 22,
       }}>
         {timeLabel ? `Last checked ${timeLabel}` : "Standing by"}
       </p>
@@ -1052,7 +1110,7 @@ function QuietTrail({ timeLabel }: { timeLabel: string | null }) {
 function Colophon({ timeLabel }: { timeLabel: string | null }) {
   return (
     <footer style={{
-      padding: "32px 20px 24px",
+      padding: "36px 20px 28px",
       textAlign: "center",
     }}>
       <div style={{
