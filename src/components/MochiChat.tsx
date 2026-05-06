@@ -1858,17 +1858,18 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                     fontFamily: "'Cormorant Garamond', serif",
                     fontSize: 38, fontWeight: 400,
                     letterSpacing: '0.3em',
-                    color: 'rgba(232, 226, 217, 0.78)',
+                    // Slightly darker than the cream paper so the letters read
+                    // as recessed into the dark masthead rather than printed on top.
+                    color: 'rgba(220, 212, 198, 0.62)',
                     margin: 0, lineHeight: 1,
                     textIndent: '0.3em',
                     textShadow: [
-                      '0 1px 0 rgba(255, 250, 240, 0.55)',           // top highlight rim
-                      '0 -1px 0 rgba(40, 28, 16, 0.55)',             // bottom shadow rim
-                      '0 0 1px rgba(60, 40, 22, 0.35)',              // hairline edge darkening
-                      '0 2px 3px rgba(40, 28, 16, 0.22)',            // inner shadow pool
-                      '0 0 22px rgba(201, 169, 110, 0.12)',          // soft gilt halo
+                      '0 1px 0 rgba(255, 248, 232, 0.22)',          // top highlight rim — light catching upper edge
+                      '0 -1px 0 rgba(0, 0, 0, 0.65)',               // bottom shadow rim — darkness pooling below
+                      '0 0 1px rgba(0, 0, 0, 0.45)',                // hairline edge darkening — sharpens the cut
+                      '0 2px 4px rgba(0, 0, 0, 0.35)',              // soft inner shadow — depth of impression
+                      '0 0 24px rgba(201, 169, 110, 0.10)',         // gilt halo — warmth from the embossed edge
                     ].join(', '),
-                    mixBlendMode: 'multiply',
                   }}>POKO</p>
                   {/* Hairline + diamond rule (drawn-in) — accent shifts with active park */}
                   <div className="poko-rule-draw poko-park-rule" aria-hidden="true" style={{
