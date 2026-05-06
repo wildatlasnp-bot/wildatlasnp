@@ -9,9 +9,15 @@ interface BottomNavProps {
   hasUnreadAlerts?: boolean;
 }
 
-const ACTIVE_INK = "#1A2F1E";
-const INACTIVE_INK = "#8A9E8A";
-const ACCENT_DOT = "#2F6F4E";
+const CREAM = "#F0EDEA";
+const CREAM_DEEP = "#E8E3DC";
+const ACTIVE_INK = "#1C1C1A";
+const INACTIVE_INK = "#9A968E";
+const GOLD = "#B58A3F";
+const GOLD_SOFT = "rgba(181,138,63,0.18)";
+const RULE = "rgba(28,28,26,0.10)";
+const CG = "'Cormorant Garamond', serif";
+const DM = "'DM Sans', sans-serif";
 
 type LucideIcon = React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
 
