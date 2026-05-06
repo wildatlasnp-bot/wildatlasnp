@@ -74,33 +74,33 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
         right: 0,
         display: "flex",
         justifyContent: "space-around",
-        alignItems: "center",
+        alignItems: "flex-start",
         paddingBottom: "env(safe-area-inset-bottom, 0px)",
-        background: "#F0EDEA",
-        borderTop: "1px solid #E5E1DD",
-        boxShadow: "none",
+        background: `linear-gradient(180deg, ${CREAM} 0%, ${CREAM_DEEP} 100%)`,
+        borderTop: `1px solid ${RULE}`,
+        boxShadow: "0 -1px 0 rgba(255,255,255,0.6) inset, 0 -8px 24px -16px rgba(28,28,26,0.18)",
         zIndex: 50,
       }}
     >
-      {/* Sliding active indicator dot */}
+      {/* Top hairline accent — gold thread under the active tab */}
       <span
         aria-hidden="true"
         style={{
           position: "absolute",
-          bottom: `calc(env(safe-area-inset-bottom, 0px) + 6px)`,
+          top: -1,
           left: `${(activeIndex + 0.5) * (100 / N)}%`,
           transform: "translateX(-50%)",
-          width: 3,
-          height: 3,
-          borderRadius: "50%",
-          background: ACCENT_DOT,
-          transition: "left 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+          width: 28,
+          height: 1,
+          background: GOLD,
+          transition: "left 320ms cubic-bezier(0.4, 0, 0.2, 1), width 200ms cubic-bezier(0.4, 0, 0.2, 1)",
           pointerEvents: "none",
-          zIndex: 2,
+          zIndex: 3,
+          boxShadow: `0 0 8px ${GOLD_SOFT}`,
         }}
       />
 
-      {tabs.map((tab) => {
+      {tabs.map((tab, i) => {
         const isActive = activeTab === tab.id;
         const isPressed = pressedTab === tab.id;
         const color = isActive ? ACTIVE_INK : INACTIVE_INK;
@@ -127,7 +127,8 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
               border: "none",
               padding: 0,
               WebkitTapHighlightColor: "transparent",
-              width: 60,
+              width: 64,
+              position: "relative",
             }}
           >
             <div
@@ -142,19 +143,31 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
                 overflow: "visible",
               }}
             >
-              {rippleKey > 0 && (
+              {/* Active glyph plate — soft cream cameo with gold hairline */}
+              {isActive && (
                 <span
-                  key={rippleKey}
-                  className="wa-nav-ripple"
                   aria-hidden="true"
+                  style={{
+                    position: "absolute",
+                    width: 36,
+                    height: 36,
+                    borderRadius: "50%",
+                    background: "linear-gradient(180deg, #FBF8F3 0%, #F0EBE2 100%)",
+                    border: `1px solid ${GOLD_SOFT}`,
+                    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.9), 0 1px 2px rgba(28,28,26,0.06)",
+                    zIndex: 0,
+                  }}
                 />
+              )}
+              {rippleKey > 0 && (
+                <span key={rippleKey} className="wa-nav-ripple" aria-hidden="true" />
               )}
               <div
                 style={{
-                  transform: isPressed ? "scale(0.88)" : "scale(1)",
+                  transform: isPressed ? "scale(0.9)" : "scale(1)",
                   transition: isPressed
                     ? "transform 60ms cubic-bezier(0.4, 0, 0.2, 1)"
-                    : "transform 100ms cubic-bezier(0.34, 1.56, 0.64, 1)",
+                    : "transform 140ms cubic-bezier(0.34, 1.56, 0.64, 1)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -163,8 +176,8 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
                 }}
               >
                 <tab.Icon
-                  size={22}
-                  strokeWidth={isActive ? 1.5 : 1}
+                  size={20}
+                  strokeWidth={isActive ? 1.6 : 1.25}
                   color={color}
                   fill="none"
                 />
@@ -173,25 +186,27 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
                 <span
                   style={{
                     position: "absolute",
-                    top: 0,
-                    right: 6,
-                    width: 7,
-                    height: 7,
+                    top: 2,
+                    right: 4,
+                    width: 6,
+                    height: 6,
                     borderRadius: "50%",
-                    background: ACCENT_DOT,
-                    border: "1.5px solid #F0EDEA",
+                    background: GOLD,
+                    border: `1.5px solid ${CREAM}`,
+                    boxShadow: `0 0 6px ${GOLD_SOFT}`,
                     pointerEvents: "none",
                     zIndex: 2,
                   }}
                 />
               )}
             </div>
+            {/* Editorial label — small caps, mono numeral underneath */}
             <span
               style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 12,
-                fontWeight: isActive ? 500 : 400,
-                letterSpacing: "0.08em",
+                fontFamily: DM,
+                fontSize: 10,
+                fontWeight: isActive ? 600 : 500,
+                letterSpacing: "0.18em",
                 textTransform: "uppercase",
                 color: isActive ? ACTIVE_INK : INACTIVE_INK,
                 lineHeight: 1,
@@ -199,6 +214,21 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
               }}
             >
               {tab.label}
+            </span>
+            {/* Tiny serif numeral — quiet field-log signature */}
+            <span
+              aria-hidden="true"
+              style={{
+                fontFamily: CG,
+                fontStyle: "italic",
+                fontSize: 9,
+                lineHeight: 1,
+                marginTop: 2,
+                color: isActive ? GOLD : "transparent",
+                transition: "color 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+              }}
+            >
+              {String(i + 1).padStart(2, "0")}
             </span>
           </button>
         );
