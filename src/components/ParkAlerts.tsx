@@ -675,6 +675,42 @@ function Stat({ numeral, label, mono }: { numeral: string; label: string; mono?:
 }
 
 /* ═════════════════════════════════════════════════════════════════
+   CHAPTER HEAD — Roman numeral severity divider
+   ═════════════════════════════════════════════════════════════════ */
+
+function ChapterHead({ numeral, label, count, ink }: { numeral: string; label: string; count: number; ink: string }) {
+  return (
+    <div style={{
+      display: "flex", alignItems: "baseline", gap: 12,
+      paddingTop: 18, paddingBottom: 6,
+      borderTop: `1px solid ${RULE}`,
+    }}>
+      <span style={{
+        fontFamily: CG, fontStyle: "italic", fontWeight: 400,
+        fontSize: 13, color: GOLD, letterSpacing: "0.04em",
+        minWidth: 24, fontVariantNumeric: "tabular-nums",
+      }}>
+        {numeral}.
+      </span>
+      <span style={{
+        fontFamily: DM, fontSize: 11, fontWeight: 600,
+        letterSpacing: "0.24em", textTransform: "uppercase",
+        color: ink,
+      }}>
+        {label}
+      </span>
+      <span style={{ flex: 1, height: 1, background: RULE, alignSelf: "center" }} />
+      <span style={{
+        fontFamily: MONO, fontSize: 11, color: INK_FAINT,
+        letterSpacing: "0.04em", fontVariantNumeric: "tabular-nums",
+      }}>
+        {String(count).padStart(2, "0")}
+      </span>
+    </div>
+  );
+}
+
+/* ═════════════════════════════════════════════════════════════════
    FILTER RAIL CHIP — flat, gold-underline indicator
    ═════════════════════════════════════════════════════════════════ */
 
