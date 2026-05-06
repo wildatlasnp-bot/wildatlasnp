@@ -1814,6 +1814,38 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                 <span style={{ width: 2, height: 2, borderRadius: '50%', background: 'rgba(240,237,234,0.28)' }} />
                 <span style={{ fontFeatureSettings: '"tnum" 1', letterSpacing: '0.14em' }}>{parkTimeLabel} · park time</span>
               </div>
+
+              {/* Imprimatur — small intaglio press seal that quietly certifies
+                  the dispatch. Italic Cormorant inside a hairline ring with a
+                  diamond glyph. Pure decoration. */}
+              <div aria-hidden="true" style={{
+                marginTop: 14,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+                opacity: 0.55,
+              }}>
+                <span style={{ flex: '0 0 28px', height: 1, background: 'linear-gradient(to right, transparent, rgba(201,169,110,0.45))' }} />
+                <span style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 6,
+                  padding: '3px 10px',
+                  border: '1px solid rgba(201,169,110,0.32)',
+                  borderRadius: 999,
+                }}>
+                  <span style={{
+                    width: 4, height: 4, transform: 'rotate(45deg)',
+                    background: 'rgba(201,169,110,0.9)',
+                    boxShadow: '0 0 4px rgba(201,169,110,0.5)',
+                  }} />
+                  <span style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontStyle: 'italic',
+                    fontSize: 10,
+                    letterSpacing: '0.22em', textTransform: 'uppercase',
+                    color: 'rgba(201,169,110,0.78)',
+                    fontFeatureSettings: '"tnum" 1',
+                  }}>Imprimatur · MMXXVI</span>
+                </span>
+                <span style={{ flex: '0 0 28px', height: 1, background: 'linear-gradient(to left, transparent, rgba(201,169,110,0.45))' }} />
+              </div>
             </div>
 
             {/* Briefing bubble — minWidth:0 prevents the chip row's
