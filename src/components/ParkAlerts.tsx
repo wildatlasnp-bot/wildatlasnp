@@ -392,8 +392,8 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
         )}
       </AnimatePresence>
 
-      {/* ── Cards ── */}
-      <div style={{ padding: "18px 20px 4px", display: "flex", flexDirection: "column", gap: 14 }}>
+      {/* ── Cards (grouped by severity into chapters when no severity filter) ── */}
+      <div style={{ padding: "10px 20px 4px", display: "flex", flexDirection: "column", gap: 0 }}>
         {visibleAlerts.length === 0 && (
           <p style={{ fontFamily: CG, fontStyle: "italic", fontSize: 17, color: INK_MUTED, textAlign: "center", padding: "32px 0", letterSpacing: "0.005em" }}>
             Nothing matches that filter.
@@ -401,15 +401,53 @@ const ParkAlerts = React.forwardRef<HTMLDivElement, ParkAlertsProps>(({ parkId, 
         )}
 
         <AnimatePresence initial={false}>
-          {visibleAlerts.map((alert, i) => (
-            <JournalCard
-              key={alert.id}
-              alert={alert}
-              index={i}
-              isUnread={!readAlertIds.has(alert.id)}
-              onRead={handleRead}
-            />
-          ))}
+          {(() => {
+            // If a severity filter is active, render flat. Otherwise, group into chapters.
+            if (activeTypeFilter) {
+              return (
+                <div style={{ display: "flex", flexDirection: "column", gap: 14, paddingTop: 8 }}>
+                  {visibleAlerts.map((alert, i) => (
+                    <JournalCard
+                      key={alert.id}
+                      alert={alert}
+                      index={i}
+                      isUnread={!readAlertIds.has(alert.id)}
+                      onRead={handleRead}
+                    />
+                  ))}
+                </div>
+              );
+            }
+
+            const order: Severity[] = ["critical", "closure", "caution", "info"];
+            const groups: Record<Severity, ParkAlert[]> = { critical: [], closure: [], caution: [], info: [] };
+            for (const a of visibleAlerts) groups[severityOf(a.category)].push(a);
+            const ROMAN = ["I", "II", "III", "IV"];
+            let chapterIdx = 0;
+            let cardIdx = 0;
+
+            return order
+              .filter((sev) => groups[sev].length > 0)
+              .map((sev) => {
+                const numeral = ROMAN[chapterIdx++];
+                return (
+                  <section key={sev} style={{ marginTop: chapterIdx === 1 ? 4 : 24 }}>
+                    <ChapterHead numeral={numeral} label={SEV_LABEL[sev]} count={groups[sev].length} ink={SEV_INK[sev]} />
+                    <div style={{ display: "flex", flexDirection: "column", gap: 14, marginTop: 12 }}>
+                      {groups[sev].map((alert) => (
+                        <JournalCard
+                          key={alert.id}
+                          alert={alert}
+                          index={cardIdx++}
+                          isUnread={!readAlertIds.has(alert.id)}
+                          onRead={handleRead}
+                        />
+                      ))}
+                    </div>
+                  </section>
+                );
+              });
+          })()}
         </AnimatePresence>
 
         {/* Archive toggle */}
