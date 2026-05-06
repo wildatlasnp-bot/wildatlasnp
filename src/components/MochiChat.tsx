@@ -820,6 +820,62 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
   const isBriefing = true; // always use new premium landscape design for light mode
   const composerBottomPadding = `calc(env(safe-area-inset-bottom, 0px) + ${keyboardInset > 0 ? keyboardInset + 12 : 96}px)`;
 
+  /* ── Premium parallax: pointer + device-tilt drive --px / --py CSS vars
+     on the Poko stage. Topo + compass + horizon glow each consume the
+     vars at different magnitudes (rear layers move less, front layers
+     more), creating real depth without re-rendering React. GPU-only,
+     respects prefers-reduced-motion. */
+  const stageRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!isBriefing) return;
+    const el = stageRef.current;
+    if (!el) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return;
+
+    let tx = 0, ty = 0;          // current (eased) offsets, range -1..1
+    let targetX = 0, targetY = 0; // latest input target
+    let raf = 0;
+
+    const tick = () => {
+      // Critically-damped ease toward target — silky, no spring overshoot.
+      tx += (targetX - tx) * 0.08;
+      ty += (targetY - ty) * 0.08;
+      el.style.setProperty('--px', tx.toFixed(3));
+      el.style.setProperty('--py', ty.toFixed(3));
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+
+    const onPointer = (e: PointerEvent) => {
+      const r = el.getBoundingClientRect();
+      // Map pointer to -1..1 across the stage, then dampen to ±0.5 so the
+      // motion stays subtle (premium = restrained).
+      targetX = Math.max(-1, Math.min(1, ((e.clientX - r.left) / r.width)  * 2 - 1)) * 0.5;
+      targetY = Math.max(-1, Math.min(1, ((e.clientY - r.top)  / r.height) * 2 - 1)) * 0.5;
+    };
+    const onLeave = () => { targetX = 0; targetY = 0; };
+
+    // Device tilt (mobile): gamma = left/right, beta = front/back.
+    const onOrient = (e: DeviceOrientationEvent) => {
+      const g = e.gamma ?? 0; // -90..90
+      const b = e.beta  ?? 0; // -180..180
+      targetX = Math.max(-1, Math.min(1, g / 25)) * 0.5;
+      targetY = Math.max(-1, Math.min(1, (b - 30) / 25)) * 0.5;
+    };
+
+    el.addEventListener('pointermove', onPointer);
+    el.addEventListener('pointerleave', onLeave);
+    window.addEventListener('deviceorientation', onOrient);
+    return () => {
+      cancelAnimationFrame(raf);
+      el.removeEventListener('pointermove', onPointer);
+      el.removeEventListener('pointerleave', onLeave);
+      window.removeEventListener('deviceorientation', onOrient);
+    };
+  }, [isBriefing]);
+
+
   useEffect(() => {
     if (!activeScrollEl) return;
     activeScrollEl.scrollTo({ top: activeScrollEl.scrollHeight, behavior: "smooth" });
