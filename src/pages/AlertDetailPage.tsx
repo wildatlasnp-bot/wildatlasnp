@@ -216,193 +216,416 @@ const AlertDetailPage = () => {
     jb: "'JetBrains Mono', monospace",
   };
 
-  return (
-    <div style={{ background: "#0e1a10", minHeight: "100vh", display: "flex", flexDirection: "column", position: "relative", overflow: "hidden" }}>
+  // Issue number — day of year for editorial flavor
+  const issueNo = useMemo(() => {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), 0, 0);
+    const diff = now.getTime() - start.getTime();
+    return String(Math.floor(diff / 86400000)).padStart(3, "0");
+  }, []);
 
-      {/* Ambient glow */}
+  // Detection timestamp — formatted for the "DET" subdial
+  const detectedDisplay = useMemo(() => {
+    if (!detectedAt) return "—";
+    try {
+      return new Date(detectedAt).toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: false,
+      });
+    } catch {
+      return "—";
+    }
+  }, [detectedAt]);
+
+  const INK = "#0c1710";
+  const PAPER = "#f4f0e8";
+  const PAPER_MUTED = "rgba(244,240,232,0.52)";
+  const PAPER_FAINT = "rgba(244,240,232,0.28)";
+  const GOLD = "#C9A96E";
+  const GOLD_SOFT = "rgba(201,169,110,0.72)";
+  const GOLD_FAINT = "rgba(201,169,110,0.18)";
+  const RULE = "rgba(244,240,232,0.10)";
+  const EMERALD = "#2F6F4E";
+
+  // Tiny corner registration mark — printer's tick
+  const CornerMark = ({ corner }: { corner: "tl" | "tr" | "bl" | "br" }) => {
+    const pos: React.CSSProperties = {
+      position: "absolute",
+      width: 10,
+      height: 10,
+      pointerEvents: "none",
+      zIndex: 2,
+      opacity: 0.42,
+    };
+    if (corner === "tl") { pos.top = 14; pos.left = 14; }
+    if (corner === "tr") { pos.top = 14; pos.right = 14; }
+    if (corner === "bl") { pos.bottom = 14; pos.left = 14; }
+    if (corner === "br") { pos.bottom = 14; pos.right = 14; }
+    const isTop = corner === "tl" || corner === "tr";
+    const isLeft = corner === "tl" || corner === "bl";
+    return (
+      <span aria-hidden="true" style={pos}>
+        <svg width="10" height="10" viewBox="0 0 10 10">
+          <path
+            d={
+              `M ${isLeft ? 0 : 10} ${isTop ? 5 : 5} L ${isLeft ? 10 : 0} ${isTop ? 5 : 5} ` +
+              `M ${isLeft ? 5 : 5} ${isTop ? 0 : 10} L ${isLeft ? 5 : 5} ${isTop ? 10 : 0}`
+            }
+            stroke={GOLD}
+            strokeWidth="0.75"
+          />
+        </svg>
+      </span>
+    );
+  };
+
+  // Diamond ornament glyph for ornament rules
+  const Diamond = () => (
+    <svg width="6" height="6" viewBox="0 0 6 6" style={{ flexShrink: 0 }}>
+      <path d="M3 0 L6 3 L3 6 L0 3 Z" fill={GOLD} opacity="0.9" />
+    </svg>
+  );
+
+  return (
+    <div
+      style={{
+        background: INK,
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        position: "relative",
+        overflow: "hidden",
+        color: PAPER,
+      }}
+    >
+      {/* Atmospheric layers — vignette + grain + ambient glow */}
       <div
         ref={ambRef}
-        id="amb"
         style={{
-          position: "absolute", top: 0, left: 0, width: "100%", height: 220, zIndex: 0,
+          position: "absolute", top: 0, left: 0, width: "100%", height: 280, zIndex: 0,
           pointerEvents: "none",
-          background: "radial-gradient(ellipse 300px 200px at 50% -30px, rgba(47,111,78,0.22) 0%, transparent 70%)",
+          background: "radial-gradient(ellipse 320px 220px at 50% -40px, rgba(47,111,78,0.22) 0%, transparent 70%)",
           transition: "background 4s ease",
         }}
       />
+      {/* Soft vignette around the edges */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
+          background:
+            "radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.45) 100%)",
+        }}
+      />
+      {/* Film grain — SVG noise texture */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
+          opacity: 0.06, mixBlendMode: "overlay",
+          backgroundImage:
+            "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.6'/></svg>\")",
+        }}
+      />
 
-      {/* Top bar */}
-      <div style={{ padding: "2px 22px 14px", display: "flex", justifyContent: "space-between", alignItems: "center", position: "relative", zIndex: 1 }}>
+      {/* Registration marks — printer's ticks at each corner */}
+      <CornerMark corner="tl" />
+      <CornerMark corner="tr" />
+      <CornerMark corner="bl" />
+      <CornerMark corner="br" />
+
+      {/* ── Masthead: dispatch number + coordinates ── */}
+      <div
+        style={{
+          padding: "20px 28px 0",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          position: "relative",
+          zIndex: 1,
+        }}
+      >
         <button
           onClick={() => navigate("/app?tab=sniper")}
           style={{
             background: "none", border: "none", padding: 0, cursor: "pointer",
-            fontFamily: F.dm, fontSize: 14, color: "rgba(244,240,232,0.45)",
-            display: "flex", alignItems: "center", gap: 6,
+            fontFamily: F.dm, fontSize: 12, color: PAPER_FAINT,
+            display: "flex", alignItems: "center", gap: 6, letterSpacing: "0.02em",
           }}
+          aria-label="Back to alerts"
         >
           <ArrowLeftIcon /> Back
         </button>
 
-        <div style={{
-          borderRadius: 100, background: "rgba(47,111,78,0.14)", border: "1px solid rgba(47,111,78,0.32)",
-          padding: "5px 12px", display: "flex", alignItems: "center", gap: 7,
-        }}>
-          <span ref={ldotRef} id="ldot" style={{ width: 6, height: 6, borderRadius: "50%", background: "#6ec994", flexShrink: 0 }} />
-          <span style={{ fontFamily: F.dm, fontSize: 12, fontWeight: 500, color: "#6ec994", textTransform: "uppercase", letterSpacing: "0.1em" }}>
-            Window open
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <span ref={ldotRef} style={{ width: 5, height: 5, borderRadius: "50%", background: "#6ec994", flexShrink: 0 }} />
+          <span style={{
+            fontFamily: F.jb, fontSize: 10, color: GOLD_SOFT,
+            letterSpacing: "0.18em", textTransform: "uppercase",
+          }}>
+            Live · Window Open
           </span>
         </div>
       </div>
 
-      {/* Hero zone */}
-      <div style={{ padding: "6px 28px 0", position: "relative", zIndex: 1 }}>
-        {/* Kicker */}
-        <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 14 }}>
-          <span style={{ display: "block", width: 20, height: 1, background: "rgba(201,169,110,0.4)" }} />
-          <span style={{ fontFamily: F.dm, fontSize: 12, fontWeight: 500, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(201,169,110,0.72)" }}>
+      {/* Editorial masthead bar */}
+      <div style={{ padding: "18px 28px 0", position: "relative", zIndex: 1 }}>
+        <div style={{
+          display: "flex", justifyContent: "space-between", alignItems: "center",
+          paddingBottom: 12, borderBottom: `1px solid ${RULE}`,
+        }}>
+          <span style={{
+            fontFamily: F.cg, fontStyle: "italic", fontSize: 13, color: PAPER_MUTED,
+            letterSpacing: "0.02em",
+          }}>
+            The Wild Atlas Dispatch
+          </span>
+          <span style={{
+            fontFamily: F.jb, fontSize: 10, color: PAPER_FAINT,
+            letterSpacing: "0.16em", textTransform: "uppercase",
+          }}>
+            № {issueNo}
+          </span>
+        </div>
+      </div>
+
+      {/* ── Hero: kicker + single italic headline + ornament ── */}
+      <div style={{ padding: "32px 28px 0", position: "relative", zIndex: 1 }}>
+        {/* Kicker — permit name, small caps */}
+        <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 18 }}>
+          <span style={{ display: "block", width: 16, height: 1, background: GOLD_SOFT }} />
+          <span style={{
+            fontFamily: F.dm, fontSize: 10, fontWeight: 500,
+            letterSpacing: "0.24em", textTransform: "uppercase", color: GOLD_SOFT,
+          }}>
             {permitName || "Timed Entry Permit"}
           </span>
         </div>
 
-        {/* Headline */}
-        <h1 style={{ fontFamily: F.cg, fontSize: 70, fontWeight: 300, lineHeight: 0.88, margin: "0 0 17px", padding: 0 }}>
-          <span style={{ display: "block", letterSpacing: "-0.02em", color: "#f4f0e8" }}>Permit</span>
-          <span style={{ display: "block", fontStyle: "italic", letterSpacing: "-0.04em", color: "rgba(244,240,232,0.58)" }}>Available</span>
+        {/* Editorial headline — single line, italic Cormorant */}
+        <h1 style={{
+          fontFamily: F.cg, fontSize: 54, fontWeight: 300, lineHeight: 0.96,
+          margin: "0 0 18px", padding: 0, letterSpacing: "-0.025em",
+        }}>
+          <span style={{ color: PAPER }}>A window </span>
+          <span style={{ fontStyle: "italic", color: GOLD }}>has opened</span>
+          <span style={{ color: PAPER }}>.</span>
         </h1>
 
-        {/* Park + date line */}
-        <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 26 }}>
+        {/* Park · date dek */}
+        <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 22 }}>
           {parkName && (
-            <span style={{ fontFamily: F.dm, fontSize: 13, color: "rgba(244,240,232,0.52)" }}>{parkName}</span>
+            <span style={{ fontFamily: F.cg, fontStyle: "italic", fontSize: 14, color: PAPER_MUTED }}>
+              {parkName}
+            </span>
           )}
-          {parkName && dateDisplay && (
-            <span style={{ width: 3, height: 3, borderRadius: "50%", background: "rgba(201,169,110,0.5)", flexShrink: 0 }} />
-          )}
+          {parkName && dateDisplay && <Diamond />}
           {dateDisplay && (
-            <span style={{ fontFamily: F.dm, fontSize: 13, color: "rgba(201,169,110,0.72)" }}>{dateDisplay}</span>
+            <span style={{ fontFamily: F.jb, fontSize: 11, color: GOLD_SOFT, letterSpacing: "0.04em" }}>
+              {dateDisplay}
+            </span>
           )}
         </div>
 
-        {/* Amber rule */}
-        <div style={{ height: 1, background: "linear-gradient(90deg, rgba(201,169,110,0.32), transparent 68%)", marginBottom: 26 }} />
+        {/* Ornament rule — gold hairlines + center diamond */}
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 26 }}>
+          <span style={{ flex: 1, height: 1, background: `linear-gradient(90deg, transparent, ${GOLD_FAINT})` }} />
+          <Diamond />
+          <span style={{ flex: 1, height: 1, background: `linear-gradient(90deg, ${GOLD_FAINT}, transparent)` }} />
+        </div>
       </div>
 
-      {/* Timer section */}
-      <div style={{ padding: "0 28px", marginBottom: 6, position: "relative", zIndex: 1 }}>
-        {/* Meta row */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-          <span style={{ fontFamily: F.dm, fontSize: 12, fontWeight: 500, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(244,240,232,0.26)" }}>
-            Time since detection
+      {/* ── Chronograph: tabular timer + three subdials ── */}
+      <div style={{ padding: "0 28px", position: "relative", zIndex: 1 }}>
+        {/* Subdial label row */}
+        <div style={{
+          display: "flex", justifyContent: "space-between", alignItems: "baseline",
+          marginBottom: 6,
+        }}>
+          <span style={{
+            fontFamily: F.jb, fontSize: 9, color: PAPER_FAINT,
+            letterSpacing: "0.22em", textTransform: "uppercase",
+          }}>
+            Elapsed
           </span>
           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <span ref={sdotRef} id="sdot" style={{ width: 5, height: 5, borderRadius: "50%", background: "#6ec994", flexShrink: 0 }} />
-            <span style={{ fontFamily: F.dm, fontSize: 12, fontWeight: 400, color: "#6ec994" }}>Scanner active</span>
+            <span ref={sdotRef} style={{ width: 5, height: 5, borderRadius: "50%", background: "#6ec994", flexShrink: 0 }} />
+            <span style={{
+              fontFamily: F.jb, fontSize: 9, color: "#6ec994",
+              letterSpacing: "0.18em", textTransform: "uppercase",
+            }}>
+              Scanning
+            </span>
           </div>
         </div>
 
-        {/* Timer row */}
-        <div style={{ display: "flex", alignItems: "baseline", marginBottom: 22 }}>
+        {/* Big tabular timer */}
+        <div style={{ display: "flex", alignItems: "baseline", marginBottom: 18 }}>
           <span
             ref={timerRef}
-            id="td"
             style={{
-              fontFamily: F.jb, fontSize: 76, fontWeight: 300, letterSpacing: "-0.03em",
-              fontVariantNumeric: "tabular-nums", color: "#f4f0e8",
+              fontFamily: F.jb, fontSize: 88, fontWeight: 300, letterSpacing: "-0.04em",
+              fontVariantNumeric: "tabular-nums", color: PAPER,
               transition: "color 2s ease", lineHeight: 1,
             }}
           >
             0:00
           </span>
-          <span style={{ fontFamily: F.dm, fontSize: 12, fontWeight: 300, color: "rgba(244,240,232,0.28)", letterSpacing: "0.06em", marginLeft: 10 }}>
-            elapsed
-          </span>
+        </div>
+
+        {/* Three subdial readouts: DET · DURATION · WIN */}
+        <div style={{
+          display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 1,
+          background: RULE,
+          border: `1px solid ${RULE}`,
+          borderRadius: 2,
+          marginBottom: 22,
+        }}>
+          {[
+            { label: "Detected", value: detectedDisplay },
+            { label: "Window", value: dateDisplay || "Open" },
+            { label: "Status", value: "Live" },
+          ].map((cell, i) => (
+            <div key={i} style={{
+              background: INK, padding: "12px 12px",
+              display: "flex", flexDirection: "column", gap: 4,
+              alignItems: i === 1 ? "center" : i === 2 ? "flex-end" : "flex-start",
+            }}>
+              <span style={{
+                fontFamily: F.jb, fontSize: 9, color: PAPER_FAINT,
+                letterSpacing: "0.2em", textTransform: "uppercase",
+              }}>
+                {cell.label}
+              </span>
+              <span style={{
+                fontFamily: F.cg, fontStyle: "italic", fontSize: 16,
+                color: PAPER, letterSpacing: "-0.01em", lineHeight: 1,
+              }}>
+                {cell.value}
+              </span>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Urgency strip */}
+      {/* ── Editorial urgency lede — italic, no boxy alert ── */}
+      <div style={{ padding: "0 28px 0", position: "relative", zIndex: 1, marginBottom: 22 }}>
+        <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+          <div style={{ paddingTop: 6 }}>
+            <span style={{
+              display: "block", width: 1, height: 36, background: GOLD,
+              opacity: 0.65,
+            }} />
+          </div>
+          <p style={{
+            margin: 0, fontFamily: F.cg, fontStyle: "italic", fontSize: 17,
+            lineHeight: 1.35, color: PAPER, letterSpacing: "-0.005em",
+          }}>
+            Most windows close in two to five minutes.
+            <span style={{ color: PAPER_MUTED }}> Claim now, or set a watch for the next release.</span>
+          </p>
+        </div>
+      </div>
+
+      {/* Spacer */}
+      <div style={{ flex: 1, minHeight: 12 }} />
+
+      {/* ── Actions ── */}
       <div style={{
-        margin: "0 18px 22px", padding: "13px 16px",
-        background: "rgba(201,169,110,0.08)", border: "1px solid rgba(201,169,110,0.28)",
-        borderRadius: 18, backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
-        display: "flex", alignItems: "flex-start", gap: 12,
-        position: "relative", zIndex: 1,
+        padding: "0 22px calc(env(safe-area-inset-bottom, 0px) + 24px)",
+        display: "flex", flexDirection: "column", gap: 12, position: "relative", zIndex: 1,
       }}>
-        <TriangleIcon />
-        <div>
-          <div style={{ fontFamily: F.dm, fontSize: 12, fontWeight: 500, color: "#C9A96E", marginBottom: 3 }}>
-            Most permits vanish in 2–5 minutes
-          </div>
-          <div style={{ fontFamily: F.dm, fontSize: 12, fontWeight: 300, color: "rgba(201,169,110,0.55)", lineHeight: 1.45 }}>
-            Windows close without warning. Claim now or set a watch for the next release.
-          </div>
-        </div>
-      </div>
-
-      {/* Spacer pushes actions to bottom */}
-      <div style={{ flex: 1 }} />
-
-      {/* Actions zone */}
-      <div style={{ padding: "0 18px 30px", display: "flex", flexDirection: "column", gap: 10, position: "relative", zIndex: 1 }}>
-        {/* Row 1: Primary + Secondary */}
-        <div style={{ display: "flex", gap: 10, alignItems: "stretch" }}>
-          {/* Primary CTA */}
-          <button
-            onClick={handleBook}
-            style={{
-              flex: "0 0 75%", position: "relative", overflow: "hidden",
-              background: "#2F6F4E", border: "1px solid rgba(78,180,120,0.18)",
-              borderRadius: 20, padding: "19px 20px",
-              display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-              fontFamily: F.dm, fontSize: 15, fontWeight: 500, color: "#f4f0e8",
-              cursor: "pointer", transition: "background 0.2s, transform 0.15s",
-            }}
-            onMouseEnter={e => { e.currentTarget.style.background = "#265E41"; e.currentTarget.style.transform = "translateY(-1px)"; }}
-            onMouseLeave={e => { e.currentTarget.style.background = "#2F6F4E"; e.currentTarget.style.transform = "translateY(0)"; }}
-            onMouseDown={e => { e.currentTarget.style.transform = "scale(0.984)"; }}
-            onMouseUp={e => { e.currentTarget.style.transform = "translateY(-1px)"; }}
-          >
-            {/* Top highlight line */}
-            <span style={{ position: "absolute", top: 0, left: 0, width: "100%", height: 1, background: "rgba(255,255,255,0.1)" }} />
+        {/* Primary CTA — engraved emerald with gold hairline frame */}
+        <button
+          onClick={handleBook}
+          style={{
+            position: "relative", overflow: "hidden",
+            background: `linear-gradient(180deg, #357A57 0%, ${EMERALD} 100%)`,
+            border: `1px solid ${GOLD_FAINT}`,
+            borderRadius: 4,
+            padding: "20px 22px",
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+            fontFamily: F.dm, fontSize: 14, fontWeight: 500, color: PAPER,
+            letterSpacing: "0.06em", textTransform: "uppercase",
+            cursor: "pointer",
+            transition: "transform 160ms cubic-bezier(0.4,0,0.2,1), box-shadow 200ms",
+            boxShadow: "0 1px 0 rgba(255,255,255,0.08) inset, 0 12px 28px -16px rgba(0,0,0,0.6)",
+          }}
+          onMouseDown={e => { e.currentTarget.style.transform = "scale(0.985)"; }}
+          onMouseUp={e => { e.currentTarget.style.transform = "scale(1)"; }}
+          onMouseLeave={e => { e.currentTarget.style.transform = "scale(1)"; }}
+        >
+          {/* Top engraved highlight */}
+          <span style={{ position: "absolute", top: 0, left: 0, width: "100%", height: 1, background: "rgba(255,255,255,0.16)" }} />
+          {/* Inner gold hairline frame */}
+          <span aria-hidden="true" style={{
+            position: "absolute", inset: 4, border: `1px solid ${GOLD_FAINT}`, borderRadius: 2, pointerEvents: "none",
+          }} />
+          <span style={{ position: "relative" }}>Claim on Recreation.gov</span>
+          <span style={{ position: "relative", display: "inline-flex" }}>
             <ExternalLinkIcon />
-            Claim on Recreation.gov
-          </button>
+          </span>
+        </button>
 
-          {/* Secondary: Captured */}
+        {/* Secondary row: Captured + Keep watching */}
+        <div style={{ display: "flex", gap: 10, alignItems: "stretch" }}>
           {!captured ? (
             <button
               onClick={handleCapture}
               style={{
-                flex: 1, background: "rgba(244,240,232,0.05)", border: "1px solid rgba(244,240,232,0.10)",
-                borderRadius: 20, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-                gap: 5, cursor: "pointer", padding: "12px 8px",
+                flex: 1, background: "transparent", border: `1px solid ${RULE}`,
+                borderRadius: 4, padding: "14px 12px",
+                display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                cursor: "pointer",
+                fontFamily: F.dm, fontSize: 11, fontWeight: 500,
+                color: PAPER_MUTED, letterSpacing: "0.14em", textTransform: "uppercase",
               }}
             >
               <CheckIcon />
-              <span style={{ fontFamily: F.dm, fontSize: 12, fontWeight: 300, color: "rgba(244,240,232,0.35)" }}>Captured</span>
+              <span>Mark captured</span>
             </button>
           ) : (
             <div style={{
-              flex: 1, background: "rgba(47,111,78,0.15)", border: "1px solid rgba(78,180,120,0.25)",
-              borderRadius: 20, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 5,
+              flex: 1, background: "rgba(47,111,78,0.15)",
+              border: "1px solid rgba(78,180,120,0.25)",
+              borderRadius: 4, padding: "14px 12px",
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+              fontFamily: F.dm, fontSize: 11, fontWeight: 500,
+              color: "#6ec994", letterSpacing: "0.14em", textTransform: "uppercase",
             }}>
               <CheckIcon />
-              <span style={{ fontFamily: F.dm, fontSize: 12, fontWeight: 300, color: "#6ec994" }}>Done</span>
+              <span>Captured</span>
             </div>
           )}
+
+          <button
+            onClick={() => navigate("/app?tab=sniper")}
+            style={{
+              flex: 1, background: "transparent", border: `1px solid ${RULE}`,
+              borderRadius: 4, padding: "14px 12px",
+              fontFamily: F.dm, fontSize: 11, fontWeight: 500,
+              color: PAPER_FAINT, letterSpacing: "0.14em", textTransform: "uppercase",
+              cursor: "pointer",
+            }}
+          >
+            Keep watching
+          </button>
         </div>
 
-        {/* Row 2: Ghost keep watching */}
-        <button
-          onClick={() => navigate("/app?tab=sniper")}
-          style={{
-            width: "100%", background: "none", border: "none", padding: "10px 0",
-            fontFamily: F.dm, fontSize: 12, fontWeight: 300, color: "rgba(244,240,232,0.22)",
-            cursor: "pointer", textAlign: "center",
-          }}
-        >
-          This date doesn't work — keep watching
-        </button>
+        {/* Footer signature */}
+        <div style={{
+          marginTop: 4, display: "flex", justifyContent: "center", alignItems: "center", gap: 8,
+        }}>
+          <span style={{ width: 12, height: 1, background: GOLD_FAINT }} />
+          <span style={{
+            fontFamily: F.cg, fontStyle: "italic", fontSize: 11, color: PAPER_FAINT,
+            letterSpacing: "0.04em",
+          }}>
+            Filed by Poko, your field cartographer
+          </span>
+          <span style={{ width: 12, height: 1, background: GOLD_FAINT }} />
+        </div>
       </div>
     </div>
   );
