@@ -1341,7 +1341,39 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
             background: 'radial-gradient(ellipse 85% 75% at 50% 42%, transparent 38%, rgba(0,0,0,0.42) 100%)',
             pointerEvents: 'none',
           }} />
-          {/* Focus overlay */}
+          {/* Gilt corner brackets — leather-bound journal frame.
+              Four L-shaped marks in the safe area, drawn in faint gold.
+              Pure ornamentation, behind interactive content (z-index 3). */}
+          {(() => {
+            const bracketSize = 18;
+            const bracketColor = 'rgba(201,169,110,0.32)';
+            const bracketWidth = 1;
+            const inset = 14;
+            const cornerStyle = (corner: 'tl'|'tr'|'bl'|'br'): React.CSSProperties => {
+              const isTop = corner === 'tl' || corner === 'tr';
+              const isLeft = corner === 'tl' || corner === 'bl';
+              return {
+                position: 'absolute',
+                width: bracketSize, height: bracketSize,
+                [isTop ? 'top' : 'bottom']: inset,
+                [isLeft ? 'left' : 'right']: inset,
+                borderTop: isTop ? `${bracketWidth}px solid ${bracketColor}` : 'none',
+                borderBottom: !isTop ? `${bracketWidth}px solid ${bracketColor}` : 'none',
+                borderLeft: isLeft ? `${bracketWidth}px solid ${bracketColor}` : 'none',
+                borderRight: !isLeft ? `${bracketWidth}px solid ${bracketColor}` : 'none',
+                zIndex: 3,
+                pointerEvents: 'none',
+              };
+            };
+            return (
+              <>
+                <div aria-hidden style={cornerStyle('tl')} />
+                <div aria-hidden style={cornerStyle('tr')} />
+                <div aria-hidden style={cornerStyle('bl')} />
+                <div aria-hidden style={cornerStyle('br')} />
+              </>
+            );
+          })()}
           <div style={{
             position: 'absolute', inset: 0, zIndex: 5,
             background: 'rgba(0,0,0,0.16)',
@@ -1719,6 +1751,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
 
                 {/* Wordmark stack — shares baseline with emblem */}
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', minWidth: 0 }}>
+                  {/* POKO wordmark — letterpress: deboss above (highlight) +
+                      below (shadow) creates the impression of ink pressed
+                      into heavy paper. The two textShadows must stay paired. */}
                   <p style={{
                     fontFamily: "'Cormorant Garamond', serif",
                     fontSize: 38, fontWeight: 400,
@@ -1726,6 +1761,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                     color: '#F0EDEA',
                     margin: 0, lineHeight: 1,
                     textIndent: '0.3em',
+                    textShadow: '0 1px 0 rgba(255,255,255,0.06), 0 -1px 0 rgba(0,0,0,0.45), 0 0 18px rgba(201,169,110,0.10)',
                   }}>POKO</p>
                   {/* Hairline + diamond rule (drawn-in) — accent shifts with active park */}
                   <div className="poko-rule-draw poko-park-rule" aria-hidden="true" style={{
@@ -1777,6 +1813,38 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                 </span>
                 <span style={{ width: 2, height: 2, borderRadius: '50%', background: 'rgba(240,237,234,0.28)' }} />
                 <span style={{ fontFeatureSettings: '"tnum" 1', letterSpacing: '0.14em' }}>{parkTimeLabel} · park time</span>
+              </div>
+
+              {/* Imprimatur — small intaglio press seal that quietly certifies
+                  the dispatch. Italic Cormorant inside a hairline ring with a
+                  diamond glyph. Pure decoration. */}
+              <div aria-hidden="true" style={{
+                marginTop: 14,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+                opacity: 0.55,
+              }}>
+                <span style={{ flex: '0 0 28px', height: 1, background: 'linear-gradient(to right, transparent, rgba(201,169,110,0.45))' }} />
+                <span style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 6,
+                  padding: '3px 10px',
+                  border: '1px solid rgba(201,169,110,0.32)',
+                  borderRadius: 999,
+                }}>
+                  <span style={{
+                    width: 4, height: 4, transform: 'rotate(45deg)',
+                    background: 'rgba(201,169,110,0.9)',
+                    boxShadow: '0 0 4px rgba(201,169,110,0.5)',
+                  }} />
+                  <span style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontStyle: 'italic',
+                    fontSize: 10,
+                    letterSpacing: '0.22em', textTransform: 'uppercase',
+                    color: 'rgba(201,169,110,0.78)',
+                    fontFeatureSettings: '"tnum" 1',
+                  }}>Imprimatur · MMXXVI</span>
+                </span>
+                <span style={{ flex: '0 0 28px', height: 1, background: 'linear-gradient(to left, transparent, rgba(201,169,110,0.45))' }} />
               </div>
             </div>
 
