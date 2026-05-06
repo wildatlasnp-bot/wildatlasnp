@@ -1341,7 +1341,39 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
             background: 'radial-gradient(ellipse 85% 75% at 50% 42%, transparent 38%, rgba(0,0,0,0.42) 100%)',
             pointerEvents: 'none',
           }} />
-          {/* Focus overlay */}
+          {/* Gilt corner brackets — leather-bound journal frame.
+              Four L-shaped marks in the safe area, drawn in faint gold.
+              Pure ornamentation, behind interactive content (z-index 3). */}
+          {(() => {
+            const bracketSize = 18;
+            const bracketColor = 'rgba(201,169,110,0.32)';
+            const bracketWidth = 1;
+            const inset = 14;
+            const cornerStyle = (corner: 'tl'|'tr'|'bl'|'br'): React.CSSProperties => {
+              const isTop = corner === 'tl' || corner === 'tr';
+              const isLeft = corner === 'tl' || corner === 'bl';
+              return {
+                position: 'absolute',
+                width: bracketSize, height: bracketSize,
+                [isTop ? 'top' : 'bottom']: inset,
+                [isLeft ? 'left' : 'right']: inset,
+                borderTop: isTop ? `${bracketWidth}px solid ${bracketColor}` : 'none',
+                borderBottom: !isTop ? `${bracketWidth}px solid ${bracketColor}` : 'none',
+                borderLeft: isLeft ? `${bracketWidth}px solid ${bracketColor}` : 'none',
+                borderRight: !isLeft ? `${bracketWidth}px solid ${bracketColor}` : 'none',
+                zIndex: 3,
+                pointerEvents: 'none',
+              };
+            };
+            return (
+              <>
+                <div aria-hidden style={cornerStyle('tl')} />
+                <div aria-hidden style={cornerStyle('tr')} />
+                <div aria-hidden style={cornerStyle('bl')} />
+                <div aria-hidden style={cornerStyle('br')} />
+              </>
+            );
+          })()}
           <div style={{
             position: 'absolute', inset: 0, zIndex: 5,
             background: 'rgba(0,0,0,0.16)',
