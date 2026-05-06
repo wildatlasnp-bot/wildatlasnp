@@ -47,7 +47,19 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
 
   const handleTabClick = (tab: Tab) => {
     setRipples((r) => ({ ...r, [tab]: r[tab] + 1 }));
-    if (tab === activeTab) return;
+    if (tab === activeTab) {
+      // Re-tap on active tab: featherlight tick (5ms) for tactile feedback.
+      try { navigator.vibrate?.(5); } catch { /* unsupported */ }
+      return;
+    }
+    // Tab switch: subtle 10ms haptic. Honors prefers-reduced-motion as a
+    // proxy for "user wants quieter UI" — Web Vibration API has no native
+    // mute setting. iOS Safari ignores navigator.vibrate, so this is a
+    // no-op there (we do not hard-fail).
+    try {
+      const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      if (!reduced) navigator.vibrate?.(10);
+    } catch { /* unsupported */ }
     onTabChange(tab);
   };
 
