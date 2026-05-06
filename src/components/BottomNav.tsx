@@ -82,21 +82,32 @@ const BottomNav = React.memo(({ activeTab, onTabChange, hasUnreadAlerts = false 
         zIndex: 50,
       }}
     >
-      {/* Top hairline accent — gold thread under the active tab */}
+      {/* Top hairline accent — gold thread that glides under the active tab.
+          Stretches subtly while in transit (a "drawn line" feel), and contracts
+          + brightens when a tab is being pressed. */}
       <span
         aria-hidden="true"
         style={{
           position: "absolute",
           top: -1,
           left: `${(activeIndex + 0.5) * (100 / N)}%`,
-          transform: "translateX(-50%)",
-          width: 28,
+          // GPU-accelerated transform for buttery-smooth glide.
+          // Press = squeeze narrower (12px) + brighter glow.
+          // Idle  = settle to 32px hairline.
+          transform: `translate3d(-50%, 0, 0) scaleX(${pressedTab ? 0.4 : 1})`,
+          transformOrigin: "center",
+          width: 32,
           height: 1,
-          background: GOLD,
-          transition: "left 320ms cubic-bezier(0.4, 0, 0.2, 1), width 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+          background: `linear-gradient(90deg, transparent 0%, ${GOLD} 20%, ${GOLD} 80%, transparent 100%)`,
+          // Spring-ish glide for left; faster scale response on press.
+          transition:
+            "left 460ms cubic-bezier(0.22, 1, 0.36, 1), transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 220ms cubic-bezier(0.4, 0, 0.2, 1)",
+          willChange: "left, transform",
           pointerEvents: "none",
           zIndex: 3,
-          boxShadow: `0 0 8px ${GOLD_SOFT}`,
+          boxShadow: pressedTab
+            ? `0 0 14px rgba(181,138,63,0.55), 0 0 4px rgba(181,138,63,0.4)`
+            : `0 0 8px ${GOLD_SOFT}`,
         }}
       />
 
