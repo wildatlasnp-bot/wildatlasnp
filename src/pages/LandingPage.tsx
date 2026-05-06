@@ -719,7 +719,7 @@ const LandingPage = () => {
                         opacity: proLoading ? 0.7 : 1,
                       }}
                     >
-                      {proLoading ? <Loader2 className="inline animate-spin" size={16} /> : proCta.label}
+                      {proLoading ? <Loader2 className="inline animate-spin" size={16} /> : (isMobile ? proCta.copy.labelMobile : proCta.copy.label)}
                     </button>
                   }
                 />
