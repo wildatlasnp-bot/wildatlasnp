@@ -32,23 +32,24 @@ const CG = "'Cormorant Garamond', serif";
 const DM = "'DM Sans', sans-serif";
 const MONO = "'JetBrains Mono', ui-monospace, monospace";
 
-const INK = "#1A2F1E";
-const INK_MUTED = "#6B7B6B";
-const INK_FAINT = "#8A9E8A";
+/* Editorial neutral palette — green removed, charcoal + gold only */
+const INK = "#1C1C1A";
+const INK_MUTED = "#5C5A55";
+const INK_FAINT = "#8A8780";
 const CREAM = "#F5F0E8";
 const CREAM_DEEP = "#F0EDEA";
 const PAPER = "#FFFFFF";
-const RULE = "rgba(26,47,30,0.10)";
-const RULE_STRONG = "rgba(26,47,30,0.18)";
+const RULE = "rgba(28,28,26,0.10)";
+const RULE_STRONG = "rgba(28,28,26,0.20)";
 const GOLD = "#B58A3F";
 const GOLD_SOFT = "rgba(181,138,63,0.32)";
 
-/* Severity colors — restrained, editorial */
+/* Severity colors — restrained editorial; info is now slate ink, not green */
 const SEV_INK: Record<Severity, string> = {
   critical: "#8B0000",
-  closure:  "#C0392B",
-  caution:  "#B5830A",
-  info:     "#2F6F4E",
+  closure:  "#A8421C",
+  caution:  "#9C6B14",
+  info:     "#2A2A28",
 };
 const SEV_LABEL: Record<Severity, string> = {
   critical: "Emergency",
