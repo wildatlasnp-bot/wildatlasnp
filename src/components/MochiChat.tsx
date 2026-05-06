@@ -1719,6 +1719,9 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
 
                 {/* Wordmark stack — shares baseline with emblem */}
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', minWidth: 0 }}>
+                  {/* POKO wordmark — letterpress: deboss above (highlight) +
+                      below (shadow) creates the impression of ink pressed
+                      into heavy paper. The two textShadows must stay paired. */}
                   <p style={{
                     fontFamily: "'Cormorant Garamond', serif",
                     fontSize: 38, fontWeight: 400,
@@ -1726,6 +1729,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
                     color: '#F0EDEA',
                     margin: 0, lineHeight: 1,
                     textIndent: '0.3em',
+                    textShadow: '0 1px 0 rgba(255,255,255,0.06), 0 -1px 0 rgba(0,0,0,0.45), 0 0 18px rgba(201,169,110,0.10)',
                   }}>POKO</p>
                   {/* Hairline + diamond rule (drawn-in) — accent shifts with active park */}
                   <div className="poko-rule-draw poko-park-rule" aria-hidden="true" style={{
