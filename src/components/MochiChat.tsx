@@ -1499,7 +1499,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
               --px: 0; --py: 0;
             }
             .poko-stage .poko-topo {
-              /* `translate:` composes with the keyframe `transform:` */
+              /* CSS translate composes with keyframe transform */
               translate: calc(var(--px, 0) * -10px) calc(var(--py, 0) * -8px);
               transition: translate 600ms cubic-bezier(0.4, 0, 0.2, 1);
               will-change: translate;
