@@ -906,7 +906,7 @@ const LandingPage = () => {
             </div>
 
             <Reveal delay={0.15}>
-              <iMessageBubble />
+              <IMessageBubble />
             </Reveal>
           </div>
         </section>
@@ -1680,7 +1680,7 @@ const FaqRow = ({ q, a, index }: { q: string; a: string; index: string }) => {
 };
 
 /* ───── iMessage bubble — full chrome: status bar, contact header, bubble, time ───── */
-const iMessageBubble = () => {
+const IMessageBubble = () => {
   const [age, setAge] = useState(0);
   useEffect(() => {
     const id = setInterval(() => setAge((a) => (a >= 9 ? 0 : a + 1)), 30_000);
