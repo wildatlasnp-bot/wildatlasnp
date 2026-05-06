@@ -1278,6 +1278,7 @@ const MochiChat = ({ onNavigateToDiscover, onNavigateToAlerts, initialQuery }: {
 
       {isBriefing ? (
         <div
+          ref={stageRef}
           className="flex-1 min-h-0 flex flex-col poko-stage"
           style={{
             position: 'relative',
